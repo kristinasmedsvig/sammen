@@ -395,8 +395,180 @@
     margin-bottom: 16px; line-height: 1.65;
   }
 
-  /* SCROLLBAR */
-  ::-webkit-scrollbar { width: 0; }
+  /* ONBOARDING */
+  .ob {
+    position: fixed;
+    inset: 0;
+    background: var(--bg);
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    max-width: 430px;
+    margin: 0 auto;
+    padding: 0 28px;
+  }
+  .ob.skjult { display: none; }
+  .ob-top {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-bottom: 20px;
+  }
+  .ob-logo {
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--grn);
+    margin-bottom: 48px;
+  }
+  .ob-steg {
+    display: flex;
+    gap: 5px;
+    margin-bottom: 36px;
+  }
+  .ob-steg-dot {
+    height: 3px;
+    flex: 1;
+    border-radius: 2px;
+    background: var(--border);
+    transition: background 0.3s;
+  }
+  .ob-steg-dot.on { background: var(--grn); }
+  .ob-tittel {
+    font-size: 26px;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.25;
+    margin-bottom: 14px;
+    letter-spacing: -0.3px;
+  }
+  .ob-tekst {
+    font-size: 16px;
+    color: var(--text-2);
+    line-height: 1.65;
+    margin-bottom: 32px;
+  }
+  .ob-label {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-3);
+    margin-bottom: 8px;
+    display: block;
+  }
+  .ob-input {
+    width: 100%;
+    font-size: 16px;
+    padding: 13px 14px;
+    border: 0.5px solid var(--border-2);
+    border-radius: var(--radius-sm);
+    background: var(--bg);
+    color: var(--text);
+    font-family: inherit;
+    outline: none;
+    margin-bottom: 10px;
+    transition: border-color 0.15s;
+    -webkit-appearance: none;
+  }
+  .ob-input:focus { border-color: var(--grn); }
+  .ob-alt {
+    font-size: 14px;
+    color: var(--grn);
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+    padding: 8px 0;
+    display: block;
+    text-align: left;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .ob-valg-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+  .ob-valg {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 16px;
+    border: 0.5px solid var(--border-2);
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+  }
+  .ob-valg.on {
+    border-color: var(--grn);
+    background: var(--grn-l);
+  }
+  .ob-valg-cb {
+    width: 20px; height: 20px; min-width: 20px;
+    border-radius: 50%;
+    border: 1.5px solid var(--border-2);
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.15s;
+  }
+  .ob-valg.on .ob-valg-cb {
+    background: var(--grn);
+    border-color: var(--grn);
+  }
+  .ob-valg-tekst { font-size: 15px; color: var(--text); line-height: 1.35; }
+  .ob-ferdig-frukt {
+    font-size: 64px;
+    text-align: center;
+    margin-bottom: 20px;
+    display: block;
+  }
+  .ob-ferdig-uke {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--grn);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 6px;
+  }
+  .ob-bunn {
+    padding: 20px 0 40px;
+    flex-shrink: 0;
+  }
+  .ob-btn {
+    width: 100%;
+    padding: 16px;
+    background: var(--grn);
+    color: white;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    transition: opacity 0.15s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .ob-btn:active { opacity: 0.85; }
+  .ob-btn:disabled { background: var(--bg-3); color: var(--text-3); }
+  .ob-btn-sek {
+    width: 100%;
+    padding: 14px;
+    background: none;
+    border: none;
+    font-size: 15px;
+    color: var(--text-3);
+    cursor: pointer;
+    font-family: inherit;
+    margin-top: 8px;
+  }
+  .ob-uke-rad {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+
 
   /* INPUT RANGE */
   input[type="range"] {
@@ -418,7 +590,108 @@
 </style>
 </head>
 <body>
-<div class="app">
+
+<!-- ── ONBOARDING ─────────────────────────────────────── -->
+
+<!-- Steg 1: Velkommen -->
+<div class="ob" id="ob1">
+  <div class="ob-top">
+    <div class="ob-logo">Sammen</div>
+    <div class="ob-steg">
+      <div class="ob-steg-dot on"></div>
+      <div class="ob-steg-dot"></div>
+      <div class="ob-steg-dot"></div>
+      <div class="ob-steg-dot"></div>
+    </div>
+    <div class="ob-tittel">Hei, og velkommen.</div>
+    <div class="ob-tekst">Sammen er en rolig app for å følge graviditeten, legge merke til babyens bevegelser og samle små tanker underveis.<br><br>Vi setter opp appen for deg på under ett minutt.</div>
+  </div>
+  <div class="ob-bunn">
+    <button class="ob-btn" onclick="obGå(2)">Kom i gang</button>
+  </div>
+</div>
+
+<!-- Steg 2: Termin -->
+<div class="ob skjult" id="ob2">
+  <div class="ob-top">
+    <div class="ob-logo">Sammen</div>
+    <div class="ob-steg">
+      <div class="ob-steg-dot on"></div>
+      <div class="ob-steg-dot on"></div>
+      <div class="ob-steg-dot"></div>
+      <div class="ob-steg-dot"></div>
+    </div>
+    <div class="ob-tittel">Når er terminen din?</div>
+    <div class="ob-tekst">Vi bruker termindatoen til å vise hva som er relevant akkurat nå – og hva som kommer.</div>
+    <label class="ob-label">Termindato</label>
+    <input class="ob-input" type="date" id="ob-termin" oninput="obSjekkTermin()">
+  </div>
+  <div class="ob-bunn">
+    <button class="ob-btn" id="ob2-btn" onclick="obGå(3)" disabled>Neste</button>
+    <button class="ob-btn-sek" onclick="obGå(1)">Tilbake</button>
+  </div>
+</div>
+
+<!-- Steg 3: Preferanser -->
+<div class="ob skjult" id="ob3">
+  <div class="ob-top">
+    <div class="ob-logo">Sammen</div>
+    <div class="ob-steg">
+      <div class="ob-steg-dot on"></div>
+      <div class="ob-steg-dot on"></div>
+      <div class="ob-steg-dot on"></div>
+      <div class="ob-steg-dot"></div>
+    </div>
+    <div class="ob-tittel">Hva er viktigst for deg?</div>
+    <div class="ob-tekst">Velg gjerne flere.</div>
+    <div class="ob-valg-grid">
+      <div class="ob-valg" id="pref-utvikling" onclick="obTogglePref('utvikling')">
+        <div class="ob-valg-cb" id="cb-utvikling"></div>
+        <span class="ob-valg-tekst">Følge babyens utvikling uke for uke</span>
+      </div>
+      <div class="ob-valg" id="pref-bevegelser" onclick="obTogglePref('bevegelser')">
+        <div class="ob-valg-cb" id="cb-bevegelser"></div>
+        <span class="ob-valg-tekst">Registrere babyens bevegelser</span>
+      </div>
+      <div class="ob-valg" id="pref-sjekkliste" onclick="obTogglePref('sjekkliste')">
+        <div class="ob-valg-cb" id="cb-sjekkliste"></div>
+        <span class="ob-valg-tekst">Ha oversikt med en god sjekkliste</span>
+      </div>
+      <div class="ob-valg" id="pref-notater" onclick="obTogglePref('notater')">
+        <div class="ob-valg-cb" id="cb-notater"></div>
+        <span class="ob-valg-tekst">Skrive små notater underveis</span>
+      </div>
+    </div>
+  </div>
+  <div class="ob-bunn">
+    <button class="ob-btn" onclick="obGå(4)">Neste</button>
+    <button class="ob-btn-sek" onclick="obGå(2)">Tilbake</button>
+  </div>
+</div>
+
+<!-- Steg 4: Ferdig -->
+<div class="ob skjult" id="ob4">
+  <div class="ob-top" style="text-align:center">
+    <div class="ob-logo" style="text-align:left">Sammen</div>
+    <div class="ob-steg">
+      <div class="ob-steg-dot on"></div>
+      <div class="ob-steg-dot on"></div>
+      <div class="ob-steg-dot on"></div>
+      <div class="ob-steg-dot on"></div>
+    </div>
+    <div style="margin-top:24px">
+      <span class="ob-ferdig-frukt" id="ob-frukt-emoji">🌱</span>
+      <div class="ob-ferdig-uke" id="ob-ferdig-uke">Uke –</div>
+      <div class="ob-tittel" id="ob-ferdig-navn" style="text-align:center"></div>
+      <div class="ob-tekst" id="ob-ferdig-tekst" style="text-align:center;margin-bottom:0"></div>
+    </div>
+  </div>
+  <div class="ob-bunn">
+    <button class="ob-btn" onclick="obFerdig()">Gå til i dag</button>
+  </div>
+</div>
+
+
 
   <!-- HEADER -->
   <div class="hdr">
@@ -516,62 +789,11 @@
 
   <!-- PARTNER -->
   <div class="pane" id="pp">
-    <div class="sec">Delt tilgang</div>
-    <div class="pc">
-      <h4>Inviter partner</h4>
-      <div class="fl">
-        <label>Navn</label>
-        <input type="text" id="pn" placeholder="F.eks. Magnus" oninput="lP()">
-      </div>
-      <div class="fl">
-        <label>E-post</label>
-        <input type="email" id="pe" placeholder="partner@epost.no" oninput="lP()">
-      </div>
-      <p class="partner-info">Partner får full tilgang – kan se og registrere bevegelser, og følge sjekklisten sammen med deg.</p>
-      <button class="gbtn" onclick="alert('Partnertilgang kommer i neste versjon av Sammen.')">Send invitasjon</button>
-    </div>
-    <div class="sec">Ønskebrev til fødeavdelingen</div>
-    <div class="pc">
-      <p class="brev-intro">Her kan du skrive ned hva som er viktig for deg under fødselen. Helsepersonell vil alltid gjøre det som er best for deg og babyen – men det hjelper å vite hva du ønsker.</p>
-      <div class="fl">
-        <label>Smertelindring</label>
-        <select id="fs" onchange="lBr()">
-          <option>Vil ta det som det kommer</option>
-          <option>Ønsker epidural</option>
-          <option>Vil prøve lystgass</option>
-          <option>Ønsker minst mulig medisinsk smertelindring</option>
-          <option>Vannfødsel</option>
-        </select>
-      </div>
-      <div class="fl">
-        <label>Amming</label>
-        <select id="fa" onchange="lBr()">
-          <option>Ønsker å amme</option>
-          <option>Planlegger morsmelkerstatning</option>
-          <option>Vil bestemme meg etter fødselen</option>
-        </select>
-      </div>
-      <div class="fl">
-        <label>Hud-mot-hud etter fødsel</label>
-        <select id="fh" onchange="lBr()">
-          <option>Ja, gjerne så snart som mulig</option>
-          <option>Ja, men barnets helse går først</option>
-          <option>Partner tar over hvis jeg ikke kan</option>
-        </select>
-      </div>
-      <div class="fl">
-        <label>Hvem vil du ha med deg?</label>
-        <input type="text" id="ft" placeholder="F.eks. partneren min" oninput="lBr()">
-      </div>
-      <div class="fl">
-        <label>Andre tanker eller ønsker</label>
-        <textarea id="fan" rows="3" placeholder="F.eks. at det er rolig stemning, dempet lys, at vi får litt tid bare oss tre..." oninput="lBr()"></textarea>
-      </div>
-      <button class="gbtn" onclick="gB()">Lag ønskebrev</button>
-      <div id="bo" style="display:none">
-        <div class="brtxt" id="bt2"></div>
-        <button class="obtn" onclick="kB()">Kopier tekst</button>
-      </div>
+    <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:60vh;text-align:center;padding:0 10px">
+      <div style="font-size:48px;margin-bottom:20px">🌿</div>
+      <div style="font-size:18px;font-weight:600;color:var(--text);margin-bottom:12px;letter-spacing:-0.2px">Del graviditeten</div>
+      <div style="font-size:15px;color:var(--text-2);line-height:1.7;max-width:280px">Snart kan du invitere partneren din til å følge med – se bevegelser, sjekkliste og små notater sammen.</div>
+      <div style="margin-top:28px;font-size:13px;color:var(--text-3);background:var(--bg-2);padding:8px 16px;border-radius:20px;border:0.5px solid var(--border)">Kommer snart</div>
     </div>
   </div>
 
@@ -585,8 +807,6 @@ var saveTimer = null;
 var db = {};       // dagbok: { "2026-04-07": { k, s, m, n } }
 var cl = {};       // sjekkliste state: { [item.id]: { d, n } }
 var oc = {};       // åpne kategorier
-var pd = { n: '', e: '' };
-var bd = { s: 0, a: 0, h: 0, t: '', an: '' };
 
 // ── DATA ───────────────────────────────────────────────
 var FD = {
@@ -614,54 +834,149 @@ var FD = {
 
 var TP = {
   4: {
-    m: 'Den første tingen å gjøre er å bestille time hos fastlege eller jordmor. Ta opp folsyre (400 µg daglig) om du ikke allerede har startet.',
-    k: 'Kvalme, tretthet og ømme bryster er veldig vanlig nå. Kroppen jobber hardt, selv om du ikke ser det ennå.',
-    g: 'Unngå alkohol og tobakk. Og ta det rolig med deg selv – det er lov å hvile mye.'
+    m: 'Embryoet fester seg i livmorslimhinnen og begynner å dele seg raskt. Morkaken er i ferd med å dannes – den vil forsyne fosteret med næring fremover.',
+    k: 'De første ukene merker mange ingenting. Noen kjenner ømme bryster, trykk i underlivet eller hyppig trang til å tisse. Kvalme og tretthet kan starte allerede nå.',
+    g: 'Ta folsyre 400 µg daglig frem til uke 12 – det beskytter mot nevralrørsdefekter. Unngå alkohol og tobakk.'
+  },
+  6: {
+    m: 'Embryoet er ca. 5 mm. Anlegg til armer, bein, hjerte, lever og lunger begynner å dannes. Hjertet begynner å slå.',
+    k: 'Kvalme, tretthet, ømme bryster og hyppig vannlating er vanlig nå. Fordøyelsen går langsommere – du kan kjenne deg oppblåst og raskere mett.',
+    g: 'Bestill første svangerskapskontroll – du bør få time innen én uke. Ta med morgenurin til konsultasjonen.'
   },
   8: {
-    m: 'På første kontroll tas det blodprøver for blodtype, RhD-typing, jern, og sjekk for HIV, syfilis, hepatitt B og røde hunder. Ingenting å bekymre seg for, bare rutine.',
-    k: 'Kvalmen er ofte på topp nå. Mange synes det hjelper å spise litt og ofte, og ha noe ved sengen til morgenen.',
-    g: 'Bestill første svangerskapskontroll om du ikke har gjort det ennå.'
+    m: 'Embryoet er ca. 1,5 cm. Ansiktet tar form med anlegg til nesetipp, øyelokk og overleppe. På første kontroll tas blodprøver for blodtype, RhD, jern, HIV, syfilis, hepatitt B og røde hunder.',
+    k: 'Kvalmen er ofte på topp nå. Det hjelper å spise litt og ofte og ha noe ved sengen om morgenen. Lett blødning fra tannkjøttet og nesen er vanlig – slimhinnene er skjørere enn normalt.',
+    g: 'Bestill første svangerskapskontroll om du ikke har gjort det. Hjemmetesten er like sikker som legens.'
+  },
+  10: {
+    m: 'Fosteret er ca. 3 cm og veier rundt 4 gram. Hodet kan være omtrent like stort som resten av kroppen. Øynene begynner å flytte seg mot riktig plass i ansiktet.',
+    k: 'Livmoren vokser, men ligger fortsatt nede i bekkenet – graviditeten er ikke nødvendigvis synlig ennå. Humørsvingninger er vanlig på grunn av hormoner.',
+    g: 'Snakk med jordmor eller lege om fosterdiagnostikk – tidlig ultralyd og eventuelt NIPT tilbys i uke 11–14.'
   },
   12: {
-    m: 'Mellom uke 11 og 14 tilbys alle tidlig ultralyd. NIPT tilbys hvis du er over 35 eller det er andre grunner til det.',
-    k: 'Kvalmen avtar gjerne de neste ukene – mange kjenner seg mer som seg selv igjen rundt uke 14.',
-    g: 'Ta opp fødeplass med jordmor eller fastlege. De søker på vegne av deg, du gjør det ikke selv.'
+    m: 'Fosteret er ca. 5 cm og ligner mer og mer på et menneske. Anlegg til alle organer er på plass og vil vokse videre. Fosteret kan bevege seg, men du kjenner det ikke ennå.',
+    k: 'Kvalmen avtar gjerne nå – de fleste kjenner seg bedre fra uke 12–14. Livmoren er nå på størrelse med en grapefrukt.',
+    g: 'Ta opp fødeplass med jordmor eller fastlege. De søker på vegne av deg – du gjør det ikke selv.'
+  },
+  14: {
+    m: 'Fosteret er ca. 8 cm. Det begynner å vokse fine hår på kroppen. Fosteret kan hikke og svelger små mengder fostervann. Morkaken er ferdig utviklet og forsyner nå fosteret med næring.',
+    k: 'Andre trimester starter – mange opplever mer energi og at kvalmen er borte. Magen begynner å bli synlig for andre.',
+    g: 'Bruk ukene fremover til å informere arbeidsgiver og lage en plan for permisjon.'
   },
   16: {
-    m: 'Rutineultralyden skjer mellom uke 17 og 20. Du får innkalling, men sjekk at den er på vei.',
-    k: 'Nå kan de første bevegelsene kjennes – som en liten bobletrekk eller noe som vifter. Mange merker det ikke med en gang, og det er helt normalt.',
-    g: 'Si fra til arbeidsgiveren din om at du er gravid. Husk: søknadsfrist for barnehage er 1. mars!'
+    m: 'Fosteret er ca. 120 gram. Skjelettet blir hardere og nerveceller i hjerne og ryggmarg vokser raskt. Organene flytter seg gradvis til riktige plasser.',
+    k: 'Du kan begynne å kjenne de første bevegelsene – som en liten iling eller prikking. De som har født før kjenner det gjerne litt tidligere.',
+    g: 'Rutineultralyden skjer mellom uke 17 og 20. Du får innkalling – sjekk at den er på vei. Husk søknadsfrist barnehage 1. mars!'
+  },
+  18: {
+    m: 'Fosteret er ca. 200 gram. Huden begynner å dekkes av et hvitt fettlag som beskytter den i fostervannet. Fosteret kan sannsynligvis begynne å oppfatte lyd.',
+    k: 'Nå vil de fleste kjenne tydelige bevegelser. Magen vokser og det er normalt å legge på seg 11–16 kilo totalt i svangerskapet. Navlen kan begynne å butte ut – helt ufarlig.',
+    g: 'Sjekk at ferritinprøven (jern) er tatt innen uke 15. Si fra til arbeidsgiveren din om at du er gravid.'
   },
   20: {
-    m: 'Rutineultralyden er rundt nå. Sjekk at ferritinprøven (jern) er tatt innen uke 15.',
-    k: 'Halsbrann starter gjerne nå. Gaviscon eller Galieve fra apoteket kan hjelpe uten resept.',
-    g: 'Snakk med partneren om permisjonsplan – det er lettere å ha en plan tidlig enn å haske det i siste liten.'
+    m: 'Fosteret veier ca. 300 gram. Det kan begynne å gjøre grimaser og suge på tommelen. Bevegelsene blir gradvis mer avanserte.',
+    k: 'Halsbrann starter gjerne nå – livmoren presser på magesekken. Gaviscon fra apoteket kan hjelpe. Det er normalt å bli svimmel når du ligger på ryggen – snu deg på siden.',
+    g: 'Snakk med partneren om permisjonsplan. Søk barnehageplass om du ikke har gjort det.'
+  },
+  22: {
+    m: 'Fosteret veier ca. 475 gram. Lungene utvikler seg videre. Bukspyttkjertelen begynner å produsere insulin.',
+    k: 'Leddbåndene i bekkenet blir mer elastiske – noen kjenner det som smerter ved gange eller trappegang. Du kan kjenne spark daglig nå.',
+    g: 'Ikke gift? Dere kan registrere farskap digitalt på nav.no fra uke 22.'
   },
   24: {
-    m: 'Kikhostevaksinen (dTp) tilbys gratis rundt uke 24 – si ja! Den beskytter babyen de første månedene etter fødsel. Rhesus negativ? Da tas det en blodprøve nå for å sjekke fosterets blodtype.',
-    k: 'Babyen hører stemmen din tydelig nå. Bekkenplager er vanlig – snakk med jordmor om du kjenner på det.',
-    g: 'RSV-vaksine kan tas fra uke 24 mot betaling. Snakk med legen om det passer for deg.'
+    m: 'Svangerskapskontroll uke 24. Fosteret veier ca. 650 gram og gjør tydelige pusteøvelser med fostervann. Kikhostevaksine (dTp) tilbys gratis – si ja. Er du rhesus negativ? Da tas blodprøve for å bestemme fosterets blodtype.',
+    k: 'Du kan nå kjenne spark utenpå magen. Livmoren presser på urinblæren – hyppigere toalettbesøk er normalt. Brystene fortsetter å vokse.',
+    g: 'RSV-vaksine kan tas fra uke 24 mot egenbetaling med resept. Sjekk om svangerskapsdiabetes-test er aktuelt for deg.'
+  },
+  25: {
+    m: 'Fosteret veier ca. 750 gram. Hørselen utvikler seg – fosteret kan sannsynligvis høre hjerteslag, pust og stemmer utenfra.',
+    k: 'Brystknoppene og huden rundt kan bli mørkere. Strekkmerker og pigmentflekker er vanlig – de blekner gjerne etter fødsel.',
+    g: 'Begynn å tenke på hvem du vil ha med deg til fødsel og hva som er viktig for deg.'
+  },
+  26: {
+    m: 'Fosteret veier ca. 900 gram. De store organene tar form. Fosteret øver seg på å åpne og lukke øynene.',
+    k: 'Mange opplever økt søvnbehov fra nå. Det er normalt å våkne om natten – fosterbevegelser og kroppen din gjør søvnen urolig. Hvil når du kan.',
+    g: 'Snakk med partneren om foreldrepermisjonsplan og fordeling.'
+  },
+  27: {
+    m: 'Fosteret veier ca. 1000 gram og kan begynne å åpne øynene for første gang. Synet modnes videre etter fødsel. Mange fostre legger seg med hodet ned nå.',
+    k: 'Røde prikker i ansiktet og på kroppen er vanlig – det skyldes endringer i blodkarene og forsvinner etter fødsel.',
+    g: 'Søk foreldrepenger hos NAV helst 4–6 uker før permisjonen starter.'
   },
   28: {
-    m: 'Hemoglobin sjekkes nå. Er du rhesus negativ og babyen er RhD-positiv, settes første anti-D-injeksjon nå – hos fastlege eller jordmor.',
-    k: 'Fra nå er det fint å telle bevegelser hver dag. Det gir deg en trygg følelse av at alt er som det skal.',
-    g: 'Søk foreldrepenger hos NAV helst 4–6 uker før du vil starte permisjonen.'
+    m: 'Svangerskapskontroll uke 28. Fosteret veier ca. 1150 gram og har tydelige perioder med aktivitet og hvile. Hemoglobin sjekkes. Er du rhesus negativ og fosteret RhD-positivt, settes anti-D dose 1 nå – hos fastlege eller jordmor.',
+    k: 'Fra nå er det fint å telle bevegelser daglig. Fosteret kan skvette ved plutselige lyder – det er normalt.',
+    g: 'Søk foreldrepenger hos NAV om du ikke har gjort det. Meld deg på fødselsforberedende kurs.'
+  },
+  29: {
+    m: 'Fosteret veier nå rundt 1300 gram. Det går inn i en fase med økt vekst – fra å være relativt langt og smalt, til å legge på seg mer i bredden. En naturlig del av utviklingen.',
+    k: 'Livmoren vokser og presser på lungene. Det er vanlig å føle seg andpusten selv ved små anstrengelser – kroppen kompenserer ved å puste litt raskere.',
+    g: 'Begynn å tenke på sykehusvesken. Du trenger ikke pakke den nå, men det er greit å ha en liste klar.'
+  },
+  30: {
+    m: 'Fosteret veier rundt 1450 gram. Blodforsyningen til øyet utvikler seg nå. Etter fødselen vil synet modnes videre – allerede kort tid etter vil den nyfødte forsøke å møte blikket ditt.',
+    k: 'Hjertet slår raskere enn vanlig for å møte kroppens økte behov. Hovne ben er vanlig – det er ekstra væske i kroppen, og det er normalt.',
+    g: 'Meld deg på fødselsforberedende kurs om du ikke har gjort det. Mange kurs fylles opp tidlig.'
+  },
+  31: {
+    m: 'Fosteret veier rundt 1650 gram og ligner nå et nyfødt barn. Det kan sannsynligvis kjenne igjen lyder fra utsiden av livmoren.',
+    k: 'Forstoppelse er vanlig nå fordi hormoner bremser tarmbevegelsene. Det hjelper med fysisk aktivitet, mer kostfiber og å drikke nok vann.',
+    g: 'Tenk gjennom hvem du vil ha med deg til fødsel, og snakk med dem om det.'
   },
   32: {
-    m: 'Jordmor vil sjekke at babyen ligger med hodet ned. 3. trimester er i full gang.',
-    k: 'Bevegelsene kjennes annerledes nå – mer stramme og tydelige fordi det er trangt. Det er normalt.',
-    g: 'Nå er det på tide å pakke sykehusvesken. Og meld deg på fødselsforberedende kurs om du ikke har gjort det.'
+    m: 'Svangerskapskontroll uke 32. Fosteret veier rundt 1850 gram. Etterhvert som det vokser, blir det gradvis mindre plass i livmoren – det skal likevel være godt med fostervann rundt det.',
+    k: 'Det er tyngre å bevege seg nå – det er helt naturlig. Bevegelsene til babyen kjennes også annerledes, mer stramme og tydelige fordi det er blitt trangt.',
+    g: 'Pakk sykehusvesken. Meld deg på fødselsforberedende kurs om du ikke har gjort det.'
+  },
+  33: {
+    m: 'Fosteret veier rundt 2050 gram og vokser i både lengde og bredde. Det kan sannsynligvis oppfatte forskjellen mellom lys og mørke.',
+    k: 'Du kan begynne å kjenne kynnere – sammentrekninger som starter øverst i magen og sprer seg nedover. De varer gjerne et halvt minutt og er ikke smertefulle.',
+    g: 'Kynnere skiller seg fra rier ved at de er uregelmessige, ikke øker i intensitet, og gjerne letter når du endrer stilling eller legger deg ned.'
+  },
+  34: {
+    m: 'Fosteret veier ca. 2300 gram. De fleste indre organer er ferdig utviklet – unntatt lungene, som trenger mer tid. Fosteret gjør pusteøvelser med fostervann som forberedelse. Det hører hjerteslag, tarmlyder og pust fra kroppen din.',
+    k: 'Kroppen jobber hardt nå. Det er normalt å kjenne seg tung og sliten – ta det i ditt tempo.',
+    g: 'Sjekk at du har pakket alt til sykehusvesken. Er bilstolen montert og testet?'
+  },
+  35: {
+    m: 'Fosteret veier ca. 2500 gram. Mengden fostervann avtar gradvis, men du skal fortsatt kjenne like mye bevegelser. Fosteret svelger fostervann – dette er grunnen til at det første avføringen etter fødsel er mørk og klebrig (barnebek).',
+    k: 'Det kan bli vanskeligere å finne en behagelig hvilestilling. Prøv å ligge på siden med en pute mellom beina og under magen.',
+    g: 'Snakk med arbeidsgiveren om siste arbeidsdag og overgang til permisjon.'
   },
   36: {
-    m: 'Jordmor sjekker fosterleiet nå. RSV-vaksinen kan senest tas uke 36 – siste sjanse.',
-    k: 'Magen kan kjennes lettere – babyen har sunket litt ned. Du er nesten i mål.',
-    g: 'Sørg for at sykehusvesken er ferdig og bilstolen er på plass. Dere er klare.'
+    m: 'Svangerskapskontroll uke 36. Jordmor sjekker fosterleiet – de fleste ligger med hodet ned. Seteleie? Da henvises du til fødepoliklinikk. Dere snakker om fødsel, hjemmebesøk fra jordmor og oppfølging fra helsestasjonen. RSV-vaksine – siste sjanse.',
+    k: 'Livmoren presser på urinblæren – vanligere å tisse. Det kan lekke råmelk fra brystene. Humørsvingninger er normalt. Det er lov å både glede seg og grue seg.',
+    g: 'Sørg for at sykehusvesken er ferdig pakket og bilstolen er montert. Dere er klare.'
+  },
+  37: {
+    m: 'Fosteret regnes nå som fullbårent. Det veier ca. 2700–3200 gram og er 48–52 cm. Hjernen er i stor grad ferdig utviklet. Lungene er blant de siste organene som modnes.',
+    k: 'Livmorhalsen mykes opp og kynnerne kan bli hyppigere. Slimproppen kan løsne – de fleste merker det ikke, og det sier ingenting om når fødselen starter.',
+    g: 'Tegn på fødsel: regelmessige rier, vannavgang eller blødning. Ring fødeavdelingen ved vannavgang eller rier hvert 5. minutt i én time.'
+  },
+  38: {
+    m: 'Svangerskapskontroll uke 38. Blodtrykk, urin, fosterleie og hjerteslag sjekkes. God anledning til å ta opp spørsmål du sitter med.',
+    k: 'Søvnen forstyrres gjerne mer nå. Det er normalt å kjenne på en blanding av spenning, utålmodighet og uro.',
+    g: 'Sjekk at du vet veien til fødeavdelingen og hvem du skal ringe. Ha telefonen ladet.'
+  },
+  39: {
+    m: 'Fosteret er ferdig utviklet. Vekten varierer mye – alt fra 2700 til 4500 gram er normalt. Hud-mot-hud-kontakt etter fødsel hjelper babyen å regulere temperatur, gråter mindre og gir ammingen en god start.',
+    k: 'Kynnerne kan komme oftere og kjennes mer intense. Husk: de er uregelmessige og letter ved stillingsbytte. Rier er regelmessige og øker i styrke.',
+    g: 'Alt er klart. Hvil så godt du kan. Du er klar.'
   },
   40: {
-    m: 'Du er ved termin. Kontrollene blir hyppigere nå. Si alltid fra dersom du merker endring i bevegelsene.',
-    k: 'Babyen beveger seg fortsatt like mye – selv om det kjennes annerledes tett inntil termin.',
-    g: 'Dra til fødeavdelingen ved regelmessige rier (ca. hvert 5. minutt i én time) eller vannavgang.'
+    m: 'Svangerskapskontroll uke 40. Du er ved termin – men bare 5 % føder på eksakt termindato. Kontrollene er hyppigere nå. Si alltid fra ved endring i bevegelsesmønsteret.',
+    k: 'Babyen beveger seg fortsatt like mye, selv om det kjennes annerledes. Kjenn etter daglig.',
+    g: 'Dra til fødeavdelingen ved regelmessige rier (ca. hvert 5. minutt i én time), vannavgang, eller blødning.'
+  },
+  41: {
+    m: 'Svangerskapskontroll uke 41 – på sykehuset. Ultralyd sjekker fostervannsmengde, blodgjennomstrømming i navlesnor og vekstestimat. Helsepersonell vurderer i samarbeid med deg om fødsel bør settes i gang.',
+    k: 'Det er normalt å passere termin. Mange føder i uke 41. Hold kontakten med fødeavdelingen.',
+    g: 'Settes fødsel ikke i gang nå, anbefales det senest i uke 42. Du bestemmer i samarbeid med helsepersonell.'
+  },
+  42: {
+    m: 'Det anbefales igangsetting av fødsel senest i uke 42, i samarbeid med deg og helsepersonell.',
+    k: 'Babyen beveger seg fortsatt. Si alltid fra ved endring i bevegelsene – ring fødeavdelingen.',
+    g: 'Du er i trygge hender. Ring fødeavdelingen ved usikkerhet – det er alltid greit å ta kontakt.'
   }
 };
 
@@ -834,9 +1149,7 @@ function buildCL(showAll) {
   return result;
 }
 
-var CL_DATA = []; // bygges i init()
-
-cl = CL.map(c => c.i.map(() => ({ d: false, n: false })));
+var CL_DATA = []; // bygges i rCL()
 
 // ── HJELPEFUNKSJONER ───────────────────────────────────
 function gF(w) {
@@ -945,26 +1258,13 @@ function lN() {
   db[TODAY] = d;
   deb();
 }
-function lP() {
-  pd.n = document.getElementById('pn').value;
-  pd.e = document.getElementById('pe').value;
-  deb();
-}
-function lBr() {
-  bd.s = document.getElementById('fs').selectedIndex;
-  bd.a = document.getElementById('fa').selectedIndex;
-  bd.h = document.getElementById('fh').selectedIndex;
-  bd.t = document.getElementById('ft').value;
-  bd.an = document.getElementById('fan').value;
-  deb();
-}
 function deb() {
   clearTimeout(saveTimer);
   saveTimer = setTimeout(lagre, 600);
 }
 function lagre() {
   try {
-    localStorage.setItem('sammen-v1', JSON.stringify({ U, db, cl, oc, pd, bd }));
+    localStorage.setItem('sammen-v1', JSON.stringify({ U, db, cl, oc }));
     flash();
   } catch (e) { console.warn('Lagring feilet', e); }
 }
@@ -974,8 +1274,84 @@ function flash() {
   setTimeout(() => t.classList.remove('vis'), 1600);
 }
 
+// ── ONBOARDING ─────────────────────────────────────────
+var OB = {
+  termin: null,      // ISO date string
+  ukeModus: false,   // bruker vet uke, ikke termin
+  prefs: {}          // valgte preferanser
+};
+
+function obGå(steg) {
+  if (steg === 4) {
+    // Vis ferdig-skjerm med frukt og uke
+    var uke = obBeregnUke();
+    var f = gF(uke);
+    document.getElementById('ob-frukt-emoji').textContent = f.e;
+    document.getElementById('ob-ferdig-uke').textContent = 'Uke ' + uke;
+    document.getElementById('ob-ferdig-navn').textContent = f.n;
+    document.getElementById('ob-ferdig-tekst').textContent = f.d;
+  }
+  for (var i = 1; i <= 4; i++) {
+    document.getElementById('ob' + i).classList.toggle('skjult', i !== steg);
+  }
+}
+
+function obSjekkTermin() {
+  var val = document.getElementById('ob-termin').value;
+  OB.termin = val || null;
+  document.getElementById('ob2-btn').disabled = !val;
+}
+
+function obVisUkeModus() { /* ikke i bruk */ }
+function obOppdaterUke() { /* ikke i bruk */ }
+
+function obTogglePref(key) {
+  OB.prefs[key] = !OB.prefs[key];
+  var el = document.getElementById('pref-' + key);
+  var cb = document.getElementById('cb-' + key);
+  el.classList.toggle('on', OB.prefs[key]);
+  cb.innerHTML = OB.prefs[key]
+    ? '<svg width="11" height="11" viewBox="0 0 11 11"><polyline points="1.5,5.5 4.5,8.5 9.5,2.5" stroke="white" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+    : '';
+}
+
+function obBeregnUke() {
+  if (OB.termin) {
+    var termin = new Date(OB.termin);
+    var naa = new Date();
+    var ukerIgjen = (termin - naa) / (7 * 24 * 60 * 60 * 1000);
+    var uke = Math.round(40 - ukerIgjen);
+    return Math.min(42, Math.max(4, uke));
+  }
+  return 20;
+}
+
+function obFerdig() {
+  U = obBeregnUke();
+  if (OB.termin) {
+    localStorage.setItem('sammen-termin', OB.termin);
+  }
+  localStorage.setItem('sammen-prefs', JSON.stringify(OB.prefs));
+  localStorage.setItem('sammen-onboarding', 'done');
+
+  // Lagre all state inkludert riktig U
+  lagre();
+
+  // Skjul onboarding
+  for (var i = 1; i <= 4; i++) {
+    document.getElementById('ob' + i).classList.add('skjult');
+  }
+
+  sU(U, false);
+  bUI();
+  rCL(true);
+}
+
 // ── INIT ───────────────────────────────────────────────
 function init() {
+  // Sjekk om onboarding er fullført
+  var onboardingDone = localStorage.getItem('sammen-onboarding') === 'done';
+
   try {
     var raw = localStorage.getItem('sammen-v1');
     if (raw) {
@@ -984,25 +1360,22 @@ function init() {
       if (x.db) db = x.db;
       if (x.cl) cl = x.cl;
       if (x.oc) oc = x.oc;
-      if (x.pd) {
-        pd = x.pd;
-        document.getElementById('pn').value = pd.n || '';
-        document.getElementById('pe').value = pd.e || '';
-      }
-      if (x.bd) {
-        bd = x.bd;
-        document.getElementById('fs').selectedIndex = bd.s || 0;
-        document.getElementById('fa').selectedIndex = bd.a || 0;
-        document.getElementById('fh').selectedIndex = bd.h || 0;
-        document.getElementById('ft').value = bd.t || '';
-        document.getElementById('fan').value = bd.an || '';
-      }
     }
   } catch (e) { console.warn('Innlasting feilet', e); }
-  sU(U, false);
-  bUI();
-  document.getElementById('dn').value = (db[TODAY] || {}).n || '';
-  rCL(true);
+
+  if (onboardingDone) {
+    // Hopp over onboarding – skjul alle ob-skjermer
+    for (var i = 1; i <= 4; i++) {
+      document.getElementById('ob' + i).classList.add('skjult');
+    }
+    sU(U, false);
+    bUI();
+    document.getElementById('dn').value = (db[TODAY] || {}).n || '';
+    rCL(true);
+  } else {
+    // Vis onboarding steg 1
+    obGå(1);
+  }
 }
 
 // ── DAGBOK ─────────────────────────────────────────────
@@ -1094,35 +1467,6 @@ function tI(id) { var s = cl[id] || {d:false,n:false}; if (!s.n) { s.d = !s.d; c
 function tN(id) { var s = cl[id] || {d:false,n:false}; s.n = !s.n; if (s.n) s.d = false; cl[id] = s; rCL(true); lagre(); }
 
 // ── ØNSKEBREV ──────────────────────────────────────────
-function gB() {
-  var so = ['Vil ta det som det kommer', 'Ønsker epidural', 'Vil prøve lystgass', 'Ønsker minst mulig medisinsk smertelindring', 'Vannfødsel'];
-  var ao = ['Ønsker å amme', 'Planlegger morsmelkerstatning', 'Vil bestemme meg etter fødselen'];
-  var ho = ['Ja, gjerne så snart som mulig', 'Ja, men barnets helse går alltid først', 'Partner tar over hvis jeg ikke kan'];
-  var til = document.getElementById('ft').value || 'partneren min';
-  var an = document.getElementById('fan').value;
-  var txt = 'Til fødeavdelingen\n\n';
-  txt += 'Jeg ønsker å dele noen tanker om hva som er viktig for meg under fødselen. Jeg vet at dere alltid gjør det som er best for meg og babyen – dette er ønsker, ikke krav.\n\n';
-  txt += 'Smertelindring\n' + so[document.getElementById('fs').selectedIndex] + '.\n\n';
-  txt += 'Amming\n' + ao[document.getElementById('fa').selectedIndex] + '.\n\n';
-  txt += 'Hud-mot-hud\n' + ho[document.getElementById('fh').selectedIndex] + '.\n\n';
-  txt += 'Til stede under fødselen\nJeg ønsker at ' + til + ' er hos meg.';
-  if (an) txt += '\n\nAndre tanker\n' + an;
-  document.getElementById('bt2').textContent = txt;
-  document.getElementById('bo').style.display = 'block';
-}
-
-function kB() {
-  navigator.clipboard.writeText(document.getElementById('bt2').textContent).then(() => {
-    var b = document.querySelector('#bo .obtn');
-    b.textContent = 'Kopiert!';
-    setTimeout(() => b.textContent = 'Kopier tekst', 2000);
-  }).catch(() => {
-    var el = document.getElementById('bt2');
-    el.select && el.select();
-    document.execCommand && document.execCommand('copy');
-  });
-}
-
 // ── START ──────────────────────────────────────────────
 init();
 </script>
