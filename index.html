@@ -810,26 +810,39 @@ var oc = {};       // åpne kategorier
 
 // ── DATA ───────────────────────────────────────────────
 var FD = {
-  4:  { e: '🌱', n: 'Valmuefrø',   c: '0.2 cm',    g: '< 1 g',     d: 'Celledelingen er i full gang. Utrolig egentlig.' },
-  6:  { e: '🍒', n: 'Kirsebær',    c: '0.6 cm',    g: '< 1 g',     d: 'Det lille hjertet begynner å slå.' },
-  8:  { e: '🍓', n: 'Jordbær',     c: '1.6 cm',    g: '1 g',       d: 'Armer og ben er i ferd med å ta form.' },
-  10: { e: '🍑', n: 'Aprikos',     c: '3.1 cm',    g: '4 g',       d: 'Alle de viktige organene er på plass.' },
-  12: { e: '🍋', n: 'Sitron',      c: '5.4 cm',    g: '14 g',      d: '1. trimester nesten ferdig. Risikoen for spontanabort synker markant.' },
-  14: { e: '🍊', n: 'Appelsin',    c: '8.7 cm',    g: '43 g',      d: '2. trimester – velkommen! Nyrene er i gang.' },
-  16: { e: '🥑', n: 'Avokado',     c: '11.6 cm',   g: '100 g',     d: 'Snart kan du kjenne de første bevegelsene.' },
-  18: { e: '🥦', n: 'Brokkoli',    c: '14.2 cm',   g: '190 g',     d: 'Babyen hører stemmen din. Nervesystemet vokser raskt.' },
-  20: { e: '🍌', n: 'Banan',       c: '25 cm',     g: '300 g',     d: 'Halvveis! Babyen kjenner berøring og hører lyder.' },
-  22: { e: '🌽', n: 'Mais',        c: '27.8 cm',   g: '430 g',     d: 'Øyenvippene er på plass. Grepet er allerede sterkt.' },
-  24: { e: '🫛', n: 'Maiskolbe',   c: '30 cm',     g: '600 g',     d: 'Med medisinsk hjelp er babyen nå levedyktig utenfor livmoren.' },
-  26: { e: '🥒', n: 'Agurk',       c: '35.6 cm',   g: '760 g',     d: 'Øynene åpner seg for første gang denne uken.' },
-  28: { e: '🥬', n: 'Kinakål',     c: '37.6 cm',   g: '1 005 g',   d: '3. trimester – innspurten! Fra nå er daglig bevegelsestelling fint.' },
-  30: { e: '🎃', n: 'Gresskar',    c: '39.9 cm',   g: '1 319 g',   d: 'Beinmargene produserer egne røde blodceller nå.' },
-  32: { e: '🍍', n: 'Ananas',      c: '42.4 cm',   g: '1 702 g',   d: 'Neglene er vokst helt til fingertuppen.' },
-  34: { e: '🍈', n: 'Melon',       c: '45 cm',     g: '2 146 g',   d: 'Lungene er nesten ferdig modnet.' },
-  36: { e: '🥬', n: 'Salathode',   c: '47.4 cm',   g: '2 622 g',   d: 'Babyen har lagt seg i hodeleie. Nesten klar.' },
-  38: { e: '🍐', n: 'Stor pære',   c: '49.8 cm',   g: '3 083 g',   d: 'Hjernen og lungene jobber på spreng med siste finpuss.' },
-  40: { e: '🎉', n: 'Termin!',     c: 'ca. 51 cm', g: 'ca. 3 400 g', d: 'Fullt utviklet og klar. Dere har klart det!' },
-  42: { e: '🌟', n: 'Snart nå!',   c: 'ca. 52 cm', g: 'ca. 3 600 g', d: 'Noen trenger litt ekstra tid. Ta kontakt med jordmor.' }
+  4:  { e: '🌱', n: 'Fosteranlegg',  c: 'noen mm',   g: '< 1 g',      d: 'Fester seg i livmorslimhinnen. Cellene deler seg raskt.' },
+  6:  { e: '🫐', n: 'Blåbær',        c: 'ca. 5 mm',  g: '< 1 g',      d: 'Hjertet begynner å slå. Anlegg til armer og bein dannes.' },
+  8:  { e: '🍓', n: 'Jordbær',       c: 'ca. 1,5 cm', g: 'ca. 1 g',   d: 'Ansiktet tar form. Hjertet fyller store deler av brysthulen.' },
+  10: { e: '🍑', n: 'Aprikos',       c: 'ca. 3 cm',  g: 'ca. 4 g',    d: 'Hodet er omtrent like stort som resten av kroppen. Øynene flytter seg mot riktig plass.' },
+  12: { e: '🍋', n: 'Sitron',        c: 'ca. 5 cm',  g: 'ca. 16 g',   d: 'Ligner mer og mer på et menneske. Alle organene er anlagt og vokser videre.' },
+  13: { e: '🍈', n: 'Liten melon',   c: 'ca. 6–7 cm', g: 'ca. 40 g',  d: 'Morkaken er ferdig utviklet. Fra nå er det morkaken som gir fosteret næring.' },
+  14: { e: '🍊', n: 'Appelsin',      c: 'ca. 8 cm',  g: 'ca. 43 g',   d: 'Fine hår vokser på kroppen. Fosteret kan hikke og svelger fostervann.' },
+  15: { e: '🥝', n: 'Kiwi',          c: 'ca. 10 cm', g: 'ca. 90 g',   d: 'Suger på fingrene – trener sugerefleksen til etter fødsel.' },
+  16: { e: '🥑', n: 'Avokado',       c: 'ca. 11–12 cm', g: 'ca. 120 g', d: 'Skjelettet blir hardere. Bevegelsene er mer koordinerte.' },
+  17: { e: '🍐', n: 'Pære',          c: 'ca. 13 cm', g: 'ca. 160 g',  d: 'Kroppen vokser raskere enn hodet nå. Bevegelsene blir større og mer målrettede.' },
+  18: { e: '🥦', n: 'Brokkoli',      c: 'ca. 14 cm', g: 'ca. 200 g',  d: 'Huden dekkes av et hvitt fettlag som beskytter den i fostervannet.' },
+  19: { e: '🥭', n: 'Mango',         c: 'ca. 15 cm', g: 'ca. 235 g',  d: 'Fosteret kan hikke – noen kjenner det som rytmiske dunk.' },
+  20: { e: '🍌', n: 'Banan',         c: 'ca. 25 cm', g: 'ca. 300 g',  d: 'Halvveis! Kan gjøre grimaser og suge på tommelen.' },
+  21: { e: '🌽', n: 'Maiskolbe',     c: 'ca. 26 cm', g: 'ca. 400 g',  d: 'Tenner dannes i tannkjøttet. Nervecellene i hjernen kobler seg til hverandre.' },
+  22: { e: '🫑', n: 'Paprika',       c: 'ca. 27 cm', g: 'ca. 475 g',  d: 'Lungene og luftveiene utvikler seg. Bukspyttkjertelen produserer insulin.' },
+  23: { e: '🍆', n: 'Aubergine',     c: 'ca. 28 cm', g: 'ca. 575 g',  d: 'Har våkne og sovende perioder – og kan antagelig drømme.' },
+  24: { e: '🌽', n: 'Mais',          c: 'ca. 30 cm', g: 'ca. 650 g',  d: 'Gjør tydelige pusteøvelser med fostervann som forberedelse til livet utenfor.' },
+  25: { e: '🥒', n: 'Agurk',         c: 'ca. 32 cm', g: 'ca. 750 g',  d: 'Hører hjerteslag, pust og stemmer utenfra. Hørselen utvikler seg raskt.' },
+  26: { e: '🫛', n: 'Ertebelg',      c: 'ca. 35 cm', g: 'ca. 900 g',  d: 'Øver seg på å åpne og lukke øynene. De store organene tar form.' },
+  27: { e: '🥬', n: 'Salat',         c: 'ca. 36 cm', g: 'ca. 1 000 g', d: 'Kan begynne å åpne øynene for første gang. Synet modnes videre etter fødsel.' },
+  28: { e: '🥬', n: 'Kinakål',       c: 'ca. 37 cm', g: 'ca. 1 150 g', d: 'Har tydelige perioder med aktivitet og hvile. Kan skvette ved plutselige lyder.' },
+  29: { e: '🎃', n: 'Liten gresskar', c: 'ca. 38 cm', g: 'ca. 1 300 g', d: 'Går inn i en fase med økt vekst – fra å være langt og smalt til å legge på seg i bredden.' },
+  30: { e: '🥥', n: 'Kokosnøtt',     c: 'ca. 39 cm', g: 'ca. 1 450 g', d: 'Blodforsyningen til øyet utvikler seg. Etter fødsel vil den nyfødte forsøke å møte blikket ditt.' },
+  31: { e: '🍍', n: 'Ananas',        c: 'ca. 40 cm', g: 'ca. 1 650 g', d: 'Ligner nå et nyfødt barn. Kan sannsynligvis kjenne igjen lyder fra utsiden av livmoren.' },
+  32: { e: '🍈', n: 'Melon',         c: 'ca. 42 cm', g: 'ca. 1 850 g', d: 'Det blir gradvis mindre plass, men det skal fortsatt være godt med fostervann.' },
+  33: { e: '🎃', n: 'Gresskar',      c: 'ca. 43 cm', g: 'ca. 2 050 g', d: 'Vokser i både lengde og bredde. Kan sannsynligvis oppfatte forskjellen mellom lys og mørke.' },
+  34: { e: '🍉', n: 'Vannmelon',     c: 'ca. 45 cm', g: 'ca. 2 300 g', d: 'Gjør pusteøvelser med fostervann. Hører hjerteslag og tarmlyder fra kroppen din.' },
+  35: { e: '🎃', n: 'Stor gresskar', c: 'ca. 46 cm', g: 'ca. 2 500 g', d: 'Fostervann avtar, men du skal fortsatt kjenne like mye bevegelser.' },
+  36: { e: '🍉', n: 'Stor vannmelon', c: 'ca. 47 cm', g: 'ca. 2 600–2 750 g', d: 'Hjernen er i stor grad ferdig utviklet. Har tydelige søvn- og våkneperioder.' },
+  37: { e: '🎉', n: 'Fullbårent!',   c: 'ca. 48–52 cm', g: 'ca. 2 700–3 200 g', d: 'Regnes nå som fullbårent. De fleste ligger med hodet ned mot fødselskanalen.' },
+  38: { e: '🎉', n: 'Snart klar',    c: 'ca. 49–52 cm', g: 'ca. 3 000–3 400 g', d: 'Lungene er blant de siste organene som modnes – de fortsetter helt frem mot fødsel.' },
+  40: { e: '🌟', n: 'Termin!',       c: 'ca. 50–55 cm', g: 'ca. 3 200–4 000 g', d: 'Fullt utviklet og klar. Bare 5 % føder på eksakt termindato – dere er klare når dere er klare.' },
+  42: { e: '🌟', n: 'Snart nå!',     c: 'ca. 51–55 cm', g: 'ca. 3 400–4 500 g', d: 'Noen trenger litt ekstra tid. Du følges tett av helsepersonell.' }
 };
 
 var TP = {
@@ -1177,10 +1190,8 @@ function sU(n, sv) {
   var f = gF(n);
   document.getElementById('fk').innerHTML =
     '<div class="fcard">' +
-    '<div class="fwrap">' + f.e + '</div>' +
     '<div class="fi">' +
-    '<div class="fsub">Uke ' + n + '</div>' +
-    '<div class="fnavn">' + f.n + '</div>' +
+    '<div class="fsub">Uke ' + n + ' · ' + (n <= 13 ? '1. trimester' : n <= 27 ? '2. trimester' : '3. trimester') + '</div>' +
     '<div class="fmaal">' +
     '<div><div class="fmv">' + f.c + '</div><div class="fml">lengde</div></div>' +
     '<div><div class="fmv">' + f.g + '</div><div class="fml">vekt</div></div>' +
