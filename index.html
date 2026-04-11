@@ -274,8 +274,8 @@ html, body {
 
 /* Kjenn liv preview på hjem */
 .hjem-kl-card {
-  background: #eff6ff;
-  border: 1px solid #bfdbfe;
+  background: var(--grn-l);
+  border: 1px solid var(--grn-b);
   border-radius: var(--radius);
   padding: 16px;
   cursor: pointer;
@@ -283,8 +283,8 @@ html, body {
   transition: opacity 0.15s;
 }
 .hjem-kl-card:active { opacity: 0.85; }
-.hjem-kl-tittel { font-size: 15px; font-weight: 600; color: #2563eb; margin-bottom: 3px; }
-.hjem-kl-sub { font-size: 13px; color: #64748b; }
+.hjem-kl-tittel { font-size: 15px; font-weight: 600; color: var(--grn-d); margin-bottom: 3px; }
+.hjem-kl-sub { font-size: 13px; color: var(--grn); }
 
 /* ── SJEKKLISTE ── */
 .side-header {
@@ -784,21 +784,45 @@ html, body {
 <div class="pane on" id="ph">
   <div class="hjem-hero" id="hjem-hero">
     <div class="hjem-label">SVANGERSKAPET DITT</div>
-    <div class="hjem-uke-row">
-      <div class="hjem-uke" id="hjem-uke-tall">29</div>
-      <span class="hjem-uke-plus" id="hjem-uke-dager-plus"></span>
-      <div class="hjem-uke-nav">
-        <button class="uke-btn" onclick="justerUke(1)" aria-label="Neste uke">▲</button>
-        <button class="uke-btn" onclick="justerUke(-1)" aria-label="Forrige uke">▼</button>
+    <div style="display:flex;align-items:center;margin-bottom:2px">
+      <div style="flex:1;display:flex;align-items:center;gap:10px">
+        <div class="hjem-uke" id="hjem-uke-tall">29</div>
+        <span class="hjem-uke-plus" id="hjem-uke-dager-plus"></span>
+        <div class="hjem-uke-nav">
+          <button class="uke-btn" onclick="justerUke(1)" aria-label="Neste uke">▲</button>
+          <button class="uke-btn" onclick="justerUke(-1)" aria-label="Forrige uke">▼</button>
+        </div>
+        <span class="lagret" id="lt">lagret</span>
       </div>
-      <span class="lagret" id="lt">lagret</span>
+      <!-- Fremdriftssirkel – sentrert i høyre halvdel -->
+      <div style="flex:1;display:flex;justify-content:center;align-items:center">
+        <div style="position:relative;width:64px;height:64px">
+          <svg width="64" height="64" viewBox="0 0 64 64" style="transform:rotate(-90deg)">
+            <circle cx="32" cy="32" r="26" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="5"/>
+            <circle id="prog-sirkel" cx="32" cy="32" r="26" fill="none" stroke="var(--grn)" stroke-width="5"
+              stroke-linecap="round"
+              stroke-dasharray="163.4"
+              stroke-dashoffset="163.4"/>
+          </svg>
+          <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center">
+            <div id="prog-pst" style="font-size:13px;font-weight:700;color:var(--text);line-height:1">0%</div>
+            <div style="font-size:9px;color:var(--text-2);margin-top:1px">ferdig</div>
+          </div>
+        </div>
+      </div>
     </div>
     <div class="hjem-dager" id="hjem-dager"></div>
+    <div id="hjem-tilbake-uke" style="display:none;margin-bottom:12px">
+      <button onclick="tilbakeTilNaa()"
+        style="background:rgba(0,0,0,0.12);border:none;border-radius:20px;padding:5px 14px;font-size:12px;font-weight:500;color:var(--text);font-family:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent">
+        ← Tilbake til uke <span id="hjem-naavaerende-uke"></span>
+      </button>
+    </div>
 
     <div class="hjem-baby-kort">
-      <div class="hjem-baby-label">Babyen din er omtrent som</div>
-      <div class="hjem-baby-navn" id="hjem-baby-navn"></div>
-      <div class="hjem-baby-desc" id="hjem-baby-desc"></div>
+      <div id="hjem-baby-id" style="font-size:20px;font-weight:600;margin-bottom:8px;min-height:0"></div>
+      <div class="hjem-baby-label">Uke <span id="hjem-baby-uke"></span> · <span id="hjem-baby-tri"></span></div>
+      <div class="hjem-baby-desc" id="hjem-baby-desc" style="font-size:15px;font-weight:500;color:var(--text-2);margin-bottom:6px"></div>
       <div class="hjem-baby-maal">
         <div class="hjem-baby-maal-item">Lengde <span id="hjem-baby-c"></span></div>
         <div class="hjem-baby-maal-item">Vekt <span id="hjem-baby-g"></span></div>
@@ -843,6 +867,10 @@ html, body {
   <div class="side-header">
     <div class="side-tittel">Sjekkliste</div>
   </div>
+
+  <!-- Motiverende oversikt -->
+  <div id="cl-motivasjon" style="margin:0 20px 16px;background:var(--bg-card);border-radius:var(--radius);border:1px solid var(--border);padding:16px"></div>
+
   <div class="cl-progress-card">
     <div class="cl-progress-label">
       <span id="cl-prog-navn">–</span>
@@ -863,7 +891,66 @@ html, body {
   </div>
   <div class="kl-body">
     <div id="kl-innhold"></div>
-    <div class="kl-advarsel">Kjenn du ikke bevegelse på over 2 timer, eller merker tydelig endring i mønster – er det alltid greit å ringe jordmor eller fødeavdelingen. Det er ingen dum grunn å ringe.</div>
+    <div id="kl-advarsel-boks"></div>
+    <div style="margin-top:12px;display:flex;flex-direction:column;gap:8px">
+      <button onclick="visBevegelseInfo()" style="background:none;border:none;font-size:13px;color:var(--grn);text-decoration:underline;text-underline-offset:3px;cursor:pointer;font-family:inherit;padding:0;text-align:left">
+        Les om babyens bevegelser og tips for telling →
+      </button>
+      <button onclick="visBevegelseUsikker()" style="background:none;border:none;font-size:13px;color:var(--grn);text-decoration:underline;text-underline-offset:3px;cursor:pointer;font-family:inherit;padding:0;text-align:left">
+        Er du usikker på om babyen beveger seg nok? →
+      </button>
+    </div>
+
+    <!-- Info modal: babyens bevegelser -->
+    <div id="bev-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:200;overflow-y:auto">
+      <div style="background:var(--bg-card);border-radius:20px 20px 0 0;position:absolute;bottom:0;left:0;right:0;max-width:430px;margin:0 auto;padding:24px 24px 48px;max-height:90vh;overflow-y:auto">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+          <div style="font-size:18px;font-weight:700">Babyens bevegelser</div>
+          <button onclick="document.getElementById('bev-modal').style.display='none'" style="background:none;border:none;font-size:22px;color:var(--text-3);cursor:pointer;line-height:1">×</button>
+        </div>
+        <div style="font-size:14px;color:var(--text-2);line-height:1.75">
+          <p style="margin-bottom:14px">Gravide kvinner skal kjenne at det er liv i magen hver dag, flere ganger i døgnet, frem til fødselen. At babyen beveger seg gir deg trygghet om at barnet har det bra.</p>
+
+          <div style="font-size:13px;font-weight:700;color:var(--text);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:8px">Når bør du begynne å telle?</div>
+          <p style="margin-bottom:14px">Fra svangerskapsuke 28. Du kan gjerne begynne litt tidligere, men babyens bevegelser er vanligvis ikke regelmessige før i uke 28.</p>
+
+          <div style="font-size:13px;font-weight:700;color:var(--text);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:8px">Finn riktig tidspunkt</div>
+          <p style="margin-bottom:14px">Velg en periode på dagen når babyen er våken – for mange er kvelden eller tidlig morgen en god tid. Du trenger ikke gjøre dette til en fast tid hver dag. Det viktigste er at babyen er våken, for den vil vanligvis ikke bevege seg mens den sover.</p>
+
+          <div style="background:var(--grn-l);border-radius:12px;padding:14px;margin-bottom:14px">
+            <div style="font-size:13px;font-weight:600;color:var(--grn-d);margin-bottom:6px">💡 Tips for telling</div>
+            <div style="font-size:13px;color:var(--text-2);line-height:1.7">Legg deg gjerne ned på siden – da er blodgjennomstrømningen best i livmoren og morkaken. Du merker bevegelsene bedre når du ligger enn når du er i aktivitet. Konsentrer deg om bevegelsene i omtrent 15 minutter. Du kjenner selv om du trenger lengre eller kortere tid.</div>
+          </div>
+
+          <p style="font-size:13px;color:var(--text-2);line-height:1.7">For noen er det nok å registrere babyens bevegelser mentalt, mens andre har nytte av å notere ned spark og bevegelser mer systematisk. Gjør gjerne dette hver dag og vær oppmerksomt til stede når du følger med på bevegelsene.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Usikker modal -->
+    <div id="bev-usikker-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:200;overflow-y:auto">
+      <div style="background:var(--bg-card);border-radius:20px 20px 0 0;position:absolute;bottom:0;left:0;right:0;max-width:430px;margin:0 auto;padding:24px 24px 48px;max-height:90vh;overflow-y:auto">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+          <div style="font-size:18px;font-weight:700">Er du usikker på bevegelsene?</div>
+          <button onclick="document.getElementById('bev-usikker-modal').style.display='none'" style="background:none;border:none;font-size:22px;color:var(--text-3);cursor:pointer;line-height:1">×</button>
+        </div>
+        <div style="font-size:14px;color:var(--text-2);line-height:1.75">
+          <p style="margin-bottom:14px">Hvis du er usikker på om babyen beveger seg mindre enn vanlig – legg deg ned på venstre side, uten telefon eller andre distraksjoner. Du kan legge noe som vibrerer forsiktig på magen, for eksempel en barbermaskin. Fokuser på bevegelsene i én til to timer, gjerne på et tidspunkt babyen vanligvis er aktiv.</p>
+
+          <div style="background:var(--bg);border-radius:12px;padding:14px;margin-bottom:14px">
+            <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:8px">📞 Ring fødeavdelingen hvis:</div>
+            <div style="font-size:13px;color:var(--text-2);line-height:1.8">
+              <div style="margin-bottom:4px">• Du ikke kjenner bevegelser i løpet av to timer</div>
+              <div style="margin-bottom:4px">• Du kjenner færre enn ti bevegelser på to timer</div>
+              <div style="margin-bottom:4px">• Du er fortsatt urolig eller usikker på bevegelsesmønsteret</div>
+            </div>
+          </div>
+
+          <p style="margin-bottom:10px">Hvis du etter tellingen kjenner godt med bevegelser og er beroliget, trenger du ikke kontakte fødeavdelingen.</p>
+          <p style="font-size:12px;color:var(--text-3)">Ikke bruk apparater hjemme for å lytte på babyens hjertelyd – disse gir ikke pålitelig informasjon.</p>
+        </div>
+      </div>
+    </div>
     <div class="kl-notat-wrap">
       <label class="kl-notat-label">Notat for i dag</label>
       <textarea class="kl-notat" id="dn" rows="3" placeholder="Mye aktivitet etter middag..." oninput="lN()"></textarea>
@@ -899,6 +986,29 @@ html, body {
           <button id="profil-termin-lagre" onclick="lagreNyTermin()"
             style="opacity:0;transition:opacity 0.2s;background:var(--grn);color:white;border:none;border-radius:10px;padding:10px 16px;font-size:14px;font-weight:600;font-family:inherit;cursor:pointer">
             Lagre
+          </button>
+        </div>
+      </div>
+      <div style="margin-top:14px;border-top:1px solid var(--border);padding-top:14px">
+        <div class="profil-rl" style="margin-bottom:8px">Babyens navn (valgfritt)</div>
+        <input type="text" id="profil-baby-navn" placeholder="Legg inn navn..." maxlength="30"
+          style="width:100%;font-size:15px;padding:10px 12px;border:1px solid var(--border);border-radius:10px;background:var(--bg);color:var(--text);font-family:inherit;outline:none"
+          oninput="lagreBabyInfo()">
+      </div>
+      <div style="margin-top:14px;border-top:1px solid var(--border);padding-top:14px">
+        <div class="profil-rl" style="margin-bottom:10px">Kjønn</div>
+        <div style="display:flex;gap:10px">
+          <button onclick="velgKjonn('ukjent')" id="kjonn-ukjent"
+            style="flex:1;padding:10px;border-radius:10px;border:1.5px solid var(--border);background:var(--bg);font-size:12px;font-weight:500;font-family:inherit;cursor:pointer;transition:all 0.15s;color:var(--text-2)">
+            Vet ikke
+          </button>
+          <button onclick="velgKjonn('jente')" id="kjonn-jente"
+            style="flex:1;padding:10px;border-radius:10px;border:1.5px solid var(--border);background:var(--bg);font-size:22px;font-family:inherit;cursor:pointer;transition:all 0.15s">
+            👧
+          </button>
+          <button onclick="velgKjonn('gutt')" id="kjonn-gutt"
+            style="flex:1;padding:10px;border-radius:10px;border:1.5px solid var(--border);background:var(--bg);font-size:22px;font-family:inherit;cursor:pointer;transition:all 0.15s">
+            👦
           </button>
         </div>
       </div>
@@ -982,8 +1092,10 @@ var saveTimer = null;
 var db = {};
 var cl = {};
 var oc = {};
-var TERMIN = null;    // ISO date string
-var TERMIN_LENGDE = 283; // graviditetslengde i dager
+var TERMIN = null;
+var TERMIN_LENGDE = 283;
+var BABY_NAVN = '';
+var BABY_KJONN = 'ukjent'; // 'ukjent', 'jente', 'gutt'
 
 // ── DATA FD ───────────────────────────────────────────
 var FD = {
@@ -1175,7 +1287,7 @@ var ALL_ITEMS = [
   {id:'hospital_toiletries',title:'Toalettsaker',category:'sykehusveske',group:'Til barsel',week_from:39,week_to:40,optional:false,conditions:[],label:null},
   {id:'hypothyroidism_adjust_dose',title:'Juster Levaxin-dose ved graviditet',category:'medisinske_hensyn',group:'Lavt stoffskifte',week_from:4,week_to:8,optional:false,conditions:['hypothyroidism'],label:'Typisk 25–30 % økning'},
   {id:'hypothyroidism_tsh_monthly',title:'Kontroll av TSH – omtrent månedlig',category:'medisinske_hensyn',group:'Lavt stoffskifte',week_from:4,week_to:20,optional:false,conditions:['hypothyroidism'],label:null},
-  {id:'gdm_glucose_test',title:'Glukosebelastningstest',category:'svangerskapsoppfolging',group:'Undersøkelser',week_from:24,week_to:28,optional:true,conditions:[],label:'Hvis du er førstegangsfødende over 25 år eller har risiko for svangerskapsdiabetes'},
+  {id:'gdm_glucose_test',title:'Glukosebelastningstest',category:'svangerskapsoppfolging',group:'Undersøkelser',week_from:24,week_to:28,optional:true,conditions:[],label:'Testen brukes primært for å påvise svangerskapsdiabetes, vanligvis mellom svangerskapsuke 24–28. Tilbys hvis du er førstegangsfødende over 25 år eller har risiko for svangerskapsdiabetes'},
   {id:'c_section_birth_mode_conversation',title:'Samtale om fødselsmåte',category:'medisinske_hensyn',group:'Tidligere keisersnitt',week_from:30,week_to:36,optional:false,conditions:['previous_c_section'],label:null},
   {id:'twins_extra_ultrasounds',title:'Hyppigere ultralyder',category:'medisinske_hensyn',group:'Tvillinger',week_from:12,week_to:36,optional:false,conditions:['twins'],label:null},
   {id:'iron_supplement_if_needed',title:'Ta jerntilskudd ved behov',category:'medisinske_hensyn',group:'Lavt jernlager',week_from:12,week_to:40,optional:false,conditions:['low_iron'],label:null},
@@ -1244,6 +1356,16 @@ function oppdaterHjem() {
 
   document.getElementById('hjem-uke-tall').textContent = U;
 
+  // Fremdriftssirkel – basert på dager tilbakelagt av total graviditetslengde
+  var pst = TERMIN ? Math.min(100, Math.round((TERMIN_LENGDE - dagerIgjen(TERMIN)) / TERMIN_LENGDE * 100)) : Math.round((U - 4) / 38 * 100);
+  var sirkelEl = document.getElementById('prog-sirkel');
+  var pstEl = document.getElementById('prog-pst');
+  if (sirkelEl) {
+    var omkrets = 163.4;
+    sirkelEl.setAttribute('stroke-dashoffset', Math.round(omkrets - (pst / 100) * omkrets));
+  }
+  if (pstEl) pstEl.textContent = pst + '%';
+
   // + dager i uken (f.eks. 29+6)
   var plusEl = document.getElementById('hjem-uke-dager-plus');
   if (TERMIN && U === EKTE_U) {
@@ -1260,8 +1382,15 @@ function oppdaterHjem() {
     document.getElementById('hjem-dager').textContent = tri + (U !== EKTE_U ? ' · blar i uker' : '');
   }
 
-  document.getElementById('hjem-baby-navn').textContent = 'en ' + f.n.toLowerCase() + ' ' + f.e;
-  // Kun én setning fra d – ingen vekttall
+  var tri = U <= 13 ? '1. trimester' : U <= 27 ? '2. trimester' : '3. trimester';
+  document.getElementById('hjem-baby-uke').textContent = U;
+  document.getElementById('hjem-baby-tri').textContent = tri;
+
+  // Tilbake-knapp
+  var tilbakeEl = document.getElementById('hjem-tilbake-uke');
+  var naavEl = document.getElementById('hjem-naavaerende-uke');
+  if (tilbakeEl) tilbakeEl.style.display = (U !== EKTE_U) ? 'block' : 'none';
+  if (naavEl) naavEl.textContent = EKTE_U;
   document.getElementById('hjem-baby-desc').textContent = f.d;
   document.getElementById('hjem-baby-c').textContent = f.c;
   document.getElementById('hjem-baby-g').textContent = f.g;
@@ -1276,8 +1405,8 @@ function oppdaterHjem() {
   // Kjenn liv preview
   var d_today = db[TODAY] || {k:0};
   if (d_today.k >= 10) {
-    document.getElementById('hjem-kl-tittel').textContent = 'Alle 10 bevegelser i dag ✓';
-    document.getElementById('hjem-kl-sub').textContent = 'Godt jobbet!';
+    document.getElementById('hjem-kl-tittel').textContent = 'Flott! Babyen er aktiv i dag. ✓';
+    document.getElementById('hjem-kl-sub').textContent = '10 bevegelser registrert';
   } else if (d_today.k > 0) {
     document.getElementById('hjem-kl-tittel').textContent = d_today.k + ' av 10 bevegelser i dag';
     document.getElementById('hjem-kl-sub').textContent = 'Trykk for å fortsette tellingen';
@@ -1341,7 +1470,11 @@ function justerUke(delta) {
   var ny = Math.min(42, Math.max(4, U + delta));
   U = ny;
   oppdaterHjem();
-  // Ikke lagre – uke er kun visuell navigasjon
+}
+
+function tilbakeTilNaa() {
+  U = EKTE_U;
+  oppdaterHjem();
 }
 
 // ── KJENN LIV ─────────────────────────────────────────
@@ -1361,14 +1494,14 @@ function renderKL() {
       h += '<div class="kl-sirkel" onclick="startKL()">';
       h += '<div class="kl-baby-emoji">👶</div>';
       h += '</div>';
-      h += '<div class="kl-hint">Sett deg godt til rette og start tellingen når du er klar.</div>';
+      h += '<div class="kl-hint">Gjerne legg deg godt til rette og start tellingen når du er klar.</div>';
       h += '<button class="kl-btn start" onclick="startKL()">Start telling</button>';
     } else if (d.k >= 10) {
       h += '<div class="kl-sirkel aktiv">';
       h += '<div class="kl-tall">10</div>';
       h += '<div class="kl-bev-txt">bevegelser</div>';
       h += '</div>';
-      h += '<div class="kl-hint">Alle 10 registrert i dag. Godt jobbet!</div>';
+      h += '<div class="kl-hint">Flott! Babyen er aktiv i dag.</div>';
     } else {
       h += '<div class="kl-sirkel aktiv" onclick="startKL()">';
       h += '<div class="kl-tall">' + d.k + '</div>';
@@ -1408,7 +1541,7 @@ function startKL() {
   renderKL();
   // Oppdater tid hvert minutt
   if (window._klTimer) clearInterval(window._klTimer);
-  window._klTimer = setInterval(() => { if (KL_AKTIV) renderKL(); }, 60000);
+  window._klTimer = setInterval(() => { if (KL_AKTIV) { renderKL(); oppdaterAdvarsel(); } }, 60000);
 }
 
 function stoppKL() {
@@ -1417,6 +1550,76 @@ function stoppKL() {
   renderKL();
   lagre();
   oppdaterHjem();
+}
+
+function velgKjonn(k) {
+  BABY_KJONN = k;
+  var styles = {
+    ukjent: { border: 'var(--grn)', bg: 'var(--grn-l)' },
+    jente:  { border: '#e879a0', bg: '#fdf2f8' },
+    gutt:   { border: '#3b82f6', bg: '#eff6ff' }
+  };
+  ['ukjent','jente','gutt'].forEach(v => {
+    var btn = document.getElementById('kjonn-' + v);
+    if (v === k) {
+      btn.style.borderColor = styles[v].border;
+      btn.style.background = styles[v].bg;
+    } else {
+      btn.style.borderColor = 'var(--border)';
+      btn.style.background = 'var(--bg)';
+    }
+  });
+  lagreBabyInfo();
+}
+
+function lagreBabyInfo() {
+  var navn = document.getElementById('profil-baby-navn').value;
+  BABY_NAVN = navn;
+  localStorage.setItem('sammen-baby-navn', navn);
+  localStorage.setItem('sammen-baby-kjonn', BABY_KJONN);
+  oppdaterBabyId();
+}
+
+function oppdaterBabyId() {
+  var el = document.getElementById('hjem-baby-id');
+  if (!el) return;
+  var emoji = BABY_KJONN === 'jente' ? ' 👧' : BABY_KJONN === 'gutt' ? ' 👦' : ' 🌱';
+  var farge = BABY_KJONN === 'jente' ? '#c2185b' : BABY_KJONN === 'gutt' ? '#1d4ed8' : 'var(--grn-d)';
+
+  var tekst = '';
+  if (BABY_NAVN) {
+    tekst = BABY_NAVN + emoji;
+  } else if (BABY_KJONN === 'jente') {
+    tekst = 'Jenta di' + emoji;
+  } else if (BABY_KJONN === 'gutt') {
+    tekst = 'Gutten din' + emoji;
+  } else {
+    tekst = 'Babyen din' + emoji;
+  }
+
+  el.style.color = farge;
+  el.textContent = tekst;
+}
+
+function visBevegelseInfo() {
+  document.getElementById('bev-modal').style.display = 'block';
+}
+
+function visBevegelseUsikker() {
+  document.getElementById('bev-usikker-modal').style.display = 'block';
+}
+
+function oppdaterAdvarsel() {
+  var el = document.getElementById('kl-advarsel-boks');
+  if (!el) return;
+  var d = db[TODAY] || {k:0, s:null};
+  if (!KL_AKTIV || !d.s || d.k >= 10) { el.innerHTML = ''; return; }
+  var minutter = Math.round((Date.now() - d.s) / 60000);
+  if (minutter >= 60) {
+    el.innerHTML = '<div class="kl-advarsel" style="margin-top:12px">Hvis du er bekymret for mindre liv,<br>ta kontakt med fødeavdelingen.</div>';
+  } else {
+    el.innerHTML = '';
+  }
 }
 
 function registrerBev() {
@@ -1529,13 +1732,60 @@ function rCL() {
   var totNr = allItems.filter(i=>(cl[i.id]||{}).n).length;
   var tot = allItems.length - totNr;
   // Finn «aktivt» kategori å vise i progress
-  // Total fremdrift – kun obligatoriske, alle kategorier unntatt medisinske/etter_fodsel
+  // ── Motiverende oversikt ──
   var alleObl = ALL_ITEMS.filter(i =>
     i.category !== 'medisinske_hensyn' &&
     i.category !== 'etter_fodsel' &&
     i.conditions.length === 0 &&
     i.optional === false
   );
+  var gjort = alleObl.filter(i => (cl[i.id]||{}).d).length;
+  var fokusNaa = alleObl.filter(i =>
+    !(cl[i.id]||{}).d && !(cl[i.id]||{}).n &&
+    i.week_from <= EKTE_U
+  ).length;
+  var venter = alleObl.filter(i =>
+    !(cl[i.id]||{}).d && i.week_from > EKTE_U
+  ).length;
+
+  var melding, emoji;
+  if (fokusNaa === 0 && gjort > 0) {
+    melding = 'Bra jobba! Du er godt i rute.'; emoji = '🤩';
+  } else if (fokusNaa === 0) {
+    melding = 'Ingenting å gjøre ennå – nyt det!'; emoji = '😊';
+  } else if (fokusNaa <= 2) {
+    melding = 'Nesten i rute – noen få ting gjenstår nå.'; emoji = '✅';
+  } else {
+    melding = 'Det er noen ting som trenger oppmerksomhet nå.'; emoji = '📋';
+  }
+
+  var motH = '<div style="font-size:18px;margin-bottom:8px">' + emoji + '</div>';
+  motH += '<div style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:12px">' + melding + '</div>';
+  motH += '<div style="display:flex;gap:8px">';
+
+  // Gjort
+  motH += '<div style="flex:1;background:var(--grn-l);border-radius:12px;padding:12px;text-align:center">';
+  motH += '<div style="font-size:22px;font-weight:700;color:var(--grn)">' + gjort + '</div>';
+  motH += '<div style="font-size:11px;color:var(--grn-d);margin-top:2px;font-weight:500">gjort ✓</div>';
+  motH += '</div>';
+
+  // Fokus nå
+  var fokusColor = fokusNaa === 0 ? 'var(--grn)' : fokusNaa <= 2 ? '#f59e0b' : '#ef4444';
+  var fokusBg = fokusNaa === 0 ? 'var(--grn-l)' : fokusNaa <= 2 ? '#fffbeb' : '#fef2f2';
+  var fokusLabel = fokusNaa === 0 ? '🤩 bra jobba!' : 'krever fokus nå';
+  motH += '<div style="flex:1;background:' + fokusBg + ';border-radius:12px;padding:12px;text-align:center">';
+  motH += '<div style="font-size:22px;font-weight:700;color:' + fokusColor + '">' + fokusNaa + '</div>';
+  motH += '<div style="font-size:11px;color:' + fokusColor + ';margin-top:2px;font-weight:500">krever fokus ' + fokusLabel + '</div>';
+  motH += '</div>';
+
+  // Venter
+  motH += '<div style="flex:1;background:var(--bg);border-radius:12px;padding:12px;text-align:center">';
+  motH += '<div style="font-size:22px;font-weight:700;color:var(--text-3)">' + venter + '</div>';
+  motH += '<div style="font-size:11px;color:var(--text-3);margin-top:2px;font-weight:500">kan vente ⏳</div>';
+  motH += '</div>';
+
+  motH += '</div>';
+  document.getElementById('cl-motivasjon').innerHTML = motH;
   var totalDone = alleObl.filter(i => (cl[i.id]||{}).d).length;
   var totalNr = alleObl.filter(i => (cl[i.id]||{}).n).length;
   var totalTot = alleObl.length - totalNr;
@@ -1616,6 +1866,8 @@ function oppdaterProfil() {
   document.getElementById('profil-termin').textContent = TERMIN ? formaterTermin(TERMIN) : '–';
   document.getElementById('profil-uke').textContent = TERMIN ? 'Uke ' + EKTE_U + ' + ' + beregnDagerIUke(TERMIN) : 'Uke ' + U;
   if (TERMIN) document.getElementById('profil-termin-input').value = TERMIN;
+  document.getElementById('profil-baby-navn').value = BABY_NAVN;
+  velgKjonn(BABY_KJONN);
 }
 
 function lagreNyTermin() {
@@ -1704,6 +1956,8 @@ function init() {
   var done = localStorage.getItem('sammen-onboarding') === 'done';
   var terminStr = localStorage.getItem('sammen-termin');
   var lengdeStr = localStorage.getItem('sammen-lengde');
+  BABY_NAVN = localStorage.getItem('sammen-baby-navn') || '';
+  BABY_KJONN = localStorage.getItem('sammen-baby-kjonn') || 'ukjent';
   if (terminStr) {
     TERMIN = terminStr;
     TERMIN_LENGDE = parseInt(lengdeStr) || 283;
@@ -1723,6 +1977,7 @@ function init() {
   if (done) {
     for (var i=1;i<=4;i++) document.getElementById('ob'+i).classList.add('skjult');
     oppdaterHjem();
+    oppdaterBabyId();
     document.getElementById('dn').value = (db[TODAY]||{}).n || '';
   } else {
     obGå(1);
