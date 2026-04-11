@@ -6,594 +6,684 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Sammen">
-<meta name="theme-color" content="#3B6D11">
+<meta name="theme-color" content="#4a7c59">
 <title>Sammen</title>
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  :root {
-    --grn: #3B6D11;
-    --grn-l: #EAF3DE;
-    --grn-b: #C0DD97;
-    --grn-m: #639922;
-    --grn-d: #27500A;
-    --warm: #F8F6F1;
-    --text: #1a1a1a;
-    --text-2: #555;
-    --text-3: #888;
-    --border: rgba(0,0,0,0.1);
-    --border-2: rgba(0,0,0,0.18);
-    --bg: #ffffff;
-    --bg-2: #f5f4f0;
-    --bg-3: #eeede9;
-    --radius: 12px;
-    --radius-sm: 8px;
-    --warn-bg: #FFFBF0;
-    --warn-border: #EF9F27;
-    --warn-text: #633806;
-  }
+:root {
+  --grn: #4a7c59;
+  --grn-l: #eef5f1;
+  --grn-b: #b8d4c3;
+  --grn-d: #2d5a3d;
+  --grn-bg: #5a8f6a;
+  --text: #1c1c1e;
+  --text-2: #6b7280;
+  --text-3: #9ca3af;
+  --border: #e5e7eb;
+  --bg: #f9f6f2;
+  --bg-card: #ffffff;
+  --radius: 16px;
+  --radius-sm: 12px;
+  --warn-bg: #fef9f0;
+  --warn-border: #f59e0b;
+  --warn-text: #92400e;
+  --red: #ef4444;
+  --rose: #fef2f2;
+  --rose-border: #fecaca;
+}
 
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --grn: #7CBF3A;
-      --grn-l: #1a2e0d;
-      --grn-b: #3B6D11;
-      --grn-d: #a8d870;
-      --text: #f0f0f0;
-      --text-2: #bbb;
-      --text-3: #888;
-      --border: rgba(255,255,255,0.1);
-      --border-2: rgba(255,255,255,0.2);
-      --bg: #1a1a1a;
-      --bg-2: #242424;
-      --bg-3: #2e2e2e;
-      --warn-bg: #2a1f00;
-      --warn-border: #a06b00;
-      --warn-text: #f0c060;
-    }
-  }
+html, body {
+  height: 100%;
+  background: var(--bg);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+}
 
-  html, body {
-    height: 100%;
-    background: var(--bg-2);
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    color: var(--text);
-    -webkit-font-smoothing: antialiased;
-  }
+.app {
+  max-width: 430px;
+  margin: 0 auto;
+  min-height: 100vh;
+  background: var(--bg);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
 
-  .app {
-    max-width: 430px;
-    margin: 0 auto;
-    min-height: 100vh;
-    background: var(--bg);
-    display: flex;
-    flex-direction: column;
-  }
+/* ── NAV ── */
+.nav {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 430px;
+  background: var(--bg-card);
+  border-top: 1px solid var(--border);
+  display: flex;
+  z-index: 50;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+.nb {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 10px 4px 10px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-3);
+  font-size: 11px;
+  font-weight: 500;
+  font-family: inherit;
+  transition: color 0.15s;
+  -webkit-tap-highlight-color: transparent;
+}
+.nb.on { color: var(--grn); }
+.nb svg { width: 22px; height: 22px; }
 
-  /* HEADER */
-  .hdr {
-    padding: 18px 20px 0;
-    background: var(--bg-2);
-    flex-shrink: 0;
-  }
-  .brand {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 14px;
-  }
-  .logo {
-    font-size: 20px;
-    font-weight: 600;
-    color: var(--grn);
-    letter-spacing: -0.3px;
-  }
-  .lagret {
-    font-size: 11px;
-    color: var(--grn);
-    padding: 2px 8px;
-    background: var(--grn-l);
-    border-radius: 10px;
-    margin-left: 8px;
-    opacity: 0;
-    transition: opacity 0.4s;
-    display: inline;
-    border: 0.5px solid var(--grn-b);
-  }
-  .lagret.vis { opacity: 1; }
-  .upill {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    border: 0.5px solid var(--grn-b);
-    border-radius: 20px;
-    padding: 5px 12px;
-    cursor: pointer;
-    background: var(--bg);
-    user-select: none;
-  }
-  .upill span { font-size: 12px; color: var(--text-2); }
-  .upill b { font-size: 14px; color: var(--grn); }
-  .ptrack { height: 3px; background: var(--grn-b); border-radius: 2px; margin-bottom: 5px; }
-  .pfill { height: 3px; background: var(--grn); border-radius: 2px; transition: width 0.4s; }
-  .trm { font-size: 11px; color: var(--grn); font-weight: 500; padding-bottom: 14px; }
+/* ── PANES ── */
+.pane {
+  display: none;
+  flex: 1;
+  overflow-y: auto;
+  padding-bottom: 90px;
+}
+.pane.on { display: block; }
 
-  /* UKE EDITOR */
-  .ued {
-    background: var(--bg);
-    border: 0.5px solid var(--grn-b);
-    border-radius: var(--radius);
-    padding: 14px 16px;
-    margin: 0 20px 10px;
-    display: none;
-  }
-  .ued.open { display: block; }
-  .ued label { font-size: 12px; color: var(--text-3); display: block; margin-bottom: 8px; }
-  .ued-row { display: flex; align-items: center; gap: 12px; }
-  .ued-num { font-size: 26px; font-weight: 600; color: var(--grn); min-width: 36px; text-align: center; }
+/* ── HJEM ny stil ── */
+.hjem-hero {
+  background: var(--bg);
+  color: var(--text);
+  padding: 52px 24px 0;
+}
+.hjem-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  margin-bottom: 4px;
+}
+.hjem-uke-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 2px;
+}
+.hjem-uke {
+  font-size: 52px;
+  font-weight: 700;
+  letter-spacing: -2px;
+  line-height: 1;
+  color: var(--text);
+}
+.hjem-uke-plus {
+  font-size: 22px;
+  font-weight: 500;
+  color: var(--text-3);
+  margin-top: 8px;
+}
+.hjem-uke-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-left: 2px;
+  margin-top: 6px;
+}
+.uke-btn {
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  color: var(--text-2);
+  font-size: 12px;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  -webkit-tap-highlight-color: transparent;
+  transition: background 0.15s;
+}
+.uke-btn:active { background: var(--border); }
+.hjem-dager {
+  font-size: 14px;
+  color: var(--text-3);
+  margin-bottom: 20px;
+}
+.hjem-baby-kort {
+  background: var(--grn-l);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  margin-bottom: 24px;
+}
+.hjem-baby-label {
+  font-size: 12px;
+  color: var(--text-2);
+  margin-bottom: 4px;
+}
+.hjem-baby-navn {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 6px;
+}
+.hjem-baby-desc {
+  font-size: 13px;
+  color: var(--text-2);
+  line-height: 1.55;
+  margin-bottom: 10px;
+}
+.hjem-baby-maal {
+  display: flex;
+  gap: 16px;
+}
+.hjem-baby-maal-item {
+  font-size: 13px;
+  color: var(--text-2);
+}
+.hjem-baby-maal-item span { font-weight: 600; color: var(--text); }
 
-  /* NAV */
-  .nav {
-    display: flex;
-    border-bottom: 0.5px solid var(--border);
-    background: var(--bg);
-    flex-shrink: 0;
-  }
-  .nb {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 3px;
-    padding: 9px 4px 10px;
-    background: none;
-    border: none;
-    border-bottom: 2px solid transparent;
-    margin-bottom: -0.5px;
-    cursor: pointer;
-    color: var(--text-3);
-    font-size: 10px;
-    font-weight: 500;
-    font-family: inherit;
-    transition: color 0.15s;
-  }
-  .nb.on { color: var(--grn); border-bottom-color: var(--grn); }
-  .nb svg { width: 18px; height: 18px; }
+/* Det som betyr noe nå */
+.hjem-dsnna-tittel {
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 10px;
+}
+.hjem-dsnna-card {
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  padding: 6px 0;
+  margin-bottom: 24px;
+}
+.hjem-dsnna-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 11px 16px;
+}
+.hjem-dsnna-dot {
+  width: 8px; height: 8px; min-width: 8px;
+  border-radius: 50%;
+  background: var(--grn);
+  margin-top: 5px;
+}
+.hjem-dsnna-tekst {
+  font-size: 14px;
+  color: var(--text);
+  line-height: 1.45;
+}
 
-  /* PANES */
-  .pane { padding: 16px 20px 80px; display: none; overflow-y: auto; flex: 1; }
-  .pane.on { display: block; }
+/* ── HJEM INNHOLD ── */
+.hjem-body { padding: 20px 20px 0; }
+.hjem-seksjon { margin-bottom: 20px; }
+.hjem-seksjon-tittel {
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 10px;
+}
 
-  .sec {
-    font-size: 10px;
-    font-weight: 600;
-    color: var(--text-3);
-    letter-spacing: 0.07em;
-    text-transform: uppercase;
-    margin: 20px 0 8px;
-  }
-  .sec:first-child { margin-top: 0; }
+/* Sjekkliste preview på hjem – Lovable-stil */
+.hjem-cl-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 0 8px;
+}
+.hjem-cl-header-left { font-size: 16px; font-weight: 600; color: var(--text); }
+.hjem-cl-count { font-size: 14px; color: var(--text-3); }
+.hjem-cl-progress {
+  height: 3px;
+  background: var(--border);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-bottom: 4px;
+}
+.hjem-cl-progress-fill {
+  height: 3px;
+  background: var(--grn);
+  border-radius: 2px;
+  transition: width 0.3s;
+}
+.hjem-cl-card { background: var(--bg-card); border-radius: var(--radius); border: 1px solid var(--border); overflow: hidden; }
+.hjem-cl-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 13px 16px;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.hjem-cl-item:last-child { border-bottom: none; }
+.hjem-cl-cb {
+  width: 22px; height: 22px; min-width: 22px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.15s;
+}
+.hjem-cl-cb.done { background: var(--grn); border-color: var(--grn); }
+.hjem-cl-tekst { font-size: 14px; color: var(--text); line-height: 1.35; }
+.hjem-cl-tekst.done { color: var(--text-3); text-decoration: line-through; }
 
-  /* FRUKT KORT */
-  .fcard {
-    background: var(--grn-l);
-    border: 0.5px solid var(--grn-b);
-    border-radius: var(--radius);
-    padding: 16px 18px;
-    margin-bottom: 14px;
-    display: flex;
-    align-items: center;
-    gap: 16px;
-  }
-  .fwrap {
-    width: 66px; height: 66px; min-width: 66px;
-    background: var(--bg);
-    border-radius: 50%;
-    border: 0.5px solid var(--grn-b);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 36px;
-  }
-  .fi { flex: 1; }
-  .fsub { font-size: 10px; color: var(--grn); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 2px; }
-  .fnavn { font-size: 17px; font-weight: 600; color: var(--grn-d); margin-bottom: 6px; }
-  .fmaal { display: flex; gap: 14px; margin-bottom: 6px; }
-  .fmv { font-size: 14px; font-weight: 600; color: var(--grn-d); }
-  .fml { font-size: 10px; color: var(--grn); margin-top: 1px; }
-  .fdesc { font-size: 12px; color: var(--grn-d); opacity: 0.85; line-height: 1.55; }
+/* Kjenn liv preview på hjem */
+.hjem-kl-card {
+  background: var(--rose);
+  border: 1px solid var(--rose-border);
+  border-radius: var(--radius);
+  padding: 16px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: opacity 0.15s;
+}
+.hjem-kl-card:active { opacity: 0.85; }
+.hjem-kl-tittel { font-size: 15px; font-weight: 600; color: #c2344a; margin-bottom: 3px; }
+.hjem-kl-sub { font-size: 13px; color: var(--text-2); }
 
-  /* STATS */
-  .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 14px; }
-  .stat { background: var(--bg-2); border-radius: var(--radius-sm); padding: 12px 14px; }
-  .sl { font-size: 11px; color: var(--text-3); margin-bottom: 3px; }
-  .sv { font-size: 24px; font-weight: 600; color: var(--text); line-height: 1.1; }
-  .ss { font-size: 11px; color: var(--text-2); margin-top: 2px; }
+/* ── SJEKKLISTE ── */
+.side-header {
+  padding: 52px 24px 20px;
+  background: var(--bg);
+}
+.side-tittel { font-size: 28px; font-weight: 700; color: var(--text); }
+.cl-progress-card {
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  margin: 0 20px 20px;
+  border: 1px solid var(--border);
+}
+.cl-progress-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  color: var(--text-2);
+  margin-bottom: 8px;
+}
+.cl-progress-bar { height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; }
+.cl-progress-fill { height: 6px; background: var(--grn); border-radius: 3px; transition: width 0.4s; }
 
-  /* BEVEGELSER */
-  .bcard {
-    border: 0.5px solid var(--border);
-    border-radius: var(--radius);
-    padding: 15px;
-    margin-bottom: 14px;
-  }
-  .btop { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-  .btop h4 { font-size: 14px; font-weight: 600; }
-  .btop span { font-size: 12px; color: var(--text-3); }
-  .dots { display: flex; gap: 5px; margin-bottom: 12px; flex-wrap: wrap; }
-  .dot {
-    width: 24px; height: 24px;
-    border-radius: 50%;
-    background: var(--bg-2);
-    border: 0.5px solid var(--border-2);
-    transition: background 0.15s, border-color 0.15s, transform 0.1s;
-  }
-  .dot.on { background: var(--grn); border-color: var(--grn); }
-  .dot.pop { transform: scale(1.3); }
-  .rbtn {
-    width: 100%; padding: 14px;
-    background: var(--grn); color: white;
-    border: none; border-radius: var(--radius-sm);
-    font-size: 15px; font-weight: 600;
-    cursor: pointer; font-family: inherit;
-    transition: opacity 0.15s, transform 0.1s;
-    -webkit-tap-highlight-color: transparent;
-  }
-  .rbtn:active { opacity: 0.85; transform: scale(0.99); }
-  .rbtn:disabled { background: var(--bg-3); color: var(--text-3); cursor: default; transform: none; }
-  .bhint { font-size: 13px; color: var(--text-2); text-align: center; margin-top: 10px; line-height: 1.5; }
-  .btidlig {
-    border: 0.5px solid var(--border);
-    border-radius: var(--radius);
-    padding: 15px;
-    margin-bottom: 14px;
-    font-size: 13px;
-    color: var(--text-2);
-    line-height: 1.65;
-    text-align: center;
-  }
+.cl-cat-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px 10px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.cl-cat-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.cl-cat-name {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--text-2);
+}
+.cl-cat-badge {
+  font-size: 11px;
+  font-weight: 600;
+  color: white;
+  background: var(--grn);
+  padding: 1px 7px;
+  border-radius: 10px;
+}
+.cl-cat-badge.opt {
+  background: var(--text-3);
+}
+.cl-cat-count { font-size: 13px; color: var(--text-3); }
+.cl-cat-chev { font-size: 11px; color: var(--text-3); display: inline-block; transition: transform 0.2s; margin-left: 4px; }
+.cl-cat-chev.open { transform: rotate(180deg); }
 
-  /* TIPS */
-  .tcard {
-    border: 0.5px solid var(--border);
-    border-radius: var(--radius);
-    padding: 14px 16px;
-    margin-bottom: 9px;
-  }
-  .ttag {
-    font-size: 10px; font-weight: 600;
-    color: var(--grn); letter-spacing: 0.06em;
-    text-transform: uppercase; margin-bottom: 6px;
-  }
-  .ttxt { font-size: 13px; line-height: 1.7; color: var(--text); }
+.cl-card {
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  margin: 0 20px 8px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+.cl-grp-header {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  padding: 10px 16px 4px;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+}
+.cl-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  background: var(--bg-card);
+  transition: background 0.1s;
+}
+.cl-item:last-child { border-bottom: none; }
+.cl-item:active { background: var(--bg); }
+.cl-item-cb {
+  width: 22px; height: 22px; min-width: 22px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.15s;
+  flex-shrink: 0;
+}
+.cl-item-cb.done { background: var(--grn); border-color: var(--grn); }
+.cl-item-cb.nr { background: var(--bg); border-color: var(--border); }
+.cl-item-right { flex: 1; min-width: 0; }
+.cl-item-title { font-size: 14px; line-height: 1.4; color: var(--text); }
+.cl-item-title.done { color: var(--text-3); text-decoration: line-through; }
+.cl-item-title.nr { color: var(--text-3); font-style: italic; }
+.cl-item-label { font-size: 12px; color: var(--text-3); margin-top: 2px; }
+.cl-item-xbtn {
+  background: none; border: none;
+  color: var(--text-3); font-size: 16px;
+  cursor: pointer; padding: 4px;
+  flex-shrink: 0;
+  -webkit-tap-highlight-color: transparent;
+  line-height: 1;
+}
+.cl-ikke-rel {
+  padding: 8px 16px 10px 52px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg);
+}
+.cl-ikke-rel-items { display: flex; flex-direction: column; gap: 8px; }
+.cl-ikke-rel-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  color: var(--text-3);
+}
+.cl-ikke-rel-icon {
+  width: 18px; height: 18px; flex-shrink: 0;
+  color: var(--text-3);
+}
+.cl-ikke-rel-label { font-size: 10px; font-weight: 600; color: var(--text-3); letter-spacing: 0.05em; margin-bottom: 6px; text-transform: uppercase; }
 
-  /* ADVARSEL */
-  .warn {
-    background: var(--warn-bg);
-    border: 0.5px solid var(--warn-border);
-    border-radius: var(--radius-sm);
-    padding: 13px 15px;
-    font-size: 13px;
-    color: var(--warn-text);
-    margin-bottom: 14px;
-    line-height: 1.65;
-  }
+/* ── KJENN LIV ── */
+.kl-header { padding: 52px 24px 16px; }
+.kl-tittel { font-size: 28px; font-weight: 700; margin-bottom: 4px; }
+.kl-sub { font-size: 15px; color: var(--text-2); }
+.kl-body { padding: 0 20px; }
 
-  /* DAGBOK */
-  .dcard {
-    border: 0.5px solid var(--border);
-    border-radius: var(--radius);
-    padding: 14px 16px;
-    margin-bottom: 9px;
-  }
-  .ddato { font-size: 12px; color: var(--text-3); margin-bottom: 6px; }
-  .dbev { font-size: 13px; color: var(--text-2); }
-  .dtid { font-size: 12px; color: var(--text-3); margin-top: 2px; }
-  .dnote {
-    font-size: 12px; color: var(--text-2);
-    margin-top: 10px; padding-top: 10px;
-    border-top: 0.5px solid var(--border);
-    font-style: italic;
-  }
-  .tomt { text-align: center; padding: 40px 20px; color: var(--text-3); font-size: 13px; line-height: 1.7; }
+.kl-sirkel-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 24px 0 20px;
+}
+.kl-min { font-size: 14px; color: var(--text-3); margin-bottom: 12px; }
+.kl-sirkel {
+  width: 180px; height: 180px;
+  border-radius: 50%;
+  background: var(--grn-l);
+  border: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.1s, background 0.2s;
+  position: relative;
+}
+.kl-sirkel.aktiv { background: var(--grn); }
+.kl-sirkel.aktiv .kl-tall { color: white; }
+.kl-sirkel.aktiv .kl-bev-txt { color: rgba(255,255,255,0.8); }
+.kl-sirkel:active { transform: scale(0.96); }
+.kl-sirkel.pop { transform: scale(1.06); }
+.kl-baby-emoji { font-size: 48px; }
+.kl-tall { font-size: 64px; font-weight: 700; color: var(--grn); line-height: 1; }
+.kl-bev-txt { font-size: 14px; color: var(--text-2); margin-top: 4px; }
 
-  /* SJEKKLISTE */
-  .crow {
-    display: flex; align-items: center;
-    justify-content: space-between;
-    padding: 12px 0;
-    border-top: 0.5px solid var(--border);
-    cursor: pointer;
-    user-select: none;
-  }
-  .crow:first-child { border-top: none; }
-  .cn { font-size: 14px; font-weight: 600; }
-  .cp { font-size: 12px; color: var(--text-3); }
-  .chev { font-size: 11px; color: var(--text-3); display: inline-block; transition: transform 0.2s; margin-left: 6px; }
-  .chev.open { transform: rotate(180deg); }
-  .irow {
-    display: flex; gap: 10px;
-    padding: 10px 0 10px 4px;
-    border-top: 0.5px solid var(--border);
-    cursor: pointer; align-items: flex-start;
-    -webkit-tap-highlight-color: transparent;
-  }
-  .cb {
-    width: 18px; height: 18px; min-width: 18px;
-    border-radius: 4px;
-    border: 1.5px solid var(--border-2);
-    display: flex; align-items: center; justify-content: center;
-    margin-top: 1px; transition: all 0.15s;
-    flex-shrink: 0;
-  }
-  .cb.done { background: var(--grn); border-color: var(--grn); }
-  .cb.nr { background: var(--bg-3); border-color: var(--border); }
-  .il { font-size: 13px; line-height: 1.45; }
-  .il.done { color: var(--text-3); text-decoration: line-through; }
-  .il.nr { color: var(--text-3); font-style: italic; }
-  .iu { font-size: 11px; color: var(--text-3); margin-top: 2px; }
-  .inr {
-    font-size: 11px; color: var(--text-3);
-    background: none; border: none; cursor: pointer;
-    padding: 3px 0 0; font-family: inherit; display: block;
-  }
+.kl-hint { font-size: 14px; color: var(--text-2); text-align: center; margin-top: 12px; padding: 0 20px; }
+.kl-btn {
+  width: 100%; padding: 15px;
+  border-radius: var(--radius);
+  font-size: 16px; font-weight: 600;
+  cursor: pointer; font-family: inherit;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  color: var(--text);
+  margin-top: 16px;
+  -webkit-tap-highlight-color: transparent;
+  transition: background 0.15s;
+}
+.kl-btn.start { background: var(--grn); color: white; border-color: var(--grn); }
+.kl-btn:active { opacity: 0.85; }
 
-  /* PARTNER & FORMS */
-  .pc {
-    border: 0.5px solid var(--border);
-    border-radius: var(--radius);
-    padding: 16px; margin-bottom: 14px;
-  }
-  .pc h4 { font-size: 14px; font-weight: 600; margin-bottom: 12px; }
-  .fl { margin-bottom: 11px; }
-  .fl label { font-size: 11px; color: var(--text-3); display: block; margin-bottom: 4px; font-weight: 500; }
-  .fl input, .fl select, .fl textarea {
-    width: 100%; font-size: 14px;
-    border: 0.5px solid var(--border-2);
-    border-radius: var(--radius-sm);
-    padding: 10px 12px;
-    background: var(--bg);
-    color: var(--text);
-    font-family: inherit;
-    outline: none;
-    transition: border-color 0.15s;
-    appearance: auto;
-  }
-  .fl input:focus, .fl select:focus, .fl textarea:focus {
-    border-color: var(--grn);
-  }
-  .fl textarea { resize: none; line-height: 1.6; }
-  .gbtn {
-    width: 100%; padding: 13px;
-    background: var(--grn); color: white;
-    border: none; border-radius: var(--radius-sm);
-    font-size: 14px; font-weight: 600;
-    cursor: pointer; font-family: inherit; margin-top: 4px;
-    transition: opacity 0.15s;
-  }
-  .gbtn:active { opacity: 0.85; }
-  .obtn {
-    width: 100%; padding: 12px;
-    background: none;
-    border: 0.5px solid var(--border-2);
-    border-radius: var(--radius-sm);
-    font-size: 13px; color: var(--text);
-    cursor: pointer; font-family: inherit; margin-top: 7px;
-  }
-  .brtxt {
-    background: var(--bg-2);
-    border-radius: var(--radius-sm);
-    padding: 13px; font-size: 12px;
-    color: var(--text); line-height: 1.75;
-    margin-top: 10px; white-space: pre-wrap;
-    border: 0.5px solid var(--border);
-  }
-  .partner-info {
-    font-size: 13px; color: var(--text-2);
-    margin: 8px 0 12px; line-height: 1.65;
-  }
-  .brev-intro {
-    font-size: 13px; color: var(--text-2);
-    margin-bottom: 16px; line-height: 1.65;
-  }
+.kl-siste { margin-top: 24px; }
+.kl-siste-label {
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--text-3); margin-bottom: 10px;
+}
+.kl-siste-card {
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+.kl-siste-rad {
+  display: flex;
+  justify-content: space-between;
+  padding: 16px;
+  border-bottom: 1px solid var(--border);
+}
+.kl-siste-rad:last-child { border-bottom: none; }
+.kl-siste-tall { font-size: 24px; font-weight: 700; }
+.kl-siste-enhet { font-size: 12px; color: var(--text-3); margin-top: 2px; }
+.kl-siste-dato { font-size: 12px; color: var(--text-3); text-align: right; margin-top: 4px; }
+.kl-siste-notat { font-size: 13px; color: var(--text-2); font-style: italic; padding: 10px 16px; border-top: 1px solid var(--border); }
 
-  /* ONBOARDING */
-  .ob {
-    position: fixed;
-    inset: 0;
-    background: var(--bg);
-    z-index: 100;
-    display: flex;
-    flex-direction: column;
-    max-width: 430px;
-    margin: 0 auto;
-    padding: 0 28px;
-  }
-  .ob.skjult { display: none; }
-  .ob-top {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding-bottom: 20px;
-  }
-  .ob-logo {
-    font-size: 22px;
-    font-weight: 600;
-    color: var(--grn);
-    margin-bottom: 48px;
-  }
-  .ob-steg {
-    display: flex;
-    gap: 5px;
-    margin-bottom: 36px;
-  }
-  .ob-steg-dot {
-    height: 3px;
-    flex: 1;
-    border-radius: 2px;
-    background: var(--border);
-    transition: background 0.3s;
-  }
-  .ob-steg-dot.on { background: var(--grn); }
-  .ob-tittel {
-    font-size: 26px;
-    font-weight: 600;
-    color: var(--text);
-    line-height: 1.25;
-    margin-bottom: 14px;
-    letter-spacing: -0.3px;
-  }
-  .ob-tekst {
-    font-size: 16px;
-    color: var(--text-2);
-    line-height: 1.65;
-    margin-bottom: 32px;
-  }
-  .ob-label {
-    font-size: 12px;
-    font-weight: 500;
-    color: var(--text-3);
-    margin-bottom: 8px;
-    display: block;
-  }
-  .ob-input {
-    width: 100%;
-    font-size: 16px;
-    padding: 13px 14px;
-    border: 0.5px solid var(--border-2);
-    border-radius: var(--radius-sm);
-    background: var(--bg);
-    color: var(--text);
-    font-family: inherit;
-    outline: none;
-    margin-bottom: 10px;
-    transition: border-color 0.15s;
-    -webkit-appearance: none;
-  }
-  .ob-input:focus { border-color: var(--grn); }
-  .ob-alt {
-    font-size: 14px;
-    color: var(--grn);
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-family: inherit;
-    padding: 8px 0;
-    display: block;
-    text-align: left;
-    text-decoration: underline;
-    text-underline-offset: 3px;
-  }
-  .ob-valg-grid {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-bottom: 8px;
-  }
-  .ob-valg {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    padding: 14px 16px;
-    border: 0.5px solid var(--border-2);
-    border-radius: var(--radius);
-    cursor: pointer;
-    transition: border-color 0.15s, background 0.15s;
-    -webkit-tap-highlight-color: transparent;
-    user-select: none;
-  }
-  .ob-valg.on {
-    border-color: var(--grn);
-    background: var(--grn-l);
-  }
-  .ob-valg-cb {
-    width: 20px; height: 20px; min-width: 20px;
-    border-radius: 50%;
-    border: 1.5px solid var(--border-2);
-    display: flex; align-items: center; justify-content: center;
-    transition: all 0.15s;
-  }
-  .ob-valg.on .ob-valg-cb {
-    background: var(--grn);
-    border-color: var(--grn);
-  }
-  .ob-valg-tekst { font-size: 15px; color: var(--text); line-height: 1.35; }
-  .ob-ferdig-frukt {
-    font-size: 64px;
-    text-align: center;
-    margin-bottom: 20px;
-    display: block;
-  }
-  .ob-ferdig-uke {
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--grn);
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    margin-bottom: 6px;
-  }
-  .ob-bunn {
-    padding: 20px 0 40px;
-    flex-shrink: 0;
-  }
-  .ob-btn {
-    width: 100%;
-    padding: 16px;
-    background: var(--grn);
-    color: white;
-    border: none;
-    border-radius: var(--radius-sm);
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    font-family: inherit;
-    transition: opacity 0.15s;
-    -webkit-tap-highlight-color: transparent;
-  }
-  .ob-btn:active { opacity: 0.85; }
-  .ob-btn:disabled { background: var(--bg-3); color: var(--text-3); }
-  .ob-btn-sek {
-    width: 100%;
-    padding: 14px;
-    background: none;
-    border: none;
-    font-size: 15px;
-    color: var(--text-3);
-    cursor: pointer;
-    font-family: inherit;
-    margin-top: 8px;
-  }
-  .ob-uke-rad {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 8px;
-  }
+.kl-advarsel {
+  background: var(--warn-bg);
+  border: 1px solid var(--warn-border);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  font-size: 13px;
+  color: var(--warn-text);
+  line-height: 1.6;
+  margin-top: 16px;
+}
 
+/* Notat */
+.kl-notat-wrap { margin-top: 20px; }
+.kl-notat-label { font-size: 12px; font-weight: 500; color: var(--text-3); margin-bottom: 6px; display: block; }
+.kl-notat {
+  width: 100%;
+  font-size: 14px; font-family: inherit;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  color: var(--text);
+  resize: none;
+  outline: none;
+  line-height: 1.6;
+  transition: border-color 0.15s;
+}
+.kl-notat:focus { border-color: var(--grn); }
 
-  /* INPUT RANGE */
-  input[type="range"] {
-    -webkit-appearance: none;
-    height: 4px;
-    border-radius: 2px;
-    background: var(--grn-b);
-    outline: none;
-  }
-  input[type="range"]::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    width: 22px; height: 22px;
-    border-radius: 50%;
-    background: var(--grn);
-    cursor: pointer;
-    border: 2px solid white;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.2);
-  }
+/* Historikk */
+.kl-hist-label {
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--text-3); margin: 20px 0 10px;
+}
+.kl-hist-card {
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  margin-bottom: 10px;
+  padding: 14px 16px;
+}
+.kl-hist-dato { font-size: 12px; color: var(--text-3); margin-bottom: 8px; }
+.kl-hist-row { display: flex; gap: 20px; align-items: flex-end; }
+.kl-hist-tall { font-size: 32px; font-weight: 700; line-height: 1; }
+.kl-hist-info { font-size: 13px; color: var(--text-2); }
+.kl-hist-min { font-size: 12px; color: var(--text-3); margin-top: 2px; }
+.kl-hist-notat { font-size: 12px; color: var(--text-2); font-style: italic; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); }
+.kl-tomt { text-align: center; padding: 40px 20px; color: var(--text-3); font-size: 14px; line-height: 1.7; }
+
+/* ── PROFIL ── */
+.profil-header { padding: 52px 24px 20px; }
+.profil-tittel { font-size: 28px; font-weight: 700; }
+.profil-body { padding: 0 20px; }
+.profil-card {
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  padding: 20px;
+  margin-bottom: 20px;
+}
+.profil-row { margin-bottom: 16px; }
+.profil-row:last-child { margin-bottom: 0; }
+.profil-rl { font-size: 12px; color: var(--text-3); margin-bottom: 3px; font-weight: 500; }
+.profil-rv { font-size: 16px; color: var(--text); font-weight: 500; }
+.profil-kommer-label {
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--text-3); margin-bottom: 10px;
+}
+.profil-kommer-card {
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+.profil-kommer-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  border-bottom: 1px solid var(--border);
+}
+.profil-kommer-item:last-child { border-bottom: none; }
+.profil-kommer-left { display: flex; align-items: center; gap: 12px; }
+.profil-kommer-emoji { font-size: 20px; }
+.profil-kommer-navn { font-size: 14px; font-weight: 500; }
+.profil-lås { font-size: 16px; color: var(--text-3); }
+.profil-reset {
+  background: none; border: none;
+  font-size: 14px; color: var(--red);
+  cursor: pointer; font-family: inherit;
+  padding: 4px 0;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* ── ONBOARDING ── */
+.ob {
+  position: fixed;
+  inset: 0;
+  background: var(--bg);
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  max-width: 430px;
+  margin: 0 auto;
+  padding: 0 28px;
+}
+.ob.skjult { display: none; }
+.ob-top { flex: 1; display: flex; flex-direction: column; justify-content: center; padding-bottom: 20px; }
+.ob-logo { font-size: 22px; font-weight: 700; color: var(--grn); margin-bottom: 48px; }
+.ob-steg { display: flex; gap: 5px; margin-bottom: 36px; }
+.ob-steg-dot { height: 3px; flex: 1; border-radius: 2px; background: var(--border); transition: background 0.3s; }
+.ob-steg-dot.on { background: var(--grn); }
+.ob-tittel { font-size: 28px; font-weight: 700; color: var(--text); line-height: 1.2; margin-bottom: 12px; letter-spacing: -0.3px; }
+.ob-tekst { font-size: 16px; color: var(--text-2); line-height: 1.65; margin-bottom: 32px; }
+.ob-label { font-size: 12px; font-weight: 500; color: var(--text-3); margin-bottom: 8px; display: block; }
+.ob-input {
+  width: 100%; font-size: 16px;
+  padding: 13px 14px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg-card);
+  color: var(--text);
+  font-family: inherit;
+  outline: none;
+  margin-bottom: 10px;
+  transition: border-color 0.15s;
+  -webkit-appearance: none;
+}
+.ob-input:focus { border-color: var(--grn); }
+.ob-valg-grid { display: flex; flex-direction: column; gap: 10px; margin-bottom: 8px; }
+.ob-valg {
+  display: flex; align-items: center; gap: 14px;
+  padding: 14px 16px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+  -webkit-tap-highlight-color: transparent;
+}
+.ob-valg.on { border-color: var(--grn); background: var(--grn-l); }
+.ob-valg-cb {
+  width: 20px; height: 20px; min-width: 20px;
+  border-radius: 50%; border: 1.5px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.15s;
+}
+.ob-valg.on .ob-valg-cb { background: var(--grn); border-color: var(--grn); }
+.ob-valg-tekst { font-size: 15px; color: var(--text); }
+.ob-ferdig-emoji { font-size: 56px; text-align: center; display: block; margin-bottom: 20px; }
+.ob-ferdig-uke { font-size: 13px; font-weight: 600; color: var(--grn); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 6px; }
+.ob-bunn { padding: 20px 0 44px; flex-shrink: 0; }
+.ob-btn {
+  width: 100%; padding: 16px;
+  background: var(--grn); color: white;
+  border: none; border-radius: var(--radius);
+  font-size: 16px; font-weight: 600;
+  cursor: pointer; font-family: inherit;
+  transition: opacity 0.15s;
+  -webkit-tap-highlight-color: transparent;
+}
+.ob-btn:active { opacity: 0.85; }
+.ob-btn:disabled { background: var(--border); color: var(--text-3); }
+.ob-btn-sek {
+  width: 100%; padding: 14px;
+  background: none; border: none;
+  font-size: 15px; color: var(--text-3);
+  cursor: pointer; font-family: inherit; margin-top: 8px;
+}
+
+/* lagret-badge */
+.lagret {
+  font-size: 11px; color: var(--grn);
+  padding: 2px 8px;
+  background: var(--grn-l);
+  border-radius: 10px;
+  opacity: 0;
+  transition: opacity 0.4s;
+  border: 1px solid var(--grn-b);
+}
+.lagret.vis { opacity: 1; }
+
+::-webkit-scrollbar { width: 0; }
 </style>
 </head>
 <body>
+<div class="app">
 
-<!-- ── ONBOARDING ─────────────────────────────────────── -->
-
-<!-- Steg 1: Velkommen -->
+<!-- ── ONBOARDING ── -->
 <div class="ob" id="ob1">
   <div class="ob-top">
     <div class="ob-logo">Sammen</div>
@@ -604,14 +694,13 @@
       <div class="ob-steg-dot"></div>
     </div>
     <div class="ob-tittel">Hei, og velkommen.</div>
-    <div class="ob-tekst">Sammen er en rolig app for å følge graviditeten, legge merke til babyens bevegelser og samle små tanker underveis.<br><br>Vi setter opp appen for deg på under ett minutt.</div>
+    <div class="ob-tekst">Sammen er din graviditetsplanlegger og følgesvenn.<br><br>Følg babyens utvikling uke for uke, hold oversikt over alt du trenger med en sjekkliste tilpasset der du er i svangerskapet, og registrer babyens bevegelser – alt på ett sted.</div>
   </div>
   <div class="ob-bunn">
     <button class="ob-btn" onclick="obGå(2)">Kom i gang</button>
   </div>
 </div>
 
-<!-- Steg 2: Termin -->
 <div class="ob skjult" id="ob2">
   <div class="ob-top">
     <div class="ob-logo">Sammen</div>
@@ -622,9 +711,11 @@
       <div class="ob-steg-dot"></div>
     </div>
     <div class="ob-tittel">Når er terminen din?</div>
-    <div class="ob-tekst">Vi bruker termindatoen til å vise hva som er relevant akkurat nå – og hva som kommer.</div>
+    <div class="ob-tekst">Vi bruker termindatoen til å vise hva som er relevant akkurat nå.</div>
     <label class="ob-label">Termindato</label>
     <input class="ob-input" type="date" id="ob-termin" oninput="obSjekkTermin()">
+    <label class="ob-label" style="margin-top:8px">Graviditetslengde (dager)</label>
+    <input class="ob-input" type="number" id="ob-lengde" value="283" min="260" max="295" placeholder="283">
   </div>
   <div class="ob-bunn">
     <button class="ob-btn" id="ob2-btn" onclick="obGå(3)" disabled>Neste</button>
@@ -632,7 +723,6 @@
   </div>
 </div>
 
-<!-- Steg 3: Preferanser -->
 <div class="ob skjult" id="ob3">
   <div class="ob-top">
     <div class="ob-logo">Sammen</div>
@@ -669,7 +759,6 @@
   </div>
 </div>
 
-<!-- Steg 4: Ferdig -->
 <div class="ob skjult" id="ob4">
   <div class="ob-top" style="text-align:center">
     <div class="ob-logo" style="text-align:left">Sammen</div>
@@ -680,7 +769,7 @@
       <div class="ob-steg-dot on"></div>
     </div>
     <div style="margin-top:24px">
-      <span class="ob-ferdig-frukt" id="ob-frukt-emoji">🌱</span>
+      <span class="ob-ferdig-emoji" id="ob-frukt-emoji">🌱</span>
       <div class="ob-ferdig-uke" id="ob-ferdig-uke">Uke –</div>
       <div class="ob-tittel" id="ob-ferdig-navn" style="text-align:center"></div>
       <div class="ob-tekst" id="ob-ferdig-tekst" style="text-align:center;margin-bottom:0"></div>
@@ -691,620 +780,889 @@
   </div>
 </div>
 
+<!-- ── HJEM PANE ── -->
+<div class="pane on" id="ph">
+  <div class="hjem-hero" id="hjem-hero">
+    <div class="hjem-label">SVANGERSKAPET DITT</div>
+    <div class="hjem-uke-row">
+      <div class="hjem-uke" id="hjem-uke-tall">29</div>
+      <span class="hjem-uke-plus" id="hjem-uke-dager-plus"></span>
+      <div class="hjem-uke-nav">
+        <button class="uke-btn" onclick="justerUke(1)" aria-label="Neste uke">▲</button>
+        <button class="uke-btn" onclick="justerUke(-1)" aria-label="Forrige uke">▼</button>
+      </div>
+      <span class="lagret" id="lt">lagret</span>
+    </div>
+    <div class="hjem-dager" id="hjem-dager"></div>
 
-
-  <!-- HEADER -->
-  <div class="hdr">
-    <div class="brand">
-      <span class="logo">Sammen <span class="lagret" id="lt">lagret</span></span>
-      <div class="upill" onclick="document.getElementById('ued').classList.toggle('open')" role="button" aria-label="Endre uke">
-        <span>Uke</span><b id="uv">–</b>
-        <span style="font-size:10px;color:var(--text-3)">▾</span>
+    <div class="hjem-baby-kort">
+      <div class="hjem-baby-label">Babyen din er omtrent som</div>
+      <div class="hjem-baby-navn" id="hjem-baby-navn"></div>
+      <div class="hjem-baby-desc" id="hjem-baby-desc"></div>
+      <div class="hjem-baby-maal">
+        <div class="hjem-baby-maal-item">Lengde <span id="hjem-baby-c"></span></div>
+        <div class="hjem-baby-maal-item">Vekt <span id="hjem-baby-g"></span></div>
       </div>
     </div>
-    <div class="ptrack"><div class="pfill" id="pb" style="width:0%"></div></div>
-    <div class="trm" id="trm">Laster...</div>
   </div>
 
-  <!-- UKE EDITOR -->
-  <div class="ued" id="ued">
-    <label>Hvor langt er du kommet?</label>
-    <div class="ued-row">
-      <input type="range" min="4" max="42" value="20" step="1" style="flex:1" id="usl" oninput="sU(+this.value,true)">
-      <span class="ued-num" id="un">20</span>
+  <div class="hjem-body">
+    <!-- Det som betyr noe nå -->
+    <div class="hjem-seksjon" id="hjem-dsnna-seksjon">
+      <div class="hjem-dsnna-tittel">Det som betyr noe nå</div>
+      <div class="hjem-dsnna-card" id="hjem-dsnna-items"></div>
     </div>
-  </div>
 
-  <!-- NAV -->
-  <div class="nav" role="navigation">
-    <button class="nb on" onclick="vis('h',this)" aria-label="Hjem">
-      <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/><path d="M9 21V12h6v9"/></svg>
-      Hjem
-    </button>
-    <button class="nb" onclick="vis('s',this)" aria-label="Sjekkliste">
-      <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
-      Sjekkliste
-    </button>
-    <button class="nb" onclick="vis('d',this)" aria-label="Dagbok">
-      <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/><circle cx="8" cy="16" r="1" fill="currentColor"/><circle cx="12" cy="16" r="1" fill="currentColor"/><circle cx="16" cy="16" r="1" fill="currentColor"/></svg>
-      Dagbok
-    </button>
-    <button class="nb" onclick="vis('p',this)" aria-label="Partner">
-      <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="9" cy="7" r="4"/><path d="M3 21v-2a4 4 0 014-4h4a4 4 0 014 4v2"/><path d="M16 3.13a4 4 0 010 7.75M21 21v-2a4 4 0 00-3-3.87"/></svg>
-      Partner
-    </button>
-  </div>
-
-  <!-- HJEM -->
-  <div class="pane on" id="ph">
-    <div id="fk"></div>
-    <div class="stats">
-      <div class="stat">
-        <div class="sl">Bevegelser i dag</div>
-        <div class="sv" id="sa">0</div>
-        <div class="ss">av 10 mål</div>
+    <!-- Sjekkliste preview -->
+    <div class="hjem-seksjon">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <span class="hjem-seksjon-tittel" style="margin-bottom:0">Sjekkliste</span>
+        <span style="font-size:14px;color:var(--text-3)" id="hjem-cl-teller"></span>
       </div>
-      <div class="stat">
-        <div class="sl">Tid brukt</div>
-        <div class="sv" id="st">–</div>
-        <div class="ss" id="sts">ikke startet</div>
+      <div class="hjem-cl-card">
+        <div style="height:4px;background:var(--border);border-radius:0;overflow:hidden">
+          <div style="height:4px;background:var(--grn);transition:width 0.3s" id="hjem-cl-fill"></div>
+        </div>
+        <div id="hjem-cl-items"></div>
       </div>
     </div>
-    <div class="bcard" id="bc" style="display:none">
-      <div class="btop">
-        <h4>Bevegelser i dag</h4>
-        <span id="bt">0 / 10</span>
+
+    <!-- Kjenn liv -->
+    <div class="hjem-seksjon">
+      <div class="hjem-seksjon-tittel">Kjenn liv</div>
+      <div class="hjem-kl-card" onclick="visKL()" id="hjem-kl-card">
+        <div class="hjem-kl-tittel" id="hjem-kl-tittel">Registrer bevegelser</div>
+        <div class="hjem-kl-sub" id="hjem-kl-sub">Trykk her for å starte telling</div>
       </div>
-      <div class="dots" id="dots"></div>
-      <button class="rbtn" id="rb" onclick="rB()">Registrer bevegelse</button>
-      <div class="bhint" id="bh">Finn et rolig øyeblikk – legg deg ned og kjenn etter</div>
     </div>
-    <div class="btidlig" id="btid" style="display:none">
-      Du kan begynne å merke de første bevegelsene fra uke 18 – som små bobletrekk eller vifteslår. Fra uke 28 anbefales daglig telling.
-    </div>
-    <div class="sec">Denne uken</div>
-    <div id="tm" class="tcard"></div>
-    <div id="tk" class="tcard"></div>
-    <div id="tg" class="tcard"></div>
   </div>
+</div>
 
-  <!-- SJEKKLISTE -->
-  <div class="pane" id="ps">
-    <div id="cl"></div>
+<!-- ── SJEKKLISTE PANE ── -->
+<div class="pane" id="ps">
+  <div class="side-header">
+    <div class="side-tittel">Sjekkliste</div>
   </div>
+  <div class="cl-progress-card">
+    <div class="cl-progress-label">
+      <span id="cl-prog-navn">–</span>
+      <span id="cl-prog-tall">0 av 0</span>
+    </div>
+    <div class="cl-progress-bar">
+      <div class="cl-progress-fill" id="cl-prog-fill" style="width:0%"></div>
+    </div>
+  </div>
+  <div id="cl"></div>
+</div>
 
-  <!-- DAGBOK -->
-  <div class="pane" id="pd">
-    <div class="warn">
-      Hvis du en dag ikke kjenner babyen bevege seg på over 2 timer – eller merker at bevegelsene plutselig har endret seg – er det alltid greit å ta kontakt med jordmor eller fødeavdelingen. Det er ingen dum grunn å ringe.
+<!-- ── KJENN LIV PANE ── -->
+<div class="pane" id="pk">
+  <div class="kl-header">
+    <div class="kl-tittel">Kjenn liv</div>
+    <div class="kl-sub">Tell bevegelsene du kjenner fra babyen.</div>
+  </div>
+  <div class="kl-body">
+    <div id="kl-innhold"></div>
+    <div class="kl-advarsel">Kjenn du ikke bevegelse på over 2 timer, eller merker tydelig endring i mønster – er det alltid greit å ringe jordmor eller fødeavdelingen. Det er ingen dum grunn å ringe.</div>
+    <div class="kl-notat-wrap">
+      <label class="kl-notat-label">Notat for i dag</label>
+      <textarea class="kl-notat" id="dn" rows="3" placeholder="Mye aktivitet etter middag..." oninput="lN()"></textarea>
     </div>
-    <div class="sec">I dag</div>
-    <div style="margin-bottom:16px">
-      <div style="font-size:12px;color:var(--text-3);margin-bottom:6px;font-weight:500">Hvordan kjentes bevegelsene i dag?</div>
-      <textarea id="dn" rows="3" placeholder="Mye aktivitet etter middag, kjente tydelige spark..." oninput="lN()" style="width:100%;font-size:14px;resize:none;background:var(--bg-2);border:0.5px solid var(--border-2);border-radius:var(--radius-sm);padding:10px 12px;color:var(--text);font-family:inherit;outline:none;line-height:1.6;transition:border-color 0.15s" onfocus="this.style.borderColor='var(--grn)'" onblur="this.style.borderColor='var(--border-2)'"></textarea>
-    </div>
-    <div class="sec">Historikk</div>
+    <div class="kl-hist-label" id="kl-hist-tittel">SISTE REGISTRERING</div>
     <div id="dh"></div>
   </div>
+</div>
 
-  <!-- PARTNER -->
-  <div class="pane" id="pp">
-    <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:60vh;text-align:center;padding:0 10px">
-      <div style="font-size:48px;margin-bottom:20px">🌿</div>
-      <div style="font-size:18px;font-weight:600;color:var(--text);margin-bottom:12px;letter-spacing:-0.2px">Del graviditeten</div>
-      <div style="font-size:15px;color:var(--text-2);line-height:1.7;max-width:280px">Snart kan du invitere partneren din til å følge med – se bevegelser, sjekkliste og små notater sammen.</div>
-      <div style="margin-top:28px;font-size:13px;color:var(--text-3);background:var(--bg-2);padding:8px 16px;border-radius:20px;border:0.5px solid var(--border)">Kommer snart</div>
-    </div>
+<!-- ── PROFIL PANE ── -->
+<div class="pane" id="pp">
+  <div class="profil-header">
+    <div class="profil-tittel">Profil</div>
   </div>
+  <div class="profil-body">
+
+    <!-- Termin -->
+    <div class="profil-card">
+      <div class="profil-row">
+        <div class="profil-rl">Termin</div>
+        <div class="profil-rv" id="profil-termin">–</div>
+      </div>
+      <div class="profil-row">
+        <div class="profil-rl">Svangerskapsuke</div>
+        <div class="profil-rv" id="profil-uke">–</div>
+      </div>
+      <div style="margin-top:14px;border-top:1px solid var(--border);padding-top:14px">
+        <div class="profil-rl" style="margin-bottom:8px">Endre termindato</div>
+        <div style="display:flex;gap:10px;align-items:center">
+          <input type="date" id="profil-termin-input"
+            style="flex:1;font-size:15px;padding:10px 12px;border:1px solid var(--border);border-radius:10px;background:var(--bg);color:var(--text);font-family:inherit;outline:none"
+            oninput="document.getElementById('profil-termin-lagre').style.opacity=1">
+          <button id="profil-termin-lagre" onclick="lagreNyTermin()"
+            style="opacity:0;transition:opacity 0.2s;background:var(--grn);color:white;border:none;border-radius:10px;padding:10px 16px;font-size:14px;font-weight:600;font-family:inherit;cursor:pointer">
+            Lagre
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Kommer snart -->
+    <div class="profil-kommer-label">KOMMER SNART</div>
+    <div class="profil-kommer-card">
+      <div class="profil-kommer-item">
+        <div class="profil-kommer-left">
+          <span class="profil-kommer-emoji">🎁</span>
+          <span class="profil-kommer-navn">Ønskeliste for baby</span>
+        </div>
+        <span class="profil-lås">🔒</span>
+      </div>
+      <div class="profil-kommer-item">
+        <div class="profil-kommer-left">
+          <span class="profil-kommer-emoji">💕</span>
+          <span class="profil-kommer-navn">Del med partner</span>
+        </div>
+        <span class="profil-lås">🔒</span>
+      </div>
+    </div>
+
+    <!-- Om appen -->
+    <div class="profil-kommer-label">OM APPEN</div>
+    <div class="profil-card" style="margin-bottom:20px">
+      <div class="profil-row">
+        <div class="profil-rl">App</div>
+        <div class="profil-rv">Sammen</div>
+      </div>
+      <div class="profil-row">
+        <div class="profil-rl">Versjon</div>
+        <div class="profil-rv">1.0</div>
+      </div>
+      <div class="profil-row" style="margin-bottom:0">
+        <div style="font-size:13px;color:var(--text-2);line-height:1.6">
+          Sammen er laget for å gi deg en trygg og oversiktlig følgesvenn gjennom svangerskapet. Medisinsk innhold er basert på retningslinjer fra Helsedirektoratet og Helsenorge.
+        </div>
+      </div>
+    </div>
+
+    <button class="profil-reset" onclick="nullstill()">Tilbakestill app</button>
+  </div>
+</div>
+
+<!-- ── BUNN-NAV ── -->
+<div class="nav">
+  <button class="nb on" onclick="visPane('h',this)" aria-label="Hjem">
+    <svg fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/><path d="M9 21V12h6v9"/></svg>
+    Hjem
+  </button>
+  <button class="nb" onclick="visPane('s',this)" aria-label="Sjekkliste">
+    <svg fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+    Sjekkliste
+  </button>
+  <button class="nb" onclick="visPane('k',this)" aria-label="Kjenne liv">
+    <svg fill="none" stroke="currentColor" stroke-width="1.4" viewBox="0 0 24 24" width="32" height="32">
+      <circle cx="12" cy="13" r="7"/>
+      <circle cx="9.8" cy="12.5" r="0.9" fill="currentColor" stroke="none"/>
+      <circle cx="14.2" cy="12.5" r="0.9" fill="currentColor" stroke="none"/>
+      <path d="M9.8 16q2.2 1.8 4.4 0" stroke-linecap="round"/>
+      <path d="M12 6 C12 4.5 13.5 4 14 5 C14.5 6 13.5 7 12.5 6.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    Kjenne liv
+  </button>
+  <button class="nb" onclick="visPane('p',this)" aria-label="Profil">
+    <svg fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+    Profil
+  </button>
+</div>
 
 </div><!-- /app -->
 
 <script>
 // ── STATE ──────────────────────────────────────────────
-var U = 20;
-var TODAY = new Date().toISOString().slice(0, 10);
+var U = 20;           // visningsuke (kan avvike fra faktisk uke ved navigasjon)
+var EKTE_U = 20;      // faktisk uke beregnet fra termin
+var TODAY = new Date().toISOString().slice(0,10);
 var saveTimer = null;
-var db = {};       // dagbok: { "2026-04-07": { k, s, m, n } }
-var cl = {};       // sjekkliste state: { [item.id]: { d, n } }
-var oc = {};       // åpne kategorier
+var db = {};
+var cl = {};
+var oc = {};
+var TERMIN = null;    // ISO date string
+var TERMIN_LENGDE = 283; // graviditetslengde i dager
 
-// ── DATA ───────────────────────────────────────────────
+// ── DATA FD ───────────────────────────────────────────
 var FD = {
-  4:  { e: '🌱', n: 'Fosteranlegg',  c: 'noen mm',   g: '< 1 g',      d: 'Fester seg i livmorslimhinnen. Cellene deler seg raskt.' },
-  6:  { e: '🫐', n: 'Blåbær',        c: 'ca. 5 mm',  g: '< 1 g',      d: 'Hjertet begynner å slå. Anlegg til armer og bein dannes.' },
-  8:  { e: '🍓', n: 'Jordbær',       c: 'ca. 1,5 cm', g: 'ca. 1 g',   d: 'Ansiktet tar form. Hjertet fyller store deler av brysthulen.' },
-  10: { e: '🍑', n: 'Aprikos',       c: 'ca. 3 cm',  g: 'ca. 4 g',    d: 'Hodet er omtrent like stort som resten av kroppen. Øynene flytter seg mot riktig plass.' },
-  12: { e: '🍋', n: 'Sitron',        c: 'ca. 5 cm',  g: 'ca. 16 g',   d: 'Ligner mer og mer på et menneske. Alle organene er anlagt og vokser videre.' },
-  13: { e: '🍈', n: 'Liten melon',   c: 'ca. 6–7 cm', g: 'ca. 40 g',  d: 'Morkaken er ferdig utviklet. Fra nå er det morkaken som gir fosteret næring.' },
-  14: { e: '🍊', n: 'Appelsin',      c: 'ca. 8 cm',  g: 'ca. 43 g',   d: 'Fine hår vokser på kroppen. Fosteret kan hikke og svelger fostervann.' },
-  15: { e: '🥝', n: 'Kiwi',          c: 'ca. 10 cm', g: 'ca. 90 g',   d: 'Suger på fingrene – trener sugerefleksen til etter fødsel.' },
-  16: { e: '🥑', n: 'Avokado',       c: 'ca. 11–12 cm', g: 'ca. 120 g', d: 'Skjelettet blir hardere. Bevegelsene er mer koordinerte.' },
-  17: { e: '🍐', n: 'Pære',          c: 'ca. 13 cm', g: 'ca. 160 g',  d: 'Kroppen vokser raskere enn hodet nå. Bevegelsene blir større og mer målrettede.' },
-  18: { e: '🥦', n: 'Brokkoli',      c: 'ca. 14 cm', g: 'ca. 200 g',  d: 'Huden dekkes av et hvitt fettlag som beskytter den i fostervannet.' },
-  19: { e: '🥭', n: 'Mango',         c: 'ca. 15 cm', g: 'ca. 235 g',  d: 'Fosteret kan hikke – noen kjenner det som rytmiske dunk.' },
-  20: { e: '🍌', n: 'Banan',         c: 'ca. 25 cm', g: 'ca. 300 g',  d: 'Halvveis! Kan gjøre grimaser og suge på tommelen.' },
-  21: { e: '🌽', n: 'Maiskolbe',     c: 'ca. 26 cm', g: 'ca. 400 g',  d: 'Tenner dannes i tannkjøttet. Nervecellene i hjernen kobler seg til hverandre.' },
-  22: { e: '🫑', n: 'Paprika',       c: 'ca. 27 cm', g: 'ca. 475 g',  d: 'Lungene og luftveiene utvikler seg. Bukspyttkjertelen produserer insulin.' },
-  23: { e: '🍆', n: 'Aubergine',     c: 'ca. 28 cm', g: 'ca. 575 g',  d: 'Har våkne og sovende perioder – og kan antagelig drømme.' },
-  24: { e: '🌽', n: 'Mais',          c: 'ca. 30 cm', g: 'ca. 650 g',  d: 'Gjør tydelige pusteøvelser med fostervann som forberedelse til livet utenfor.' },
-  25: { e: '🥒', n: 'Agurk',         c: 'ca. 32 cm', g: 'ca. 750 g',  d: 'Hører hjerteslag, pust og stemmer utenfra. Hørselen utvikler seg raskt.' },
-  26: { e: '🫛', n: 'Ertebelg',      c: 'ca. 35 cm', g: 'ca. 900 g',  d: 'Øver seg på å åpne og lukke øynene. De store organene tar form.' },
-  27: { e: '🥬', n: 'Salat',         c: 'ca. 36 cm', g: 'ca. 1 000 g', d: 'Kan begynne å åpne øynene for første gang. Synet modnes videre etter fødsel.' },
-  28: { e: '🥬', n: 'Kinakål',       c: 'ca. 37 cm', g: 'ca. 1 150 g', d: 'Har tydelige perioder med aktivitet og hvile. Kan skvette ved plutselige lyder.' },
-  29: { e: '🎃', n: 'Liten gresskar', c: 'ca. 38 cm', g: 'ca. 1 300 g', d: 'Går inn i en fase med økt vekst – fra å være langt og smalt til å legge på seg i bredden.' },
-  30: { e: '🥥', n: 'Kokosnøtt',     c: 'ca. 39 cm', g: 'ca. 1 450 g', d: 'Blodforsyningen til øyet utvikler seg. Etter fødsel vil den nyfødte forsøke å møte blikket ditt.' },
-  31: { e: '🍍', n: 'Ananas',        c: 'ca. 40 cm', g: 'ca. 1 650 g', d: 'Ligner nå et nyfødt barn. Kan sannsynligvis kjenne igjen lyder fra utsiden av livmoren.' },
-  32: { e: '🍈', n: 'Melon',         c: 'ca. 42 cm', g: 'ca. 1 850 g', d: 'Det blir gradvis mindre plass, men det skal fortsatt være godt med fostervann.' },
-  33: { e: '🎃', n: 'Gresskar',      c: 'ca. 43 cm', g: 'ca. 2 050 g', d: 'Vokser i både lengde og bredde. Kan sannsynligvis oppfatte forskjellen mellom lys og mørke.' },
-  34: { e: '🍉', n: 'Vannmelon',     c: 'ca. 45 cm', g: 'ca. 2 300 g', d: 'Gjør pusteøvelser med fostervann. Hører hjerteslag og tarmlyder fra kroppen din.' },
-  35: { e: '🎃', n: 'Stor gresskar', c: 'ca. 46 cm', g: 'ca. 2 500 g', d: 'Fostervann avtar, men du skal fortsatt kjenne like mye bevegelser.' },
-  36: { e: '🍉', n: 'Stor vannmelon', c: 'ca. 47 cm', g: 'ca. 2 600–2 750 g', d: 'Hjernen er i stor grad ferdig utviklet. Har tydelige søvn- og våkneperioder.' },
-  37: { e: '🎉', n: 'Fullbårent!',   c: 'ca. 48–52 cm', g: 'ca. 2 700–3 200 g', d: 'Regnes nå som fullbårent. De fleste ligger med hodet ned mot fødselskanalen.' },
-  38: { e: '🎉', n: 'Snart klar',    c: 'ca. 49–52 cm', g: 'ca. 3 000–3 400 g', d: 'Lungene er blant de siste organene som modnes – de fortsetter helt frem mot fødsel.' },
-  40: { e: '🌟', n: 'Termin!',       c: 'ca. 50–55 cm', g: 'ca. 3 200–4 000 g', d: 'Fullt utviklet og klar. Bare 5 % føder på eksakt termindato – dere er klare når dere er klare.' },
-  42: { e: '🌟', n: 'Snart nå!',     c: 'ca. 51–55 cm', g: 'ca. 3 400–4 500 g', d: 'Noen trenger litt ekstra tid. Du følges tett av helsepersonell.' }
+  4:  { e:'🌱', n:'Fosteranlegg', c:'noen mm', g:'< 1 g', d:'Fester seg i livmorslimhinnen. Cellene deler seg raskt.' },
+  6:  { e:'🫐', n:'Blåbær', c:'ca. 5 mm', g:'< 1 g', d:'Hjertet begynner å slå. Anlegg til armer og bein dannes.' },
+  8:  { e:'🍓', n:'Jordbær', c:'ca. 1,5 cm', g:'ca. 1 g', d:'Ansiktet tar form. Hjertet fyller store deler av brysthulen.' },
+  10: { e:'🍑', n:'Aprikos', c:'ca. 3 cm', g:'ca. 4 g', d:'Hodet er omtrent like stort som resten av kroppen.' },
+  12: { e:'🍋', n:'Sitron', c:'ca. 5 cm', g:'ca. 16 g', d:'Ligner mer og mer på et menneske. Alle organene er anlagt og vokser videre.' },
+  13: { e:'🍈', n:'Liten melon', c:'ca. 6–7 cm', g:'ca. 40 g', d:'Morkaken er ferdig utviklet. Fra nå gir morkaken fosteret næring.' },
+  14: { e:'🍊', n:'Appelsin', c:'ca. 8 cm', g:'ca. 43 g', d:'Fine hår vokser på kroppen. Fosteret kan hikke og svelger fostervann.' },
+  15: { e:'🥝', n:'Kiwi', c:'ca. 10 cm', g:'ca. 90 g', d:'Suger på fingrene – trener sugerefleksen til etter fødsel.' },
+  16: { e:'🥑', n:'Avokado', c:'ca. 11–12 cm', g:'ca. 120 g', d:'Skjelettet blir hardere. Bevegelsene er mer koordinerte.' },
+  17: { e:'🍐', n:'Pære', c:'ca. 13 cm', g:'ca. 160 g', d:'Kroppen vokser raskere enn hodet nå. Bevegelsene blir større og mer målrettede.' },
+  18: { e:'🥦', n:'Brokkoli', c:'ca. 14 cm', g:'ca. 200 g', d:'Huden dekkes av et hvitt fettlag som beskytter den i fostervannet.' },
+  19: { e:'🥭', n:'Mango', c:'ca. 15 cm', g:'ca. 235 g', d:'Fosteret kan hikke – noen kjenner det som rytmiske dunk.' },
+  20: { e:'🍌', n:'Banan', c:'ca. 25 cm', g:'ca. 300 g', d:'Halvveis! Kan gjøre grimaser og suge på tommelen.' },
+  21: { e:'🌽', n:'Maiskolbe', c:'ca. 26 cm', g:'ca. 400 g', d:'Tenner dannes i tannkjøttet. Nervecellene i hjernen kobler seg til hverandre.' },
+  22: { e:'🫑', n:'Paprika', c:'ca. 27 cm', g:'ca. 475 g', d:'Lungene og luftveiene utvikler seg. Bukspyttkjertelen produserer insulin.' },
+  23: { e:'🍆', n:'Aubergine', c:'ca. 28 cm', g:'ca. 575 g', d:'Har våkne og sovende perioder – og kan antagelig drømme.' },
+  24: { e:'🌽', n:'Mais', c:'ca. 30 cm', g:'ca. 650 g', d:'Gjør tydelige pusteøvelser med fostervann som forberedelse til livet utenfor.' },
+  25: { e:'🥒', n:'Agurk', c:'ca. 32 cm', g:'ca. 750 g', d:'Hører hjerteslag, pust og stemmer utenfra. Hørselen utvikler seg raskt.' },
+  26: { e:'🫛', n:'Ertebelg', c:'ca. 35 cm', g:'ca. 900 g', d:'Øver seg på å åpne og lukke øynene. De store organene tar form.' },
+  27: { e:'🥬', n:'Salat', c:'ca. 36 cm', g:'ca. 1 000 g', d:'Kan begynne å åpne øynene for første gang. Synet modnes videre etter fødsel.' },
+  28: { e:'🥬', n:'Kinakål', c:'ca. 37 cm', g:'ca. 1 150 g', d:'Har tydelige perioder med aktivitet og hvile. Kan skvette ved plutselige lyder.' },
+  29: { e:'🎃', n:'Liten gresskar', c:'ca. 38 cm', g:'ca. 1 300 g', d:'Går inn i en fase med økt vekst – fra å være langt og smalt til å legge på seg i bredden.' },
+  30: { e:'🥥', n:'Kokosnøtt', c:'ca. 39 cm', g:'ca. 1 450 g', d:'Blodforsyningen til øyet utvikler seg. Etter fødsel vil den nyfødte forsøke å møte blikket ditt.' },
+  31: { e:'🍍', n:'Ananas', c:'ca. 40 cm', g:'ca. 1 650 g', d:'Ligner nå et nyfødt barn. Kan sannsynligvis kjenne igjen lyder fra utsiden av livmoren.' },
+  32: { e:'🍈', n:'Melon', c:'ca. 42 cm', g:'ca. 1 850 g', d:'Det blir gradvis mindre plass, men det skal fortsatt være godt med fostervann.' },
+  33: { e:'🎃', n:'Gresskar', c:'ca. 43 cm', g:'ca. 2 050 g', d:'Vokser i både lengde og bredde. Kan sannsynligvis oppfatte forskjellen mellom lys og mørke.' },
+  34: { e:'🍉', n:'Vannmelon', c:'ca. 45 cm', g:'ca. 2 300 g', d:'Gjør pusteøvelser med fostervann. Hører hjerteslag og tarmlyder fra kroppen din.' },
+  35: { e:'🎃', n:'Stor gresskar', c:'ca. 46 cm', g:'ca. 2 500 g', d:'Fostervann avtar, men du skal fortsatt kjenne like mye bevegelser.' },
+  36: { e:'🍉', n:'Stor vannmelon', c:'ca. 47 cm', g:'ca. 2 600–2 750 g', d:'Hjernen er i stor grad ferdig utviklet. Har tydelige søvn- og våkneperioder.' },
+  37: { e:'🎉', n:'Fullbårent!', c:'ca. 48–52 cm', g:'ca. 2 700–3 200 g', d:'Regnes nå som fullbårent. De fleste ligger med hodet ned mot fødselskanalen.' },
+  38: { e:'🎉', n:'Snart klar', c:'ca. 49–52 cm', g:'ca. 3 000–3 400 g', d:'Lungene er blant de siste organene som modnes – de fortsetter helt frem mot fødsel.' },
+  40: { e:'🌟', n:'Termin!', c:'ca. 50–55 cm', g:'ca. 3 200–4 000 g', d:'Fullt utviklet og klar. Bare 5 % føder på eksakt termindato.' },
+  42: { e:'🌟', n:'Snart nå!', c:'ca. 51–55 cm', g:'ca. 3 400–4 500 g', d:'Noen trenger litt ekstra tid. Du følges tett av helsepersonell.' }
 };
 
+// ── DATA TP ───────────────────────────────────────────
 var TP = {
-  4: {
-    m: 'Embryoet fester seg i livmorslimhinnen og begynner å dele seg raskt. Morkaken er i ferd med å dannes – den vil forsyne fosteret med næring fremover.',
-    k: 'De første ukene merker mange ingenting. Noen kjenner ømme bryster, trykk i underlivet eller hyppig trang til å tisse. Kvalme og tretthet kan starte allerede nå.',
-    g: 'Ta folsyre 400 µg daglig frem til uke 12 – det beskytter mot nevralrørsdefekter. Unngå alkohol og tobakk.'
-  },
-  6: {
-    m: 'Embryoet er ca. 5 mm. Anlegg til armer, bein, hjerte, lever og lunger begynner å dannes. Hjertet begynner å slå.',
-    k: 'Kvalme, tretthet, ømme bryster og hyppig vannlating er vanlig nå. Fordøyelsen går langsommere – du kan kjenne deg oppblåst og raskere mett.',
-    g: 'Bestill første svangerskapskontroll – du bør få time innen én uke. Ta med morgenurin til konsultasjonen.'
-  },
-  8: {
-    m: 'Embryoet er ca. 1,5 cm. Ansiktet tar form med anlegg til nesetipp, øyelokk og overleppe. På første kontroll tas blodprøver for blodtype, RhD, jern, HIV, syfilis, hepatitt B og røde hunder.',
-    k: 'Kvalmen er ofte på topp nå. Det hjelper å spise litt og ofte og ha noe ved sengen om morgenen. Lett blødning fra tannkjøttet og nesen er vanlig – slimhinnene er skjørere enn normalt.',
-    g: 'Bestill første svangerskapskontroll om du ikke har gjort det. Hjemmetesten er like sikker som legens.'
-  },
-  10: {
-    m: 'Fosteret er ca. 3 cm og veier rundt 4 gram. Hodet kan være omtrent like stort som resten av kroppen. Øynene begynner å flytte seg mot riktig plass i ansiktet.',
-    k: 'Livmoren vokser, men ligger fortsatt nede i bekkenet – graviditeten er ikke nødvendigvis synlig ennå. Humørsvingninger er vanlig på grunn av hormoner.',
-    g: 'Snakk med jordmor eller lege om fosterdiagnostikk – tidlig ultralyd og eventuelt NIPT tilbys i uke 11–14.'
-  },
-  12: {
-    m: 'Fosteret er ca. 5 cm og ligner mer og mer på et menneske. Anlegg til alle organer er på plass og vil vokse videre. Fosteret kan bevege seg, men du kjenner det ikke ennå.',
-    k: 'Kvalmen avtar gjerne nå – de fleste kjenner seg bedre fra uke 12–14. Livmoren er nå på størrelse med en grapefrukt.',
-    g: 'Ta opp fødeplass med jordmor eller fastlege. De søker på vegne av deg – du gjør det ikke selv.'
-  },
-  14: {
-    m: 'Fosteret er ca. 8 cm. Det begynner å vokse fine hår på kroppen. Fosteret kan hikke og svelger små mengder fostervann. Morkaken er ferdig utviklet og forsyner nå fosteret med næring.',
-    k: 'Andre trimester starter – mange opplever mer energi og at kvalmen er borte. Magen begynner å bli synlig for andre.',
-    g: 'Bruk ukene fremover til å informere arbeidsgiver og lage en plan for permisjon.'
-  },
-  16: {
-    m: 'Fosteret er ca. 120 gram. Skjelettet blir hardere og nerveceller i hjerne og ryggmarg vokser raskt. Organene flytter seg gradvis til riktige plasser.',
-    k: 'Du kan begynne å kjenne de første bevegelsene – som en liten iling eller prikking. De som har født før kjenner det gjerne litt tidligere.',
-    g: 'Rutineultralyden skjer mellom uke 17 og 20. Du får innkalling – sjekk at den er på vei. Husk søknadsfrist barnehage 1. mars!'
-  },
-  18: {
-    m: 'Fosteret er ca. 200 gram. Huden begynner å dekkes av et hvitt fettlag som beskytter den i fostervannet. Fosteret kan sannsynligvis begynne å oppfatte lyd.',
-    k: 'Nå vil de fleste kjenne tydelige bevegelser. Magen vokser og det er normalt å legge på seg 11–16 kilo totalt i svangerskapet. Navlen kan begynne å butte ut – helt ufarlig.',
-    g: 'Sjekk at ferritinprøven (jern) er tatt innen uke 15. Si fra til arbeidsgiveren din om at du er gravid.'
-  },
-  20: {
-    m: 'Fosteret veier ca. 300 gram. Det kan begynne å gjøre grimaser og suge på tommelen. Bevegelsene blir gradvis mer avanserte.',
-    k: 'Halsbrann starter gjerne nå – livmoren presser på magesekken. Gaviscon fra apoteket kan hjelpe. Det er normalt å bli svimmel når du ligger på ryggen – snu deg på siden.',
-    g: 'Snakk med partneren om permisjonsplan. Søk barnehageplass om du ikke har gjort det.'
-  },
-  22: {
-    m: 'Fosteret veier ca. 475 gram. Lungene utvikler seg videre. Bukspyttkjertelen begynner å produsere insulin.',
-    k: 'Leddbåndene i bekkenet blir mer elastiske – noen kjenner det som smerter ved gange eller trappegang. Du kan kjenne spark daglig nå.',
-    g: 'Ikke gift? Dere kan registrere farskap digitalt på nav.no fra uke 22.'
-  },
-  24: {
-    m: 'Svangerskapskontroll uke 24. Fosteret veier ca. 650 gram og gjør tydelige pusteøvelser med fostervann. Kikhostevaksine (dTp) tilbys gratis – si ja. Er du rhesus negativ? Da tas blodprøve for å bestemme fosterets blodtype.',
-    k: 'Du kan nå kjenne spark utenpå magen. Livmoren presser på urinblæren – hyppigere toalettbesøk er normalt. Brystene fortsetter å vokse.',
-    g: 'RSV-vaksine kan tas fra uke 24 mot egenbetaling med resept. Sjekk om svangerskapsdiabetes-test er aktuelt for deg.'
-  },
-  25: {
-    m: 'Fosteret veier ca. 750 gram. Hørselen utvikler seg – fosteret kan sannsynligvis høre hjerteslag, pust og stemmer utenfra.',
-    k: 'Brystknoppene og huden rundt kan bli mørkere. Strekkmerker og pigmentflekker er vanlig – de blekner gjerne etter fødsel.',
-    g: 'Begynn å tenke på hvem du vil ha med deg til fødsel og hva som er viktig for deg.'
-  },
-  26: {
-    m: 'Fosteret veier ca. 900 gram. De store organene tar form. Fosteret øver seg på å åpne og lukke øynene.',
-    k: 'Mange opplever økt søvnbehov fra nå. Det er normalt å våkne om natten – fosterbevegelser og kroppen din gjør søvnen urolig. Hvil når du kan.',
-    g: 'Snakk med partneren om foreldrepermisjonsplan og fordeling.'
-  },
-  27: {
-    m: 'Fosteret veier ca. 1000 gram og kan begynne å åpne øynene for første gang. Synet modnes videre etter fødsel. Mange fostre legger seg med hodet ned nå.',
-    k: 'Røde prikker i ansiktet og på kroppen er vanlig – det skyldes endringer i blodkarene og forsvinner etter fødsel.',
-    g: 'Søk foreldrepenger hos NAV helst 4–6 uker før permisjonen starter.'
-  },
-  28: {
-    m: 'Svangerskapskontroll uke 28. Fosteret veier ca. 1150 gram og har tydelige perioder med aktivitet og hvile. Hemoglobin sjekkes. Er du rhesus negativ og fosteret RhD-positivt, settes anti-D dose 1 nå – hos fastlege eller jordmor.',
-    k: 'Fra nå er det fint å telle bevegelser daglig. Fosteret kan skvette ved plutselige lyder – det er normalt.',
-    g: 'Søk foreldrepenger hos NAV om du ikke har gjort det. Meld deg på fødselsforberedende kurs.'
-  },
-  29: {
-    m: 'Fosteret veier nå rundt 1300 gram. Det går inn i en fase med økt vekst – fra å være relativt langt og smalt, til å legge på seg mer i bredden. En naturlig del av utviklingen.',
-    k: 'Livmoren vokser og presser på lungene. Det er vanlig å føle seg andpusten selv ved små anstrengelser – kroppen kompenserer ved å puste litt raskere.',
-    g: 'Begynn å tenke på sykehusvesken. Du trenger ikke pakke den nå, men det er greit å ha en liste klar.'
-  },
-  30: {
-    m: 'Fosteret veier rundt 1450 gram. Blodforsyningen til øyet utvikler seg nå. Etter fødselen vil synet modnes videre – allerede kort tid etter vil den nyfødte forsøke å møte blikket ditt.',
-    k: 'Hjertet slår raskere enn vanlig for å møte kroppens økte behov. Hovne ben er vanlig – det er ekstra væske i kroppen, og det er normalt.',
-    g: 'Meld deg på fødselsforberedende kurs om du ikke har gjort det. Mange kurs fylles opp tidlig.'
-  },
-  31: {
-    m: 'Fosteret veier rundt 1650 gram og ligner nå et nyfødt barn. Det kan sannsynligvis kjenne igjen lyder fra utsiden av livmoren.',
-    k: 'Forstoppelse er vanlig nå fordi hormoner bremser tarmbevegelsene. Det hjelper med fysisk aktivitet, mer kostfiber og å drikke nok vann.',
-    g: 'Tenk gjennom hvem du vil ha med deg til fødsel, og snakk med dem om det.'
-  },
-  32: {
-    m: 'Svangerskapskontroll uke 32. Fosteret veier rundt 1850 gram. Etterhvert som det vokser, blir det gradvis mindre plass i livmoren – det skal likevel være godt med fostervann rundt det.',
-    k: 'Det er tyngre å bevege seg nå – det er helt naturlig. Bevegelsene til babyen kjennes også annerledes, mer stramme og tydelige fordi det er blitt trangt.',
-    g: 'Pakk sykehusvesken. Meld deg på fødselsforberedende kurs om du ikke har gjort det.'
-  },
-  33: {
-    m: 'Fosteret veier rundt 2050 gram og vokser i både lengde og bredde. Det kan sannsynligvis oppfatte forskjellen mellom lys og mørke.',
-    k: 'Du kan begynne å kjenne kynnere – sammentrekninger som starter øverst i magen og sprer seg nedover. De varer gjerne et halvt minutt og er ikke smertefulle.',
-    g: 'Kynnere skiller seg fra rier ved at de er uregelmessige, ikke øker i intensitet, og gjerne letter når du endrer stilling eller legger deg ned.'
-  },
-  34: {
-    m: 'Fosteret veier ca. 2300 gram. De fleste indre organer er ferdig utviklet – unntatt lungene, som trenger mer tid. Fosteret gjør pusteøvelser med fostervann som forberedelse. Det hører hjerteslag, tarmlyder og pust fra kroppen din.',
-    k: 'Kroppen jobber hardt nå. Det er normalt å kjenne seg tung og sliten – ta det i ditt tempo.',
-    g: 'Sjekk at du har pakket alt til sykehusvesken. Er bilstolen montert og testet?'
-  },
-  35: {
-    m: 'Fosteret veier ca. 2500 gram. Mengden fostervann avtar gradvis, men du skal fortsatt kjenne like mye bevegelser. Fosteret svelger fostervann – dette er grunnen til at det første avføringen etter fødsel er mørk og klebrig (barnebek).',
-    k: 'Det kan bli vanskeligere å finne en behagelig hvilestilling. Prøv å ligge på siden med en pute mellom beina og under magen.',
-    g: 'Snakk med arbeidsgiveren om siste arbeidsdag og overgang til permisjon.'
-  },
-  36: {
-    m: 'Svangerskapskontroll uke 36. Jordmor sjekker fosterleiet – de fleste ligger med hodet ned. Seteleie? Da henvises du til fødepoliklinikk. Dere snakker om fødsel, hjemmebesøk fra jordmor og oppfølging fra helsestasjonen. RSV-vaksine – siste sjanse.',
-    k: 'Livmoren presser på urinblæren – vanligere å tisse. Det kan lekke råmelk fra brystene. Humørsvingninger er normalt. Det er lov å både glede seg og grue seg.',
-    g: 'Sørg for at sykehusvesken er ferdig pakket og bilstolen er montert. Dere er klare.'
-  },
-  37: {
-    m: 'Fosteret regnes nå som fullbårent. Det veier ca. 2700–3200 gram og er 48–52 cm. Hjernen er i stor grad ferdig utviklet. Lungene er blant de siste organene som modnes.',
-    k: 'Livmorhalsen mykes opp og kynnerne kan bli hyppigere. Slimproppen kan løsne – de fleste merker det ikke, og det sier ingenting om når fødselen starter.',
-    g: 'Tegn på fødsel: regelmessige rier, vannavgang eller blødning. Ring fødeavdelingen ved vannavgang eller rier hvert 5. minutt i én time.'
-  },
-  38: {
-    m: 'Svangerskapskontroll uke 38. Blodtrykk, urin, fosterleie og hjerteslag sjekkes. God anledning til å ta opp spørsmål du sitter med.',
-    k: 'Søvnen forstyrres gjerne mer nå. Det er normalt å kjenne på en blanding av spenning, utålmodighet og uro.',
-    g: 'Sjekk at du vet veien til fødeavdelingen og hvem du skal ringe. Ha telefonen ladet.'
-  },
-  39: {
-    m: 'Fosteret er ferdig utviklet. Vekten varierer mye – alt fra 2700 til 4500 gram er normalt. Hud-mot-hud-kontakt etter fødsel hjelper babyen å regulere temperatur, gråter mindre og gir ammingen en god start.',
-    k: 'Kynnerne kan komme oftere og kjennes mer intense. Husk: de er uregelmessige og letter ved stillingsbytte. Rier er regelmessige og øker i styrke.',
-    g: 'Alt er klart. Hvil så godt du kan. Du er klar.'
-  },
-  40: {
-    m: 'Svangerskapskontroll uke 40. Du er ved termin – men bare 5 % føder på eksakt termindato. Kontrollene er hyppigere nå. Si alltid fra ved endring i bevegelsesmønsteret.',
-    k: 'Babyen beveger seg fortsatt like mye, selv om det kjennes annerledes. Kjenn etter daglig.',
-    g: 'Dra til fødeavdelingen ved regelmessige rier (ca. hvert 5. minutt i én time), vannavgang, eller blødning.'
-  },
-  41: {
-    m: 'Svangerskapskontroll uke 41 – på sykehuset. Ultralyd sjekker fostervannsmengde, blodgjennomstrømming i navlesnor og vekstestimat. Helsepersonell vurderer i samarbeid med deg om fødsel bør settes i gang.',
-    k: 'Det er normalt å passere termin. Mange føder i uke 41. Hold kontakten med fødeavdelingen.',
-    g: 'Settes fødsel ikke i gang nå, anbefales det senest i uke 42. Du bestemmer i samarbeid med helsepersonell.'
-  },
-  42: {
-    m: 'Det anbefales igangsetting av fødsel senest i uke 42, i samarbeid med deg og helsepersonell.',
-    k: 'Babyen beveger seg fortsatt. Si alltid fra ved endring i bevegelsene – ring fødeavdelingen.',
-    g: 'Du er i trygge hender. Ring fødeavdelingen ved usikkerhet – det er alltid greit å ta kontakt.'
-  }
+  4:  { m:'Embryoet fester seg i livmorslimhinnen og begynner å dele seg raskt. Morkaken er i ferd med å dannes.', k:'De første ukene merker mange ingenting. Noen kjenner ømme bryster, trykk i underlivet eller hyppig trang til å tisse.', g:'Ta folsyre 400 µg daglig frem til uke 12 – det beskytter mot nevralrørsdefekter. Unngå alkohol og tobakk.' },
+  6:  { m:'Embryoet er ca. 5 mm. Anlegg til armer, bein, hjerte, lever og lunger begynner å dannes. Hjertet begynner å slå.', k:'Kvalme, tretthet, ømme bryster og hyppig vannlating er vanlig nå. Fordøyelsen går langsommere.', g:'Bestill første svangerskapskontroll – du bør få time innen én uke. Ta med morgenurin.' },
+  8:  { m:'Embryoet er ca. 1,5 cm. Ansiktet tar form. På første kontroll tas blodprøver for blodtype, RhD, jern, HIV, syfilis, hepatitt B og røde hunder.', k:'Kvalmen er ofte på topp nå. Det hjelper å spise litt og ofte og ha noe ved sengen om morgenen.', g:'Bestill første svangerskapskontroll om du ikke har gjort det. Hjemmetesten er like sikker som legens.' },
+  10: { m:'Fosteret er ca. 3 cm og veier rundt 4 gram. Hodet kan være omtrent like stort som resten av kroppen.', k:'Livmoren vokser, men ligger fortsatt nede i bekkenet – graviditeten er ikke nødvendigvis synlig ennå.', g:'Snakk med jordmor eller lege om fosterdiagnostikk – tidlig ultralyd og eventuelt NIPT tilbys i uke 11–14.' },
+  12: { m:'Fosteret er ca. 5 cm. Anlegg til alle organer er på plass og vil vokse videre. Fosteret kan bevege seg, men du kjenner det ikke ennå.', k:'Kvalmen avtar gjerne nå – de fleste kjenner seg bedre fra uke 12–14. Livmoren er nå på størrelse med en grapefrukt.', g:'Ta opp fødeplass med jordmor eller fastlege. De søker på vegne av deg – du gjør det ikke selv.' },
+  14: { m:'Fosteret er ca. 8 cm. Det begynner å vokse fine hår på kroppen. Morkaken er ferdig utviklet og forsyner nå fosteret med næring.', k:'Andre trimester starter – mange opplever mer energi og at kvalmen er borte. Magen begynner å bli synlig.', g:'Bruk ukene fremover til å informere arbeidsgiver og lage en plan for permisjon.' },
+  16: { m:'Fosteret er ca. 120 gram. Skjelettet blir hardere og nerveceller i hjerne og ryggmarg vokser raskt.', k:'Du kan begynne å kjenne de første bevegelsene – som en liten iling eller prikking.', g:'Rutineultralyden skjer mellom uke 17 og 20. Du får innkalling – sjekk at den er på vei. Husk søknadsfrist barnehage 1. mars!' },
+  18: { m:'Fosteret er ca. 200 gram. Huden begynner å dekkes av et hvitt fettlag som beskytter den i fostervannet.', k:'Nå vil de fleste kjenne tydelige bevegelser. Navlen kan begynne å butte ut – helt ufarlig.', g:'Sjekk at ferritinprøven (jern) er tatt innen uke 15. Si fra til arbeidsgiveren din om at du er gravid.' },
+  20: { m:'Fosteret veier ca. 300 gram. Det kan begynne å gjøre grimaser og suge på tommelen.', k:'Halsbrann starter gjerne nå – livmoren presser på magesekken. Gaviscon fra apoteket kan hjelpe.', g:'Snakk med partneren om permisjonsplan. Søk barnehageplass om du ikke har gjort det.' },
+  22: { m:'Fosteret veier ca. 475 gram. Lungene utvikler seg videre. Bukspyttkjertelen begynner å produsere insulin.', k:'Leddbåndene i bekkenet blir mer elastiske – noen kjenner det som smerter ved gange eller trappegang.', g:'Ikke gift? Dere kan registrere farskap digitalt på nav.no fra uke 22.' },
+  24: { m:'Svangerskapskontroll uke 24. Fosteret veier ca. 650 gram. Kikhostevaksine (dTp) tilbys gratis – si ja. Er du rhesus negativ tas blodprøve for å bestemme fosterets blodtype.', k:'Du kan nå kjenne spark utenpå magen. Livmoren presser på urinblæren – hyppigere toalettbesøk er normalt.', g:'RSV-vaksine kan tas fra uke 24 mot egenbetaling med resept. Sjekk om svangerskapsdiabetes-test er aktuelt.' },
+  25: { m:'Fosteret veier ca. 750 gram. Hørselen utvikler seg – fosteret kan sannsynligvis høre hjerteslag, pust og stemmer utenfra.', k:'Brystknoppene og huden rundt kan bli mørkere. Strekkmerker og pigmentflekker er vanlig.', g:'Begynn å tenke på hvem du vil ha med deg til fødsel og hva som er viktig for deg.' },
+  26: { m:'Fosteret veier ca. 900 gram. De store organene tar form. Fosteret øver seg på å åpne og lukke øynene.', k:'Mange opplever økt søvnbehov fra nå. Hvil når du kan.', g:'Snakk med partneren om foreldrepermisjonsplan og fordeling.' },
+  27: { m:'Fosteret veier ca. 1000 gram og kan begynne å åpne øynene for første gang. Synet modnes videre etter fødsel.', k:'Røde prikker i ansiktet og på kroppen er vanlig – det skyldes endringer i blodkarene.', g:'Søk foreldrepenger hos NAV helst 4–6 uker før permisjonen starter.' },
+  28: { m:'Svangerskapskontroll uke 28. Fosteret veier ca. 1150 gram. Hemoglobin sjekkes. Er du rhesus negativ og fosteret RhD-positivt, settes anti-D dose 1 nå.', k:'Fra nå er det fint å telle bevegelser daglig. Fosteret kan skvette ved plutselige lyder – det er normalt.', g:'Søk foreldrepenger hos NAV om du ikke har gjort det. Meld deg på fødselsforberedende kurs.' },
+  29: { m:'Fosteret veier nå rundt 1300 gram. Det går inn i en fase med økt vekst – fra å være relativt langt og smalt, til å legge på seg mer i bredden.', k:'Livmoren vokser og presser på lungene. Det er vanlig å føle seg andpusten selv ved små anstrengelser.', g:'Begynn å tenke på sykehusvesken. Du trenger ikke pakke den nå, men det er greit å ha en liste klar.' },
+  30: { m:'Fosteret veier rundt 1450 gram. Blodforsyningen til øyet utvikler seg nå. Etter fødsel vil den nyfødte forsøke å møte blikket ditt.', k:'Hjertet slår raskere enn vanlig for å møte kroppens økte behov. Hovne ben er vanlig – ekstra væske i kroppen.', g:'Meld deg på fødselsforberedende kurs om du ikke har gjort det. Mange kurs fylles opp tidlig.' },
+  31: { m:'Fosteret veier rundt 1650 gram og ligner nå et nyfødt barn. Det kan sannsynligvis kjenne igjen lyder fra utsiden av livmoren.', k:'Forstoppelse er vanlig nå fordi hormoner bremser tarmbevegelsene. Det hjelper med kostfiber og nok vann.', g:'Tenk gjennom hvem du vil ha med deg til fødsel, og snakk med dem om det.' },
+  32: { m:'Svangerskapskontroll uke 32. Fosteret veier rundt 1850 gram. Etterhvert som det vokser, blir det gradvis mindre plass i livmoren.', k:'Det er tyngre å bevege seg nå – det er helt naturlig. Bevegelsene kjennes annerledes, mer stramme og tydelige.', g:'Pakk sykehusvesken. Meld deg på fødselsforberedende kurs om du ikke har gjort det.' },
+  33: { m:'Fosteret veier rundt 2050 gram og vokser i både lengde og bredde. Det kan sannsynligvis oppfatte forskjellen mellom lys og mørke.', k:'Du kan begynne å kjenne kynnere – sammentrekninger som starter øverst i magen og sprer seg nedover. Ikke smertefulle.', g:'Kynnere skiller seg fra rier ved at de er uregelmessige, ikke øker i intensitet, og letter ved stillingsbytte.' },
+  34: { m:'Fosteret veier ca. 2300 gram. De fleste indre organer er ferdig utviklet – unntatt lungene. Fosteret gjør pusteøvelser med fostervann.', k:'Kroppen jobber hardt nå. Det er normalt å kjenne seg tung og sliten – ta det i ditt tempo.', g:'Sjekk at du har pakket alt til sykehusvesken. Er bilstolen montert og testet?' },
+  35: { m:'Fosteret veier ca. 2500 gram. Mengden fostervann avtar gradvis, men du skal fortsatt kjenne like mye bevegelser. Fosteret svelger fostervann – derav barnebek.', k:'Det kan bli vanskeligere å finne en behagelig hvilestilling. Prøv å ligge på siden med en pute mellom beina.', g:'Snakk med arbeidsgiveren om siste arbeidsdag og overgang til permisjon.' },
+  36: { m:'Svangerskapskontroll uke 36. Jordmor sjekker fosterleiet – de fleste ligger med hodet ned. Seteleie? Da henvises du til fødepoliklinikk. RSV-vaksine – siste sjanse.', k:'Livmoren presser på urinblæren – vanligere å tisse. Det kan lekke råmelk. Humørsvingninger er normalt.', g:'Sørg for at sykehusvesken er ferdig pakket og bilstolen er montert. Dere er klare.' },
+  37: { m:'Fosteret regnes nå som fullbårent. Det veier ca. 2700–3200 gram. Hjernen er i stor grad ferdig utviklet.', k:'Livmorhalsen mykes opp og kynnerne kan bli hyppigere. Slimproppen kan løsne – sier ingenting om når fødselen starter.', g:'Tegn på fødsel: regelmessige rier, vannavgang eller blødning. Ring fødeavdelingen ved rier hvert 5. minutt i én time.' },
+  38: { m:'Svangerskapskontroll uke 38. Blodtrykk, urin, fosterleie og hjerteslag sjekkes. God anledning til å ta opp spørsmål.', k:'Søvnen forstyrres gjerne mer nå. Det er normalt å kjenne på en blanding av spenning og uro.', g:'Sjekk at du vet veien til fødeavdelingen og hvem du skal ringe. Ha telefonen ladet.' },
+  39: { m:'Fosteret er ferdig utviklet. Hud-mot-hud-kontakt etter fødsel hjelper babyen å regulere temperatur og gir ammingen en god start.', k:'Kynnerne kan komme oftere. Husk: de er uregelmessige og letter ved stillingsbytte. Rier øker i styrke.', g:'Alt er klart. Hvil så godt du kan. Du er klar.' },
+  40: { m:'Svangerskapskontroll uke 40. Du er ved termin – men bare 5 % føder på eksakt termindato. Si alltid fra ved endring i bevegelsesmønsteret.', k:'Babyen beveger seg fortsatt like mye, selv om det kjennes annerledes. Kjenn etter daglig.', g:'Dra til fødeavdelingen ved regelmessige rier (ca. hvert 5. minutt i én time), vannavgang, eller blødning.' },
+  41: { m:'Svangerskapskontroll uke 41 – på sykehuset. Ultralyd sjekker fostervannsmengde og navlesnor. Helsepersonell vurderer om fødsel bør settes i gang.', k:'Det er normalt å passere termin. Mange føder i uke 41. Hold kontakten med fødeavdelingen.', g:'Settes fødsel ikke i gang nå, anbefales det senest i uke 42. Du bestemmer i samarbeid med helsepersonell.' },
+  42: { m:'Det anbefales igangsetting av fødsel senest i uke 42, i samarbeid med deg og helsepersonell.', k:'Babyen beveger seg fortsatt. Si alltid fra ved endring i bevegelsene – ring fødeavdelingen.', g:'Du er i trygge hender. Ring fødeavdelingen ved usikkerhet – det er alltid greit å ta kontakt.' }
 };
 
-// ── SJEKKLISTE-DATA ────────────────────────────────────
+// ── SJEKKLISTE DATA ────────────────────────────────────
 var CAT_NAMES = {
-  svangerskapsoppfolging: 'Svangerskapsoppfølging',
-  blodprover_vaksiner:    'Blodprøver og vaksiner',
-  planlegging_okonomi:    'Planlegging og økonomi',
-  soveplass:              'Soveplass',
-  transport:              'Transport',
-  stell_hygiene:          'Stell og hygiene',
-  mat_naerhet:            'Mat og nærhet',
-  pa_farten:              'På farten',
-  sykehusveske:           'Sykehusveske',
-  medisinske_hensyn:      'Medisinske hensyn'
+  svangerskapsoppfolging:'Svangerskapsoppfølging',blodprover_vaksiner:'Blodprøver og vaksiner',
+  planlegging_okonomi:'Planlegging og økonomi',klar:'Klær til baby',soveplass:'Soveplass',
+  transport:'Transport og på farten',stell_hygiene:'Stell og hygiene',mat_naerhet:'Mat og nærhet',
+  sykehusveske:'Sykehusveske',medisinske_hensyn:'Medisinske hensyn',etter_fodsel:'Etter fødsel'
 };
-
-var CAT_ORDER = [
-  'svangerskapsoppfolging','blodprover_vaksiner','planlegging_okonomi',
-  'soveplass','transport','stell_hygiene','mat_naerhet',
-  'pa_farten','sykehusveske','medisinske_hensyn'
-];
+var CAT_ORDER = ['svangerskapsoppfolging','blodprover_vaksiner','planlegging_okonomi','klar','soveplass','transport','stell_hygiene','mat_naerhet','sykehusveske','medisinske_hensyn','etter_fodsel'];
 
 var ALL_ITEMS = [
-  // 1. Svangerskapsoppfølging
-  { id:'first_check', title:'Første svangerskapskontroll', category:'svangerskapsoppfolging', group:'Tidlig i svangerskapet', week_from:6, week_to:12, optional:false, conditions:[], label:null },
-  { id:'choose_midwife', title:'Velg om du vil gå til jordmor i tillegg til fastlege', category:'svangerskapsoppfolging', group:'Tidlig i svangerskapet', week_from:6, week_to:12, optional:false, conditions:[], label:null },
-  { id:'birth_place_application', title:'Søknad om fødeplass – legen eller jordmor søker for deg', category:'svangerskapsoppfolging', group:'Tidlig i svangerskapet', week_from:6, week_to:12, optional:false, conditions:[], label:null },
-  { id:'early_ultrasound', title:'Tidlig ultralyd', category:'svangerskapsoppfolging', group:'Undersøkelser', week_from:11, week_to:13, optional:true, conditions:[], label:null },
-  { id:'nipt', title:'NIPT', category:'svangerskapsoppfolging', group:'Undersøkelser', week_from:11, week_to:13, optional:true, conditions:[], label:null },
-  { id:'routine_ultrasound', title:'Rutineultralyd', category:'svangerskapsoppfolging', group:'Undersøkelser', week_from:17, week_to:19, optional:false, conditions:[], label:'Uke 17–19' },
-  { id:'checkup_week_24', title:'Svangerskapskontroll', category:'svangerskapsoppfolging', group:'Kontroller', week_from:24, week_to:24, optional:false, conditions:[], label:'Uke 24' },
-  { id:'checkup_week_28', title:'Svangerskapskontroll', category:'svangerskapsoppfolging', group:'Kontroller', week_from:28, week_to:28, optional:false, conditions:[], label:'Uke 28' },
-  { id:'checkup_week_32', title:'Svangerskapskontroll', category:'svangerskapsoppfolging', group:'Kontroller', week_from:32, week_to:32, optional:false, conditions:[], label:'Uke 32' },
-  { id:'checkup_week_36', title:'Svangerskapskontroll', category:'svangerskapsoppfolging', group:'Kontroller', week_from:36, week_to:36, optional:false, conditions:[], label:'Uke 36' },
-  { id:'checkup_week_38', title:'Svangerskapskontroll', category:'svangerskapsoppfolging', group:'Kontroller', week_from:38, week_to:38, optional:false, conditions:[], label:'Uke 38' },
-  { id:'checkup_week_40', title:'Svangerskapskontroll', category:'svangerskapsoppfolging', group:'Kontroller', week_from:40, week_to:41, optional:false, conditions:[], label:'Uke 40–41' },
-  { id:'birth_prep_course', title:'Fødselsforberedende kurs', category:'svangerskapsoppfolging', group:'Forberedelse', week_from:30, week_to:36, optional:true, conditions:[], label:null },
-  { id:'birth_letter', title:'Skriv fødebrev', category:'svangerskapsoppfolging', group:'Forberedelse', week_from:32, week_to:36, optional:true, conditions:[], label:null },
-
-  // 2. Blodprøver og vaksiner
-  { id:'bloodtype_rhesus', title:'Blodtype og rhesus-faktor', category:'blodprover_vaksiner', group:'Blodprøver', week_from:6, week_to:12, optional:false, conditions:[], label:null },
-  { id:'antibody_screen_first', title:'Antistoffscreening', category:'blodprover_vaksiner', group:'Blodprøver', week_from:6, week_to:12, optional:false, conditions:[], label:null },
-  { id:'hemoglobin_first', title:'Hemoglobin', category:'blodprover_vaksiner', group:'Blodprøver', week_from:6, week_to:12, optional:false, conditions:[], label:null },
-  { id:'ferritin_if_needed', title:'Ferritin (jernlager)', category:'blodprover_vaksiner', group:'Blodprøver', week_from:6, week_to:15, optional:true, conditions:[], label:null },
-  { id:'hiv_test', title:'HIV-test', category:'blodprover_vaksiner', group:'Blodprøver', week_from:6, week_to:12, optional:false, conditions:[], label:null },
-  { id:'hepatitis_b_test', title:'Hepatitt B-test', category:'blodprover_vaksiner', group:'Blodprøver', week_from:6, week_to:12, optional:false, conditions:[], label:null },
-  { id:'syphilis_test', title:'Syfilis-test', category:'blodprover_vaksiner', group:'Blodprøver', week_from:6, week_to:12, optional:false, conditions:[], label:null },
-  { id:'rubella_immunity', title:'Rubella-immunitet', category:'blodprover_vaksiner', group:'Blodprøver', week_from:6, week_to:12, optional:false, conditions:[], label:null },
-  { id:'hemoglobin_repeat', title:'Ny hemoglobinmåling', category:'blodprover_vaksiner', group:'Blodprøver', week_from:24, week_to:28, optional:false, conditions:[], label:'Uke 24–28' },
-  { id:'antibody_screen_week_28', title:'Antistoffscreening', category:'blodprover_vaksiner', group:'Rhesus-oppfølging', week_from:28, week_to:28, optional:false, conditions:['rhesus_negative'], label:'Kun hvis rhesus-negativ' },
-  { id:'anti_d_dose_1', title:'Anti-D dose 1', category:'blodprover_vaksiner', group:'Rhesus-oppfølging', week_from:28, week_to:28, optional:false, conditions:['rhesus_negative'], label:'Uke 28 · kun hvis rhesus-negativ' },
-  { id:'anti_d_dose_2', title:'Anti-D dose 2', category:'blodprover_vaksiner', group:'Rhesus-oppfølging', week_from:40, week_to:42, optional:false, conditions:['rhesus_negative'], label:'Etter fødsel · innen 72 timer' },
-  { id:'influenza_vaccine', title:'Influensavaksine – gratis', category:'blodprover_vaksiner', group:'Vaksiner', week_from:12, week_to:40, optional:false, conditions:['flu_season'], label:'Høst og vinter' },
-  { id:'pertussis_vaccine', title:'Kikhostevaksine (dTp) – gratis', category:'blodprover_vaksiner', group:'Vaksiner', week_from:24, week_to:36, optional:false, conditions:[], label:'Uke 24–36' },
-  { id:'rsv_vaccine', title:'RS-virusvaksine – egenbetaling', category:'blodprover_vaksiner', group:'Vaksiner', week_from:24, week_to:36, optional:true, conditions:[], label:'Uke 24–36 · resept fra lege' },
-
-  // 3. Planlegging og økonomi
-  { id:'paternity_acknowledgement', title:'Send inn farskapserklæring', category:'planlegging_okonomi', group:'Praktisk', week_from:22, week_to:34, optional:false, conditions:['not_married'], label:'Kun hvis dere ikke er gift' },
-  { id:'notify_employer', title:'Gi beskjed til arbeidsgiver om permisjon', category:'planlegging_okonomi', group:'Permisjon', week_from:28, week_to:32, optional:false, conditions:[], label:null },
-  { id:'agree_leave_distribution', title:'Avtal fordeling av foreldrepermisjon med partner', category:'planlegging_okonomi', group:'Permisjon', week_from:24, week_to:34, optional:false, conditions:[], label:null },
-  { id:'apply_nav_leave', title:'Søk foreldrepermisjon eller engangsstønad hos NAV', category:'planlegging_okonomi', group:'Permisjon', week_from:28, week_to:36, optional:false, conditions:[], label:null },
-  { id:'clarify_pension', title:'Avklar pensjonssparing ved ulønnet permisjon', category:'planlegging_okonomi', group:'Økonomi', week_from:28, week_to:36, optional:false, conditions:[], label:null },
-  { id:'clarify_shared_costs', title:'Avklar fordeling av kostnader for babyutstyr', category:'planlegging_okonomi', group:'Økonomi', week_from:24, week_to:36, optional:false, conditions:[], label:null },
-  { id:'child_insurance', title:'Tegn forsikring til barnet', category:'planlegging_okonomi', group:'Økonomi', week_from:30, week_to:40, optional:true, conditions:[], label:null },
-
-  // 4. Soveplass
-  { id:'sleep_space_bed', title:'Seng, bedside crib eller vugge', category:'soveplass', group:'Grunnleggende', week_from:28, week_to:34, optional:false, conditions:[], label:null },
-  { id:'sleep_mattress', title:'Madrass', category:'soveplass', group:'Grunnleggende', week_from:28, week_to:34, optional:false, conditions:[], label:null },
-  { id:'sleep_mattress_protector', title:'Madrassbeskytter', category:'soveplass', group:'Grunnleggende', week_from:30, week_to:36, optional:false, conditions:[], label:null },
-  { id:'sleep_tisselaken', title:'Tisselaken', category:'soveplass', group:'Grunnleggende', week_from:30, week_to:36, optional:false, conditions:[], label:null },
-  { id:'sleep_sheets', title:'Laken (kjøp gjerne 2–3)', category:'soveplass', group:'Grunnleggende', week_from:30, week_to:36, optional:false, conditions:[], label:null },
-  { id:'sleep_duvet_or_sleepbag', title:'Dyne eller sovepose', category:'soveplass', group:'Grunnleggende', week_from:30, week_to:36, optional:false, conditions:[], label:null },
-  { id:'sleep_blanket', title:'Babyteppe', category:'soveplass', group:'Grunnleggende', week_from:30, week_to:36, optional:false, conditions:[], label:null },
-  { id:'sleep_babynest', title:'Babynest', category:'soveplass', group:'Valgfritt', week_from:30, week_to:36, optional:true, conditions:[], label:null },
-  { id:'sleep_baby_monitor', title:'Babycall', category:'soveplass', group:'Valgfritt', week_from:32, week_to:36, optional:true, conditions:[], label:null },
-  { id:'sleep_mobile', title:'Uro', category:'soveplass', group:'Valgfritt', week_from:32, week_to:40, optional:true, conditions:[], label:null },
-
-  // 5. Transport
-  { id:'transport_stroller', title:'Barnevogn', category:'transport', group:'Grunnleggende', week_from:24, week_to:32, optional:false, conditions:[], label:null },
-  { id:'transport_car_seat', title:'Bilstol til baby', category:'transport', group:'Grunnleggende', week_from:28, week_to:36, optional:false, conditions:[], label:null },
-  { id:'transport_rain_cover', title:'Regntrekk til barnevogn', category:'transport', group:'Valgfritt', week_from:30, week_to:36, optional:true, conditions:[], label:null },
-  { id:'transport_footmuff', title:'Vognpose', category:'transport', group:'Valgfritt', week_from:30, week_to:40, optional:true, conditions:[], label:null },
-  { id:'transport_adapter', title:'Adapter til barnevogn (for bilstol)', category:'transport', group:'Valgfritt', week_from:30, week_to:36, optional:true, conditions:[], label:null },
-  { id:'transport_bag_for_stroller', title:'Stelleveske til barnevogn', category:'transport', group:'Valgfritt', week_from:30, week_to:36, optional:true, conditions:[], label:null },
-  { id:'transport_bug_net', title:'Myggnett til barnevogn', category:'transport', group:'Valgfritt', week_from:30, week_to:36, optional:true, conditions:[], label:null },
-  { id:'transport_car_window_sunshade', title:'Solbeskyttelse til bilvindu', category:'transport', group:'Valgfritt', week_from:30, week_to:36, optional:true, conditions:[], label:null },
-
-  // 6. Stell og hygiene
-  { id:'care_changing_mat', title:'Stellematte', category:'stell_hygiene', group:'Stelleplass', week_from:28, week_to:36, optional:false, conditions:[], label:null },
-  { id:'care_changing_table', title:'Stellebord', category:'stell_hygiene', group:'Stelleplass', week_from:28, week_to:36, optional:false, conditions:[], label:null },
-  { id:'care_storage_baskets', title:'Stellebag eller stellekurver', category:'stell_hygiene', group:'Stelleplass', week_from:30, week_to:36, optional:true, conditions:[], label:null },
-  { id:'care_diapers', title:'Bleier', category:'stell_hygiene', group:'Bleieskift', week_from:34, week_to:40, optional:false, conditions:[], label:null },
-  { id:'care_wipes', title:'Kluter til bleieskift', category:'stell_hygiene', group:'Bleieskift', week_from:34, week_to:40, optional:false, conditions:[], label:'Engangs, våtservietter eller vaskekluter' },
-  { id:'care_nappy_cream', title:'Sinksalve eller bleiekrem', category:'stell_hygiene', group:'Bleieskift', week_from:34, week_to:40, optional:false, conditions:[], label:null },
-  { id:'care_diaper_bin', title:'Bleiebøtte', category:'stell_hygiene', group:'Bleieskift', week_from:30, week_to:40, optional:true, conditions:[], label:null },
-  { id:'care_baby_bath', title:'Badebalje', category:'stell_hygiene', group:'Hygiene', week_from:32, week_to:36, optional:false, conditions:[], label:null },
-  { id:'care_baby_towel', title:'Badehåndkle', category:'stell_hygiene', group:'Hygiene', week_from:32, week_to:36, optional:false, conditions:[], label:null },
-  { id:'care_thermometer', title:'Termometer', category:'stell_hygiene', group:'Hygiene', week_from:34, week_to:40, optional:false, conditions:[], label:null },
-  { id:'care_nasal_aspirator', title:'Nesesuger', category:'stell_hygiene', group:'Hygiene', week_from:34, week_to:40, optional:false, conditions:[], label:null },
-  { id:'care_nail_clipper', title:'Negleklipper eller neglefil', category:'stell_hygiene', group:'Hygiene', week_from:34, week_to:40, optional:false, conditions:[], label:null },
-  { id:'care_cotton_swabs', title:'Bomullspinner til baby', category:'stell_hygiene', group:'Hygiene', week_from:34, week_to:40, optional:false, conditions:[], label:'Til pleie av navlen de første dagene' },
-  { id:'care_saline', title:'Saltvannsløsning', category:'stell_hygiene', group:'Hygiene', week_from:34, week_to:40, optional:false, conditions:[], label:null },
-
-  // 7. Mat og nærhet
-  { id:'feeding_nursing_bra', title:'Amme-BH', category:'mat_naerhet', group:'Amming og mating', week_from:32, week_to:36, optional:false, conditions:[], label:null },
-  { id:'feeding_nursing_pads', title:'Ammeinnlegg', category:'mat_naerhet', group:'Amming og mating', week_from:34, week_to:40, optional:false, conditions:[], label:null },
-  { id:'feeding_nursing_pillow', title:'Ammepute', category:'mat_naerhet', group:'Amming og mating', week_from:32, week_to:36, optional:true, conditions:[], label:null },
-  { id:'feeding_nipple_cream', title:'Brystvortekrem', category:'mat_naerhet', group:'Amming og mating', week_from:34, week_to:40, optional:true, conditions:[], label:null },
-  { id:'feeding_pump', title:'Brystpumpe', category:'mat_naerhet', group:'Amming og mating', week_from:34, week_to:40, optional:true, conditions:[], label:null },
-  { id:'feeding_bottles', title:'Flasker', category:'mat_naerhet', group:'Amming og mating', week_from:34, week_to:40, optional:true, conditions:[], label:null },
-  { id:'feeding_bottle_brush', title:'Flaskebørste', category:'mat_naerhet', group:'Amming og mating', week_from:34, week_to:40, optional:true, conditions:['uses_bottles'], label:'Hvis flasker' },
-  { id:'feeding_pacifier', title:'Smokk', category:'mat_naerhet', group:'Amming og mating', week_from:34, week_to:40, optional:true, conditions:[], label:null },
-  { id:'bonding_carrier', title:'Bæresele eller bæresjal', category:'mat_naerhet', group:'Bæring', week_from:30, week_to:36, optional:false, conditions:[], label:null },
-
-  // 8. På farten
-  { id:'out_and_about_bag', title:'Stelleveske eller stelleryggsekk', category:'pa_farten', group:'Grunnleggende', week_from:30, week_to:36, optional:false, conditions:[], label:null },
-  { id:'out_and_about_burp_cloths', title:'Gulpekluter – kjøp gjerne mange', category:'pa_farten', group:'Grunnleggende', week_from:30, week_to:40, optional:false, conditions:[], label:null },
-  { id:'out_and_about_changing_pad', title:'Stelleunderlag', category:'pa_farten', group:'Grunnleggende', week_from:30, week_to:40, optional:true, conditions:[], label:'Engangs eller brettbart' },
-
-  // 9. Sykehusveske
-  { id:'hospital_health_card', title:'Helsekort for gravide', category:'sykehusveske', group:'Dokumenter', week_from:34, week_to:36, optional:false, conditions:[], label:null },
-  { id:'hospital_phone_charger', title:'Mobil og lader', category:'sykehusveske', group:'Til fødsel', week_from:34, week_to:36, optional:false, conditions:[], label:null },
-  { id:'hospital_snacks', title:'Snacks', category:'sykehusveske', group:'Til fødsel', week_from:34, week_to:36, optional:false, conditions:[], label:null },
-  { id:'hospital_water_bottle', title:'Vannflaske', category:'sykehusveske', group:'Til fødsel', week_from:34, week_to:36, optional:false, conditions:[], label:null },
-  { id:'hospital_hair_tie', title:'Hårstrikk', category:'sykehusveske', group:'Til fødsel', week_from:34, week_to:36, optional:false, conditions:[], label:null },
-  { id:'hospital_comfy_clothes', title:'Behagelige klær', category:'sykehusveske', group:'Til barsel', week_from:34, week_to:36, optional:false, conditions:[], label:null },
-  { id:'hospital_nursing_bra', title:'Amme-BH', category:'sykehusveske', group:'Til barsel', week_from:34, week_to:36, optional:false, conditions:[], label:null },
-  { id:'hospital_toiletries', title:'Toalettsaker', category:'sykehusveske', group:'Til barsel', week_from:34, week_to:36, optional:false, conditions:[], label:null },
-
-  // 10. Medisinske hensyn
-  { id:'hypothyroidism_adjust_dose', title:'Juster Levaxin-dose ved graviditet', category:'medisinske_hensyn', group:'Lavt stoffskifte', week_from:4, week_to:8, optional:false, conditions:['hypothyroidism'], label:'Typisk 25–30 % økning' },
-  { id:'hypothyroidism_tsh_monthly', title:'Kontroll av TSH – omtrent månedlig', category:'medisinske_hensyn', group:'Lavt stoffskifte', week_from:4, week_to:20, optional:false, conditions:['hypothyroidism'], label:null },
-  { id:'gdm_glucose_test', title:'Glukosebelastningstest', category:'medisinske_hensyn', group:'Svangerskapsdiabetes', week_from:24, week_to:28, optional:false, conditions:['gestational_diabetes_risk'], label:'Uke 24–28' },
-  { id:'c_section_birth_mode_conversation', title:'Samtale om fødselsmåte', category:'medisinske_hensyn', group:'Tidligere keisersnitt', week_from:30, week_to:36, optional:false, conditions:['previous_c_section'], label:null },
-  { id:'twins_extra_ultrasounds', title:'Hyppigere ultralyder', category:'medisinske_hensyn', group:'Tvillinger', week_from:12, week_to:36, optional:false, conditions:['twins'], label:null },
-  { id:'iron_supplement_if_needed', title:'Ta jerntilskudd ved behov', category:'medisinske_hensyn', group:'Lavt jernlager', week_from:12, week_to:40, optional:false, conditions:['low_iron'], label:null },
-  { id:'iron_followup', title:'Kontroll av hemoglobin', category:'medisinske_hensyn', group:'Lavt jernlager', week_from:24, week_to:32, optional:false, conditions:['low_iron'], label:null },
+  {id:'first_check',title:'Første svangerskapskontroll',category:'svangerskapsoppfolging',group:'Tidlig i svangerskapet',week_from:4,week_to:12,optional:false,conditions:[],label:null},
+  {id:'choose_midwife',title:'Velg om du vil gå til jordmor eller fastlege, eller en kombinasjon',category:'svangerskapsoppfolging',group:'Tidlig i svangerskapet',week_from:4,week_to:12,optional:false,conditions:[],label:'Svangerskapskontroller fra uke 24–40'},
+  {id:'birth_place_application',title:'Søknad om fødeplass',category:'svangerskapsoppfolging',group:'Tidlig i svangerskapet',week_from:4,week_to:12,optional:false,conditions:[],label:'Fastlege eller jordmor sender søknad til fødeinstitusjonen der du ønsker å føde. Kan søke ved første konsultasjon'},
+  {id:'early_ultrasound',title:'Tidlig ultralyd',category:'svangerskapsoppfolging',group:'Undersøkelser',week_from:11,week_to:13,optional:false,conditions:[],label:'Uke 11+0 – 13+6 · tilbys alle gravide'},
+  {id:'nipt',title:'NIPT',category:'svangerskapsoppfolging',group:'Undersøkelser',week_from:11,week_to:13,optional:true,conditions:[],label:'For trisomi 13, 18 og 21 · tilbys hvis du er 35 år eller eldre ved termin, eller har annen indikasjon'},
+  {id:'routine_ultrasound',title:'Rutineultralyd',category:'svangerskapsoppfolging',group:'Undersøkelser',week_from:16,week_to:19,optional:false,conditions:[],label:'Uke 17–19'},
+  {id:'checkup_week_24',title:'Svangerskapskontroll',category:'svangerskapsoppfolging',group:'Kontroller',week_from:23,week_to:24,optional:false,conditions:[],label:'Uke 24'},
+  {id:'checkup_week_28',title:'Svangerskapskontroll',category:'svangerskapsoppfolging',group:'Kontroller',week_from:27,week_to:28,optional:false,conditions:[],label:'Uke 28'},
+  {id:'checkup_week_32',title:'Svangerskapskontroll',category:'svangerskapsoppfolging',group:'Kontroller',week_from:31,week_to:32,optional:false,conditions:[],label:'Uke 32'},
+  {id:'checkup_week_36',title:'Svangerskapskontroll',category:'svangerskapsoppfolging',group:'Kontroller',week_from:35,week_to:36,optional:false,conditions:[],label:'Uke 36 · ved mistanke om sete- eller tverrleie henvises du til ultralydundersøkelse'},
+  {id:'checkup_week_38',title:'Svangerskapskontroll',category:'svangerskapsoppfolging',group:'Kontroller',week_from:37,week_to:38,optional:false,conditions:[],label:'Uke 38'},
+  {id:'checkup_week_40',title:'Svangerskapskontroll',category:'svangerskapsoppfolging',group:'Kontroller',week_from:39,week_to:41,optional:false,conditions:[],label:'Uke 40–41'},
+  {id:'birth_prep_course',title:'Fødselsforberedende kurs',category:'svangerskapsoppfolging',group:'Forberedelse',week_from:30,week_to:36,optional:true,conditions:[],label:null},
+  {id:'birth_letter',title:'Skriv fødebrev',category:'svangerskapsoppfolging',group:'Forberedelse',week_from:32,week_to:36,optional:true,conditions:[],label:null},
+  {id:'bloodtype_rhesus',title:'Blodtype og rhesus-faktor',category:'blodprover_vaksiner',group:'Blodprøver',week_from:6,week_to:12,optional:false,conditions:[],label:'Tas på første svangerskapskontroll'},
+  {id:'hemoglobin_first',title:'Hemoglobin – anemi',category:'blodprover_vaksiner',group:'Blodprøver',week_from:6,week_to:12,optional:false,conditions:[],label:'Tas på første svangerskapskontroll'},
+  {id:'diverse_tester',title:'Diverse tester (HIV, hepatitt B, syfilis, røde hunder)',category:'blodprover_vaksiner',group:'Blodprøver',week_from:6,week_to:12,optional:false,conditions:[],label:'Tas på første svangerskapskontroll'},
+  {id:'rhd_fetal_typing',title:'Blodprøve for å påvise barnets RhD-type',category:'blodprover_vaksiner',group:'Rhesus-oppfølging',week_from:24,week_to:24,optional:false,conditions:['rhesus_negative'],label:'Uke 24 · kun hvis du er RhD-negativ'},
+  {id:'ferritin_if_needed',title:'Ferritin (jernlager)',category:'blodprover_vaksiner',group:'Blodprøver',week_from:6,week_to:15,optional:true,conditions:[],label:'Tas på første svangerskapskontroll'},
+  {id:'hemoglobin_repeat',title:'Ny hemoglobinmåling',category:'blodprover_vaksiner',group:'Blodprøver',week_from:28,week_to:28,optional:false,conditions:[],label:'Uke 28'},
+  {id:'anti_d_dose_1',title:'Anti-D profylakse',category:'blodprover_vaksiner',group:'Rhesus-oppfølging',week_from:27,week_to:28,optional:false,conditions:['rhesus_negative'],label:'Uke 28 · hvis fosteret er RhD-positivt og du er RhD-negativ – forebygger reaksjon mellom blodet'},
+  {id:'anti_d_dose_2',title:'Anti-D dose 2',category:'blodprover_vaksiner',group:'Rhesus-oppfølging',week_from:40,week_to:42,optional:false,conditions:['rhesus_negative'],label:'Etter fødsel · innen 72 timer'},
+  {id:'influenza_vaccine',title:'Influensavaksine – gratis',category:'blodprover_vaksiner',group:'Vaksiner',week_from:12,week_to:40,optional:true,conditions:['flu_season'],label:'Høst og vinter'},
+  {id:'pertussis_vaccine',title:'Kikhostevaksine (dTp) – gratis',category:'blodprover_vaksiner',group:'Vaksiner',week_from:23,week_to:24,optional:true,conditions:[],label:'Uke 24'},
+  {id:'rsv_vaccine',title:'RS-virusvaksine – egenbetaling',category:'blodprover_vaksiner',group:'Vaksiner',week_from:24,week_to:36,optional:true,conditions:[],label:'Uke 24–36 · resept fra lege'},
+  {id:'paternity_acknowledgement',title:'Send inn farskapserklæring',category:'planlegging_okonomi',group:'Praktisk',week_from:22,week_to:34,optional:true,conditions:['not_married'],label:'Kun hvis dere ikke er gift'},
+  {id:'notify_employer',title:'Gi beskjed til arbeidsgiver om permisjon',category:'planlegging_okonomi',group:'Permisjon',week_from:14,week_to:32,optional:false,conditions:[],label:null},
+  {id:'agree_leave_distribution',title:'Avtal fordeling av foreldrepermisjon med partner',category:'planlegging_okonomi',group:'Permisjon',week_from:24,week_to:34,optional:false,conditions:[],label:null},
+  {id:'apply_nav_leave',title:'Søk foreldrepermisjon eller engangsstønad hos NAV',category:'planlegging_okonomi',group:'Permisjon',week_from:28,week_to:36,optional:false,conditions:[],label:null},
+  {id:'clarify_pension',title:'Avklar pensjonssparing ved ulønnet permisjon',category:'planlegging_okonomi',group:'Økonomi',week_from:28,week_to:36,optional:false,conditions:[],label:null},
+  {id:'clarify_shared_costs',title:'Avklar fordeling av kostnader for babyutstyr',category:'planlegging_okonomi',group:'Økonomi',week_from:24,week_to:36,optional:false,conditions:[],label:null},
+  {id:'child_insurance',title:'Tegn forsikring til barnet',category:'planlegging_okonomi',group:'Økonomi',week_from:30,week_to:40,optional:true,conditions:[],label:null},
+  {id:'klar_body_lang',title:'Bodyer, langermede',category:'klar',group:'Grunnleggende',week_from:34,week_to:40,optional:false,conditions:[],label:'5–6 stk · størrelse 50/56'},
+  {id:'klar_body_kort',title:'Bodyer, kortermede',category:'klar',group:'Grunnleggende',week_from:34,week_to:40,optional:true,conditions:[],label:'3–4 stk · sesongavhengig'},
+  {id:'klar_sparkebukse',title:'Sparkebukse eller heldrakt',category:'klar',group:'Grunnleggende',week_from:34,week_to:40,optional:false,conditions:[],label:'4–5 stk'},
+  {id:'klar_lue',title:'Lue',category:'klar',group:'Grunnleggende',week_from:34,week_to:40,optional:false,conditions:[],label:'2–3 stk · bomull eller ull'},
+  {id:'klar_sokker',title:'Sokker',category:'klar',group:'Grunnleggende',week_from:34,week_to:40,optional:false,conditions:[],label:'5–6 par'},
+  {id:'klar_svopetepper',title:'Svøpetepper',category:'klar',group:'Valgfritt',week_from:34,week_to:40,optional:true,conditions:[],label:'3 stk · musselin er populært'},
+  {id:'klar_hentesett',title:'Hentesett til hjemturen',category:'klar',group:'Valgfritt',week_from:34,week_to:40,optional:true,conditions:[],label:'1 stk'},
+  {id:'sleep_space_bed',title:'Seng, bedside crib eller vugge',category:'soveplass',group:'Grunnleggende',week_from:30,week_to:34,optional:false,conditions:[],label:null},
+  {id:'sleep_mattress',title:'Madrass',category:'soveplass',group:'Grunnleggende',week_from:30,week_to:34,optional:false,conditions:[],label:null},
+  {id:'sleep_mattress_protector',title:'Madrassbeskytter',category:'soveplass',group:'Grunnleggende',week_from:32,week_to:40,optional:true,conditions:[],label:null},
+  {id:'sleep_tisselaken',title:'Tisselaken',category:'soveplass',group:'Grunnleggende',week_from:30,week_to:34,optional:true,conditions:[],label:null},
+  {id:'sleep_sheets',title:'Laken (kjøp gjerne 2–3)',category:'soveplass',group:'Grunnleggende',week_from:30,week_to:34,optional:false,conditions:[],label:null},
+  {id:'sleep_duvet_or_sleepbag',title:'Dyne eller sovepose',category:'soveplass',group:'Grunnleggende',week_from:32,week_to:40,optional:false,conditions:[],label:null},
+  {id:'sleep_blanket',title:'Babyteppe',category:'soveplass',group:'Grunnleggende',week_from:32,week_to:40,optional:false,conditions:[],label:null},
+  {id:'sleep_babynest',title:'Babynest',category:'soveplass',group:'Valgfritt',week_from:30,week_to:36,optional:true,conditions:[],label:null},
+  {id:'sleep_baby_monitor',title:'Babycall',category:'soveplass',group:'Valgfritt',week_from:32,week_to:36,optional:true,conditions:[],label:null},
+  {id:'sleep_mobile',title:'Uro',category:'soveplass',group:'Valgfritt',week_from:32,week_to:40,optional:true,conditions:[],label:null},
+  {id:'sleep_muslin',title:'Muslintepper',category:'soveplass',group:'Valgfritt',week_from:30,week_to:36,optional:true,conditions:[],label:'3–4 stk · pustende og allsidige'},
+  {id:'sleep_nightlight',title:'Nattlampe',category:'soveplass',group:'Valgfritt',week_from:32,week_to:36,optional:true,conditions:[],label:'Praktisk ved nattamming'},
+  {id:'transport_stroller',title:'Barnevogn',category:'transport',group:'Grunnleggende',week_from:24,week_to:32,optional:false,conditions:[],label:null},
+  {id:'transport_car_seat',title:'Bilstol til baby',category:'transport',group:'Grunnleggende',week_from:28,week_to:36,optional:false,conditions:[],label:null},
+  {id:'out_and_about_bag',title:'Stelleveske eller stelleryggsekk',category:'transport',group:'Grunnleggende',week_from:30,week_to:36,optional:false,conditions:[],label:null},
+  {id:'out_and_about_burp_cloths',title:'Gulpekluter',category:'transport',group:'Grunnleggende',week_from:36,week_to:40,optional:false,conditions:[],label:'Kjøp gjerne 6–8 stk'},
+  {id:'out_and_about_changing_pad',title:'Stelleunderlag',category:'transport',group:'Grunnleggende',week_from:30,week_to:40,optional:true,conditions:[],label:'Engangs eller brettbart'},
+  {id:'transport_rain_cover',title:'Regntrekk til barnevogn',category:'transport',group:'Valgfritt',week_from:30,week_to:36,optional:true,conditions:[],label:null},
+  {id:'transport_footmuff',title:'Vognpose',category:'transport',group:'Valgfritt',week_from:30,week_to:40,optional:true,conditions:[],label:null},
+  {id:'transport_sunshade_stroller',title:'Solskjerm til barnevogn',category:'transport',group:'Valgfritt',week_from:30,week_to:36,optional:true,conditions:[],label:null},
+  {id:'transport_sleepcarrier',title:'Bærebag til vogn / SleepCarrier',category:'transport',group:'Valgfritt',week_from:30,week_to:36,optional:true,conditions:[],label:'Gjør det enkelt å ta sovende baby med seg'},
+  {id:'transport_wrap',title:'Bæresjal / wrap',category:'transport',group:'Valgfritt',week_from:30,week_to:36,optional:true,conditions:[],label:'Mykt alternativ til bæresele for de første månedene'},
+  {id:'transport_adapter',title:'Adapter til barnevogn (for bilstol)',category:'transport',group:'Valgfritt',week_from:30,week_to:36,optional:true,conditions:[],label:null},
+  {id:'transport_car_window_sunshade',title:'Solbeskyttelse til bilvindu',category:'transport',group:'Valgfritt',week_from:30,week_to:36,optional:true,conditions:[],label:null},
+  {id:'transport_bag_for_stroller',title:'Stelleveske til barnevogn',category:'transport',group:'Valgfritt',week_from:30,week_to:36,optional:true,conditions:[],label:null},
+  {id:'transport_bug_net',title:'Myggnett til barnevogn',category:'transport',group:'Valgfritt',week_from:30,week_to:36,optional:true,conditions:[],label:null},
+  {id:'care_changing_mat',title:'Stellematte',category:'stell_hygiene',group:'Stelleplass',week_from:32,week_to:36,optional:false,conditions:[],label:null},
+  {id:'care_changing_table',title:'Stellebord',category:'stell_hygiene',group:'Stelleplass',week_from:32,week_to:36,optional:true,conditions:[],label:null},
+  {id:'care_storage_baskets',title:'Stellebag eller stellekurver',category:'stell_hygiene',group:'Stelleplass',week_from:30,week_to:36,optional:true,conditions:[],label:null},
+  {id:'care_diapers',title:'Bleier',category:'stell_hygiene',group:'Bleieskift',week_from:36,week_to:40,optional:false,conditions:[],label:null},
+  {id:'care_wipes',title:'Kluter til bleieskift',category:'stell_hygiene',group:'Bleieskift',week_from:38,week_to:40,optional:false,conditions:[],label:'Engangs, våtservietter eller vaskekluter'},
+  {id:'care_nappy_cream',title:'Sinksalve eller bleiekrem',category:'stell_hygiene',group:'Bleieskift',week_from:38,week_to:40,optional:false,conditions:[],label:null},
+  {id:'care_diaper_bin',title:'Bleiebøtte',category:'stell_hygiene',group:'Bleieskift',week_from:30,week_to:40,optional:true,conditions:[],label:null},
+  {id:'care_baby_bath',title:'Badebalje',category:'stell_hygiene',group:'Hygiene',week_from:33,week_to:40,optional:false,conditions:[],label:null},
+  {id:'care_baby_towel',title:'Badehåndkle',category:'stell_hygiene',group:'Hygiene',week_from:33,week_to:40,optional:false,conditions:[],label:null},
+  {id:'care_thermometer',title:'Termometer',category:'stell_hygiene',group:'Hygiene',week_from:37,week_to:40,optional:false,conditions:[],label:null},
+  {id:'care_nasal_aspirator',title:'Nesesuger',category:'stell_hygiene',group:'Hygiene',week_from:37,week_to:40,optional:false,conditions:[],label:null},
+  {id:'care_nail_clipper',title:'Negleklipper eller neglefil',category:'stell_hygiene',group:'Hygiene',week_from:38,week_to:40,optional:false,conditions:[],label:null},
+  {id:'care_cotton_swabs',title:'Bomullspinner til baby',category:'stell_hygiene',group:'Hygiene',week_from:38,week_to:40,optional:false,conditions:[],label:'Til pleie av navlen de første dagene'},
+  {id:'care_saline',title:'Saltvannsløsning',category:'stell_hygiene',group:'Hygiene',week_from:36,week_to:40,optional:false,conditions:[],label:null},
+  {id:'care_soap_shampoo',title:'Babysåpe og -sjampo',category:'stell_hygiene',group:'Hygiene',week_from:36,week_to:40,optional:false,conditions:[],label:null},
+  {id:'care_comb',title:'Kam eller hårbørste til baby',category:'stell_hygiene',group:'Hygiene',week_from:34,week_to:40,optional:true,conditions:[],label:null},
+  {id:'feeding_nursing_bra',title:'Amme-BH',category:'mat_naerhet',group:'Amming og mating',week_from:35,week_to:40,optional:false,conditions:[],label:null},
+  {id:'feeding_nursing_pads',title:'Ammeinnlegg',category:'mat_naerhet',group:'Amming og mating',week_from:35,week_to:40,optional:false,conditions:[],label:null},
+  {id:'feeding_nursing_pillow',title:'Ammepute',category:'mat_naerhet',group:'Amming og mating',week_from:32,week_to:36,optional:true,conditions:[],label:null},
+  {id:'feeding_nipple_cream',title:'Brystvortekrem',category:'mat_naerhet',group:'Amming og mating',week_from:34,week_to:40,optional:true,conditions:[],label:null},
+  {id:'feeding_pump',title:'Brystpumpe',category:'mat_naerhet',group:'Amming og mating',week_from:34,week_to:40,optional:true,conditions:[],label:null},
+  {id:'feeding_bottles',title:'Flasker',category:'mat_naerhet',group:'Amming og mating',week_from:34,week_to:40,optional:true,conditions:[],label:null},
+  {id:'feeding_bottle_brush',title:'Flaskebørste',category:'mat_naerhet',group:'Amming og mating',week_from:34,week_to:40,optional:true,conditions:['uses_bottles'],label:'Hvis flasker'},
+  {id:'feeding_pacifier',title:'Smokk',category:'mat_naerhet',group:'Amming og mating',week_from:34,week_to:40,optional:true,conditions:[],label:null},
+  {id:'bonding_carrier',title:'Bæresele eller bæresjal',category:'mat_naerhet',group:'Bæring',week_from:37,week_to:40,optional:true,conditions:[],label:null},
+  {id:'feeding_bib',title:'Smekker',category:'mat_naerhet',group:'Mating',week_from:37,week_to:40,optional:false,conditions:[],label:'1–2 stk'},
+  {id:'feeding_highchair',title:'Barnestol',category:'mat_naerhet',group:'Mating',week_from:34,week_to:40,optional:true,conditions:[],label:'Med nyfødtinnlegg kan den brukes fra dag én'},
+  {id:'feeding_highchair_insert',title:'Nyfødtinnlegg til barnestol',category:'mat_naerhet',group:'Mating',week_from:34,week_to:40,optional:true,conditions:[],label:null},
+  {id:'baby_bouncer',title:'Vippestol',category:'mat_naerhet',group:'Mating',week_from:32,week_to:36,optional:true,conditions:[],label:'Praktisk fra nyfødt – babyen kan ligge der mens du har hendene fri'},
+  {id:'baby_soft_toys',title:'Myke leker eller rangler',category:'mat_naerhet',group:'Lek og stimulering',week_from:32,week_to:36,optional:true,conditions:[],label:null},
+  {id:'storage_toys',title:'Oppbevaring til leker',category:'mat_naerhet',group:'Oppbevaring',week_from:32,week_to:36,optional:true,conditions:[],label:null},
+  {id:'storage_clothes',title:'Oppbevaring til klær',category:'mat_naerhet',group:'Oppbevaring',week_from:32,week_to:36,optional:true,conditions:[],label:null},
+  {id:'hospital_health_card',title:'Helsekort for gravide',category:'sykehusveske',group:'Dokumenter',week_from:39,week_to:40,optional:false,conditions:[],label:null},
+  {id:'hospital_phone_charger',title:'Mobil og lader',category:'sykehusveske',group:'Til fødsel',week_from:39,week_to:40,optional:false,conditions:[],label:null},
+  {id:'hospital_snacks',title:'Snacks',category:'sykehusveske',group:'Til fødsel',week_from:40,week_to:40,optional:true,conditions:[],label:null},
+  {id:'hospital_water_bottle',title:'Vannflaske',category:'sykehusveske',group:'Til fødsel',week_from:39,week_to:40,optional:true,conditions:[],label:null},
+  {id:'hospital_hair_tie',title:'Hårstrikk',category:'sykehusveske',group:'Til fødsel',week_from:40,week_to:40,optional:true,conditions:[],label:null},
+  {id:'hospital_comfy_clothes',title:'Behagelige klær',category:'sykehusveske',group:'Til barsel',week_from:40,week_to:40,optional:false,conditions:[],label:null},
+  {id:'hospital_nursing_bra',title:'Amme-BH',category:'sykehusveske',group:'Til barsel',week_from:40,week_to:40,optional:false,conditions:[],label:null},
+  {id:'hospital_toiletries',title:'Toalettsaker',category:'sykehusveske',group:'Til barsel',week_from:39,week_to:40,optional:false,conditions:[],label:null},
+  {id:'hypothyroidism_adjust_dose',title:'Juster Levaxin-dose ved graviditet',category:'medisinske_hensyn',group:'Lavt stoffskifte',week_from:4,week_to:8,optional:false,conditions:['hypothyroidism'],label:'Typisk 25–30 % økning'},
+  {id:'hypothyroidism_tsh_monthly',title:'Kontroll av TSH – omtrent månedlig',category:'medisinske_hensyn',group:'Lavt stoffskifte',week_from:4,week_to:20,optional:false,conditions:['hypothyroidism'],label:null},
+  {id:'gdm_glucose_test',title:'Glukosebelastningstest',category:'svangerskapsoppfolging',group:'Undersøkelser',week_from:24,week_to:28,optional:true,conditions:[],label:'Hvis du er førstegangsfødende over 25 år eller har risiko for svangerskapsdiabetes'},
+  {id:'c_section_birth_mode_conversation',title:'Samtale om fødselsmåte',category:'medisinske_hensyn',group:'Tidligere keisersnitt',week_from:30,week_to:36,optional:false,conditions:['previous_c_section'],label:null},
+  {id:'twins_extra_ultrasounds',title:'Hyppigere ultralyder',category:'medisinske_hensyn',group:'Tvillinger',week_from:12,week_to:36,optional:false,conditions:['twins'],label:null},
+  {id:'iron_supplement_if_needed',title:'Ta jerntilskudd ved behov',category:'medisinske_hensyn',group:'Lavt jernlager',week_from:12,week_to:40,optional:false,conditions:['low_iron'],label:null},
+  {id:'iron_followup',title:'Kontroll av hemoglobin',category:'medisinske_hensyn',group:'Lavt jernlager',week_from:24,week_to:32,optional:false,conditions:['low_iron'],label:null},
+  {id:'postbirth_midwife_visit',title:'Hjemmebesøk av jordmor',category:'etter_fodsel',group:'Oppfølging',week_from:38,week_to:42,optional:true,conditions:[],label:'Innen 1–3 dager etter hjemreise'},
+  {id:'postbirth_nurse_visit',title:'Hjemmebesøk av helsesykepleier',category:'etter_fodsel',group:'Oppfølging',week_from:38,week_to:42,optional:true,conditions:[],label:'Dag 7–10 etter fødsel · gjelder alle'},
+  {id:'postbirth_gp_checkup',title:'Etterkontroll hos fastlege',category:'etter_fodsel',group:'Oppfølging',week_from:38,week_to:42,optional:false,conditions:[],label:'6 uker etter fødsel – bestill selv'},
+  {id:'postbirth_helsestasjon',title:'Registrer barnet på helsestasjon',category:'etter_fodsel',group:'Oppfølging',week_from:38,week_to:42,optional:false,conditions:[],label:'Helsestasjonen kontakter deg'},
+  {id:'postbirth_vitamin_d',title:'D-vitamindråper til baby',category:'etter_fodsel',group:'Ernæring',week_from:38,week_to:42,optional:false,conditions:[],label:'5 dråper daglig fra 1 ukes alder · kun hvis amming eller delamming'},
+  {id:'postbirth_postpartum_pads',title:'Store bind til barselbødning',category:'etter_fodsel',group:'Mor etter fødsel',week_from:36,week_to:42,optional:false,conditions:[],label:'Du blør gjerne 2–6 uker etter fødsel'},
+  {id:'postbirth_sitz_bath',title:'Kjølebind eller ispose til underlivet',category:'etter_fodsel',group:'Mor etter fødsel',week_from:36,week_to:42,optional:true,conditions:[],label:'Lindrer verkende underliv'},
+  {id:'postbirth_skylleflaske',title:'Skylleflaske',category:'etter_fodsel',group:'Mor etter fødsel',week_from:36,week_to:42,optional:true,conditions:[],label:'For å lindre svie og ubehag ved toalettbesøk etter fødsel'},
 ];
-
-// Bygg CL-struktur fra ALL_ITEMS
-// showAll = true  → hele sjekklisten (sjekkliste-fanen)
-// showAll = false → kun relevant nå + litt fremover (hjem-fanen, fremtidig bruk)
-function buildCL(showAll) {
-  var lookahead = U + 4;
-  var cats = {};
-  CAT_ORDER.forEach(c => { cats[c] = {}; });
-
-  ALL_ITEMS.forEach(item => {
-    // Hopp over medisinske hensyn med spesifikke conditions – vises ikke uten tilpasning
-    if (item.category === 'medisinske_hensyn' && item.conditions.length > 0) return;
-    // Filtrer på uke kun hvis showAll er false
-    if (!showAll && item.week_from > lookahead) return;
-    var cat = item.category;
-    var grp = item.group;
-    if (!cats[cat]) cats[cat] = {};
-    if (!cats[cat][grp]) cats[cat][grp] = [];
-    cats[cat][grp].push(item);
-  });
-
-  var result = [];
-  CAT_ORDER.forEach(cat => {
-    var groups = cats[cat];
-    if (!groups) return;
-    var grpKeys = Object.keys(groups);
-    if (grpKeys.length === 0) return;
-    var grpArr = grpKeys.map(g => ({ g, items: groups[g] }));
-    result.push({ k: CAT_NAMES[cat], id: cat, groups: grpArr });
-  });
-  return result;
-}
-
-var CL_DATA = []; // bygges i rCL()
 
 // ── HJELPEFUNKSJONER ───────────────────────────────────
 function gF(w) {
-  var ks = Object.keys(FD).map(Number).sort((a, b) => a - b);
+  var ks = Object.keys(FD).map(Number).sort((a,b)=>a-b);
   var b = ks[0];
   for (var k of ks) if (k <= w) b = k;
   return FD[b];
 }
 function gT(w) {
-  var ks = Object.keys(TP).map(Number).sort((a, b) => a - b);
+  var ks = Object.keys(TP).map(Number).sort((a,b)=>a-b);
   var b = ks[0];
   for (var k of ks) if (k <= w) b = k;
   return TP[b];
 }
-
-// ── UKE ───────────────────────────────────────────────
-function sU(n, sv) {
-  U = n;
-  document.getElementById('uv').textContent = n;
-  document.getElementById('un').textContent = n;
-  document.getElementById('usl').value = n;
-  document.getElementById('pb').style.width = Math.round(((n - 4) / 38) * 100) + '%';
-  var tri = n <= 13 ? '1. trimester' : n <= 27 ? '2. trimester' : '3. trimester';
-  document.getElementById('trm').textContent = 'Uke ' + n + ' · ' + tri;
-  var f = gF(n);
-  document.getElementById('fk').innerHTML =
-    '<div class="fcard">' +
-    '<div class="fi">' +
-    '<div class="fsub">Uke ' + n + ' · ' + (n <= 13 ? '1. trimester' : n <= 27 ? '2. trimester' : '3. trimester') + '</div>' +
-    '<div class="fmaal">' +
-    '<div><div class="fmv">' + f.c + '</div><div class="fml">lengde</div></div>' +
-    '<div><div class="fmv">' + f.g + '</div><div class="fml">vekt</div></div>' +
-    '</div>' +
-    '<div class="fdesc">' + f.d + '</div>' +
-    '</div></div>';
-  var t = gT(n);
-  document.getElementById('tm').innerHTML = '<div class="ttag">Medisinsk</div><div class="ttxt">' + t.m + '</div>';
-  document.getElementById('tk').innerHTML = '<div class="ttag">Kroppen din</div><div class="ttxt">' + t.k + '</div>';
-  document.getElementById('tg').innerHTML = '<div class="ttag">Gjøre nå</div><div class="ttxt">' + t.g + '</div>';
-  document.getElementById('bc').style.display = n >= 18 ? 'block' : 'none';
-  document.getElementById('btid').style.display = n < 18 ? 'block' : 'none';
-  if (sv) lagre();
+function beregnUkeFraTermin(termin) {
+  var t = new Date(termin);
+  var n = new Date();
+  n.setHours(0,0,0,0); t.setHours(0,0,0,0);
+  var dagerIgjenVal = Math.round((t - n) / (24 * 60 * 60 * 1000));
+  // Beregn graviditetslengde fra termindato (lagres ved innlegging)
+  var lengde = TERMIN_LENGDE || 283;
+  var dagerTilbakelagt = lengde - dagerIgjenVal;
+  return Math.min(42, Math.max(4, Math.floor(dagerTilbakelagt / 7)));
 }
 
-// ── BEVEGELSER ─────────────────────────────────────────
-function rB() {
-  var d = db[TODAY] || { k: 0, s: null, m: 0, n: '' };
+function beregnDagerIUke(termin) {
+  var t = new Date(termin);
+  var n = new Date();
+  n.setHours(0,0,0,0); t.setHours(0,0,0,0);
+  var dagerIgjenVal = Math.round((t - n) / (24 * 60 * 60 * 1000));
+  var lengde = TERMIN_LENGDE || 283;
+  var dagerTilbakelagt = lengde - dagerIgjenVal;
+  return dagerTilbakelagt % 7;
+}
+function dagerIgjen(termin) {
+  var t = new Date(termin);
+  var n = new Date();
+  n.setHours(0,0,0,0); t.setHours(0,0,0,0);
+  return Math.max(0, Math.round((t - n) / (24 * 60 * 60 * 1000)));
+}
+function formaterTermin(termin) {
+  var mn = ['januar','februar','mars','april','mai','juni','juli','august','september','oktober','november','desember'];
+  var d = new Date(termin);
+  return d.getDate() + '. ' + mn[d.getMonth()] + ' ' + d.getFullYear();
+}
+
+// ── HJEM RENDER ───────────────────────────────────────
+function oppdaterHjem() {
+  var f = gF(U);
+  var t = gT(U);
+  var tri = U <= 13 ? '1. trimester' : U <= 27 ? '2. trimester' : '3. trimester';
+
+  document.getElementById('hjem-uke-tall').textContent = U;
+
+  // + dager i uken (f.eks. 29+6)
+  var plusEl = document.getElementById('hjem-uke-dager-plus');
+  if (TERMIN && U === EKTE_U) {
+    var dagerInnIUke = beregnDagerIUke(TERMIN);
+    plusEl.textContent = dagerInnIUke > 0 ? '+ ' + dagerInnIUke : '';
+  } else {
+    plusEl.textContent = '';
+  }
+
+  if (TERMIN && U === EKTE_U) {
+    var d = dagerIgjen(TERMIN);
+    document.getElementById('hjem-dager').textContent = d + ' dager igjen';
+  } else {
+    document.getElementById('hjem-dager').textContent = tri + (U !== EKTE_U ? ' · blar i uker' : '');
+  }
+
+  document.getElementById('hjem-baby-navn').textContent = 'en ' + f.n.toLowerCase() + ' ' + f.e;
+  // Kun én setning fra d – ingen vekttall
+  document.getElementById('hjem-baby-desc').textContent = f.d;
+  document.getElementById('hjem-baby-c').textContent = f.c;
+  document.getElementById('hjem-baby-g').textContent = f.g;
+
+  // Det som betyr noe nå – grønne prikker med tips fra k og g
+  var tips = [t.k, t.g].filter(Boolean);
+  var dsnnaH = tips.map(tip =>
+    '<div class="hjem-dsnna-item"><div class="hjem-dsnna-dot"></div><div class="hjem-dsnna-tekst">' + tip + '</div></div>'
+  ).join('');
+  document.getElementById('hjem-dsnna-items').innerHTML = dsnnaH;
+
+  // Kjenn liv preview
+  var d_today = db[TODAY] || {k:0};
+  if (d_today.k >= 10) {
+    document.getElementById('hjem-kl-tittel').textContent = 'Alle 10 bevegelser i dag ✓';
+    document.getElementById('hjem-kl-sub').textContent = 'Godt jobbet!';
+  } else if (d_today.k > 0) {
+    document.getElementById('hjem-kl-tittel').textContent = d_today.k + ' av 10 bevegelser i dag';
+    document.getElementById('hjem-kl-sub').textContent = 'Trykk for å fortsette tellingen';
+  } else {
+    document.getElementById('hjem-kl-tittel').textContent = 'Registrer bevegelser';
+    document.getElementById('hjem-kl-sub').textContent = 'Trykk her for å starte telling';
+  }
+
+  oppdaterHjemCL();
+}
+
+function oppdaterHjemCL() {
+  // Kun obligatoriske items som STARTER denne uken
+  var ukeitems = ALL_ITEMS.filter(i =>
+    i.category !== 'medisinske_hensyn' &&
+    i.category !== 'etter_fodsel' &&
+    i.conditions.length === 0 &&
+    i.optional === false &&
+    i.week_from === U
+  );
+
+  var nr = ukeitems.filter(i => (cl[i.id]||{}).n).length;
+  var dn = ukeitems.filter(i => (cl[i.id]||{}).d).length;
+  var tot = ukeitems.length - nr;
+  var pct = tot > 0 ? Math.round(dn / tot * 100) : 0;
+
+  document.getElementById('hjem-cl-teller').textContent = tot > 0 ? dn + '/' + tot : '';
+  document.getElementById('hjem-cl-fill').style.width = pct + '%';
+
+  // Maks 5 – ikke-relevant filtrert bort, ugjorte først
+  var visItems = ukeitems
+    .filter(i => !(cl[i.id]||{}).n)
+    .slice(0, 5);
+
+  if (!visItems.length) {
+    document.getElementById('hjem-cl-items').innerHTML =
+      '<div style="padding:16px;font-size:14px;color:var(--text-3);text-align:center">Ingen nye oppgaver denne uken</div>';
+    return;
+  }
+
+  var h = '';
+  visItems.forEach(item => {
+    var done = (cl[item.id]||{}).d;
+    h += '<div class="hjem-cl-item" onclick="tIhjem(\'' + item.id + '\')">';
+    h += '<div class="hjem-cl-cb' + (done ? ' done' : '') + '">';
+    if (done) h += '<svg width="11" height="11" viewBox="0 0 11 11"><polyline points="1.5,5.5 4.5,8.5 9.5,2.5" stroke="white" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+    h += '</div>';
+    h += '<span class="hjem-cl-tekst' + (done ? ' done' : '') + '">' + item.title + '</span>';
+    h += '</div>';
+  });
+  document.getElementById('hjem-cl-items').innerHTML = h;
+}
+
+function tIhjem(id) {
+  var s = cl[id] || {d:false,n:false};
+  if (!s.n) { s.d = !s.d; cl[id] = s; lagre(); oppdaterHjem(); }
+}
+
+// ── UKE JUSTERING ─────────────────────────────────────
+function justerUke(delta) {
+  var ny = Math.min(42, Math.max(4, U + delta));
+  U = ny;
+  oppdaterHjem();
+  // Ikke lagre – uke er kun visuell navigasjon
+}
+
+// ── KJENN LIV ─────────────────────────────────────────
+var KL_AKTIV = false;
+
+function visKL() {
+  visPane('k', document.querySelectorAll('.nb')[2]);
+}
+
+function renderKL() {
+  var d = db[TODAY] || {k:0, s:null, m:0, n:''};
+  var h = '';
+
+  if (!KL_AKTIV) {
+    h += '<div class="kl-sirkel-wrap">';
+    if (d.k === 0) {
+      h += '<div class="kl-sirkel" onclick="startKL()">';
+      h += '<div class="kl-baby-emoji">👶</div>';
+      h += '</div>';
+      h += '<div class="kl-hint">Sett deg godt til rette og start tellingen når du er klar.</div>';
+      h += '<button class="kl-btn start" onclick="startKL()">Start telling</button>';
+    } else if (d.k >= 10) {
+      h += '<div class="kl-sirkel aktiv">';
+      h += '<div class="kl-tall">10</div>';
+      h += '<div class="kl-bev-txt">bevegelser</div>';
+      h += '</div>';
+      h += '<div class="kl-hint">Alle 10 registrert i dag. Godt jobbet!</div>';
+    } else {
+      h += '<div class="kl-sirkel aktiv" onclick="startKL()">';
+      h += '<div class="kl-tall">' + d.k + '</div>';
+      h += '<div class="kl-bev-txt">bevegelser</div>';
+      h += '</div>';
+      h += '<div class="kl-hint">Trykk for å fortsette tellingen fra i dag.</div>';
+      h += '<button class="kl-btn start" onclick="startKL()">Fortsett telling</button>';
+    }
+    h += '</div>';
+  } else {
+    var elapsed = d.s ? Math.round((Date.now() - d.s) / 60000) : 0;
+    h += '<div class="kl-sirkel-wrap">';
+    h += '<div class="kl-min">' + elapsed + ' min</div>';
+    h += '<div class="kl-sirkel aktiv" id="kl-sirkel-btn" onclick="registrerBev()">';
+    h += '<div class="kl-tall" id="kl-tall">' + d.k + '</div>';
+    h += '<div class="kl-bev-txt">bevegelser</div>';
+    h += '</div>';
+    h += '<div class="kl-hint">Trykk på sirkelen hver gang du kjenner en bevegelse</div>';
+    h += '<button class="kl-btn" onclick="stoppKL()">Stopp telling</button>';
+    h += '</div>';
+  }
+
+  document.getElementById('kl-innhold').innerHTML = h;
+  document.getElementById('dn').value = (db[TODAY]||{}).n || '';
+
+  // Oppdater historikk-label
+  var allDays = Object.keys(db).filter(d2 => db[d2] && db[d2].k).sort((a,b)=>b.localeCompare(a));
+  document.getElementById('kl-hist-tittel').textContent = allDays.length ? 'SISTE REGISTRERINGER' : 'INGEN REGISTRERINGER ENNÅ';
+  rDh();
+}
+
+function startKL() {
+  KL_AKTIV = true;
+  var d = db[TODAY] || {k:0, s:null, m:0, n:''};
+  if (!d.s) d.s = Date.now();
+  db[TODAY] = d;
+  renderKL();
+  // Oppdater tid hvert minutt
+  if (window._klTimer) clearInterval(window._klTimer);
+  window._klTimer = setInterval(() => { if (KL_AKTIV) renderKL(); }, 60000);
+}
+
+function stoppKL() {
+  KL_AKTIV = false;
+  if (window._klTimer) clearInterval(window._klTimer);
+  renderKL();
+  lagre();
+  oppdaterHjem();
+}
+
+function registrerBev() {
+  var d = db[TODAY] || {k:0, s:Date.now(), m:0, n:''};
   if (d.k >= 10) return;
   if (!d.s) d.s = Date.now();
   d.k++;
   d.m = Math.max(1, Math.round((Date.now() - d.s) / 60000));
   db[TODAY] = d;
-  bUI();
-  animateDot(d.k - 1);
+
+  // Animasjon
+  var sirkel = document.getElementById('kl-sirkel-btn');
+  if (sirkel) { sirkel.classList.add('pop'); setTimeout(()=>sirkel.classList.remove('pop'), 200); }
+  var tall = document.getElementById('kl-tall');
+  if (tall) tall.textContent = d.k;
+
   lagre();
-}
+  oppdaterHjem();
 
-function animateDot(idx) {
-  var dot = document.getElementById('dot-' + idx);
-  if (!dot) return;
-  dot.classList.add('pop');
-  setTimeout(() => dot.classList.remove('pop'), 200);
-}
-
-function bUI() {
-  var d = db[TODAY] || { k: 0, m: 0 };
-  var k = d.k, m = d.m;
-  document.getElementById('sa').textContent = k;
-  document.getElementById('st').textContent = k ? m : '–';
-  document.getElementById('sts').textContent = k ? 'minutter' : 'ikke startet';
-  document.getElementById('bt').textContent = k + ' / 10';
-  var h = '';
-  for (var i = 0; i < 10; i++) {
-    h += '<div class="dot' + (i < k ? ' on' : '') + '" id="dot-' + i + '"></div>';
-  }
-  document.getElementById('dots').innerHTML = h;
-  var rb = document.getElementById('rb'), bh = document.getElementById('bh');
-  if (k >= 10) {
-    rb.disabled = true;
-    bh.textContent = 'Alle 10 – du kan puste ut for i dag.';
-  } else if (k === 0) {
-    rb.disabled = false;
-    bh.textContent = 'Finn et rolig øyeblikk – legg deg ned og kjenn etter';
-  } else {
-    rb.disabled = false;
-    bh.textContent = 'Bra! ' + (10 - k) + ' bevegelser gjenstår';
+  if (d.k >= 10) {
+    stoppKL();
   }
 }
 
 // ── NAVIGASJON ─────────────────────────────────────────
-function vis(id, btn) {
-  document.querySelectorAll('.pane').forEach(p => p.classList.remove('on'));
-  document.querySelectorAll('.nb').forEach(b => b.classList.remove('on'));
-  document.getElementById('p' + id).classList.add('on');
+function visPane(id, btn) {
+  document.querySelectorAll('.pane').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.nb').forEach(b=>b.classList.remove('on'));
+  document.getElementById('p'+id).classList.add('on');
   btn.classList.add('on');
-  if (id === 'd') rDh();
-  if (id === 's') rCL(true);
+  if (id==='s') rCL();
+  if (id==='k') renderKL();
+  if (id==='p') oppdaterProfil();
 }
 
 // ── LAGRING ────────────────────────────────────────────
 function lN() {
-  var d = db[TODAY] || { k: 0, s: null, m: 0, n: '' };
+  var d = db[TODAY] || {k:0, s:null, m:0, n:''};
   d.n = document.getElementById('dn').value;
   db[TODAY] = d;
-  deb();
-}
-function deb() {
   clearTimeout(saveTimer);
   saveTimer = setTimeout(lagre, 600);
 }
 function lagre() {
   try {
-    localStorage.setItem('sammen-v1', JSON.stringify({ U, db, cl, oc }));
+    localStorage.setItem('sammen-v1', JSON.stringify({U: EKTE_U, db, cl, oc}));
     flash();
-  } catch (e) { console.warn('Lagring feilet', e); }
+  } catch(e) { console.warn(e); }
 }
 function flash() {
   var t = document.getElementById('lt');
+  if (!t) return;
   t.classList.add('vis');
-  setTimeout(() => t.classList.remove('vis'), 1600);
+  setTimeout(()=>t.classList.remove('vis'), 1600);
+}
+
+// ── DAGBOK ─────────────────────────────────────────────
+function rDh() {
+  var ds = Object.keys(db).filter(d=>db[d]&&db[d].k).sort((a,b)=>b.localeCompare(a));
+  if (!ds.length) {
+    document.getElementById('dh').innerHTML = '<div class="kl-tomt">Ingen registreringer ennå.<br>Start en telling ovenfor.</div>';
+    return;
+  }
+  var mn=['jan','feb','mar','apr','mai','jun','jul','aug','sep','okt','nov','des'];
+  var dg=['søn','man','tir','ons','tor','fre','lør'];
+  var h = '';
+  ds.slice(0,7).forEach(dato => {
+    var d = db[dato], dt = new Date(dato);
+    var lbl = dato===TODAY ? 'I dag' : dg[dt.getDay()]+' '+dt.getDate()+'. '+mn[dt.getMonth()];
+    h += '<div class="kl-hist-card">';
+    h += '<div class="kl-hist-dato">' + lbl + '</div>';
+    h += '<div class="kl-hist-row">';
+    h += '<div><div class="kl-hist-tall">'+d.k+'</div><div class="kl-hist-min">bevegelser</div></div>';
+    if (d.m) h += '<div><div class="kl-hist-tall" style="font-size:24px">'+d.m+'</div><div class="kl-hist-min">minutter</div></div>';
+    h += '</div>';
+    if (d.n) h += '<div class="kl-hist-notat">«'+d.n+'»</div>';
+    h += '</div>';
+  });
+  document.getElementById('dh').innerHTML = h;
+}
+
+// ── SJEKKLISTE ─────────────────────────────────────────
+function buildCL() {
+  var cats = {};
+  CAT_ORDER.forEach(c=>{cats[c]={};});
+  ALL_ITEMS.forEach(item => {
+    if (item.category==='medisinske_hensyn' && item.conditions.length>0) return;
+    var cat=item.category, grp=item.group;
+    if (!cats[cat]) cats[cat]={};
+    if (!cats[cat][grp]) cats[cat][grp]=[];
+    cats[cat][grp].push(item);
+  });
+  var result=[];
+  CAT_ORDER.forEach(cat=>{
+    var groups=cats[cat];
+    if (!groups) return;
+    var grpKeys=Object.keys(groups);
+    if (!grpKeys.length) return;
+    result.push({k:CAT_NAMES[cat], id:cat, groups:grpKeys.map(g=>({g,items:groups[g]}))});
+  });
+  return result;
+}
+
+function rCL() {
+  var CL_DATA = buildCL();
+
+  // Oppdater overall progress (første kategori med not-done)
+  var allItems = ALL_ITEMS.filter(i=>i.category!=='medisinske_hensyn'||i.conditions.length===0);
+  var totDone = allItems.filter(i=>(cl[i.id]||{}).d).length;
+  var totNr = allItems.filter(i=>(cl[i.id]||{}).n).length;
+  var tot = allItems.length - totNr;
+  // Finn «aktivt» kategori å vise i progress
+  // Total fremdrift – kun obligatoriske, alle kategorier unntatt medisinske/etter_fodsel
+  var alleObl = ALL_ITEMS.filter(i =>
+    i.category !== 'medisinske_hensyn' &&
+    i.category !== 'etter_fodsel' &&
+    i.conditions.length === 0 &&
+    i.optional === false
+  );
+  var totalDone = alleObl.filter(i => (cl[i.id]||{}).d).length;
+  var totalNr = alleObl.filter(i => (cl[i.id]||{}).n).length;
+  var totalTot = alleObl.length - totalNr;
+  document.getElementById('cl-prog-navn').textContent = 'Totalt';
+  document.getElementById('cl-prog-tall').textContent = totalDone + ' av ' + totalTot;
+  document.getElementById('cl-prog-fill').style.width = (totalTot > 0 ? Math.round(totalDone / totalTot * 100) : 0) + '%';
+
+  var h = '';
+  CL_DATA.forEach(cat => {
+    var allIt = cat.groups.flatMap(g=>g.items);
+    var dn = allIt.filter(i=>(cl[i.id]||{}).d).length;
+    var nr = allIt.filter(i=>(cl[i.id]||{}).n).length;
+    var tot = allIt.length - nr;
+    var op = oc[cat.id] !== false;
+    var hasObl = allIt.some(i=>!i.optional);
+    var hasOpt = allIt.some(i=>i.optional);
+
+    h += '<div class="cl-cat-header" onclick="tC(\'' + cat.id + '\')">';
+    h += '<div class="cl-cat-left">';
+    h += '<span class="cl-cat-name">' + cat.k + '</span>';
+    h += '</div>';
+    h += '<span style="display:flex;align-items:center;gap:4px">';
+    h += '<span class="cl-cat-count">'+dn+'/'+tot+'</span>';
+    h += '<span class="cl-cat-chev'+(op?' open':'')+'">▾</span>';
+    h += '</span></div>';
+
+    if (op) {
+      var doneItems = allIt.filter(i=>(cl[i.id]||{}).n);
+      h += '<div class="cl-card">';
+      cat.groups.forEach((grp, gi) => {
+        var visItems = grp.items.filter(i=>!(cl[i.id]||{}).n);
+        if (cat.groups.length > 1 && visItems.length > 0) {
+          h += '<div class="cl-grp-header">' + grp.g + '</div>';
+        }
+        visItems.forEach(item => {
+          var s = cl[item.id]||{d:false,n:false};
+          h += '<div class="cl-item" onclick="tI(\'' + item.id + '\')">';
+          h += '<div class="cl-item-cb'+(s.d?' done':'')+'">'+
+            (s.d?'<svg width="11" height="11" viewBox="0 0 11 11"><polyline points="1.5,5.5 4.5,8.5 9.5,2.5" stroke="white" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>':'')+'</div>';
+          h += '<div class="cl-item-right">';
+          h += '<div class="cl-item-title'+(s.d?' done':'')+'" style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">'+item.title;
+          if (!item.optional) h += '<span style="font-size:10px;font-weight:600;color:var(--grn);background:var(--grn-l);padding:1px 7px;border-radius:10px;white-space:nowrap">Obligatorisk</span>';
+          if (item.optional) h += '<span style="font-size:10px;font-weight:500;color:var(--text-3);background:var(--bg);padding:1px 7px;border-radius:10px;border:1px solid var(--border);white-space:nowrap">Valgfritt</span>';
+          h += '</div>';
+          if (item.label) h += '<div class="cl-item-label">'+item.label+'</div>';
+          h += '</div>';
+          h += '<button class="cl-item-xbtn" onclick="event.stopPropagation();tN(\'' + item.id + '\')" aria-label="Ikke relevant">×</button>';
+          h += '</div>';
+        });
+      });
+
+      if (doneItems.length > 0) {
+        h += '<div class="cl-ikke-rel">';
+        h += '<div class="cl-ikke-rel-label">Ikke relevant ('+doneItems.length+')</div>';
+        h += '<div class="cl-ikke-rel-items">';
+        doneItems.forEach(item => {
+          h += '<div class="cl-ikke-rel-item">';
+          h += '<svg class="cl-ikke-rel-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 4v16M4 12h16" transform="rotate(45 12 12)"/></svg>';
+          h += '<span style="text-decoration:line-through">' + item.title + '</span>';
+          h += '<button style="background:none;border:none;color:var(--grn);font-size:12px;cursor:pointer;padding:0" onclick="event.stopPropagation();tN(\'' + item.id + '\')" >Angre</button>';
+          h += '</div>';
+        });
+        h += '</div></div>';
+      }
+      h += '</div>';
+    }
+  });
+
+  document.getElementById('cl').innerHTML = h;
+}
+
+function tC(catId) { oc[catId] = oc[catId]===false ? true : false; rCL(); lagre(); }
+function tI(id) { var s=cl[id]||{d:false,n:false}; if(!s.n){s.d=!s.d; cl[id]=s; rCL(); lagre(); oppdaterHjem(); } }
+function tN(id) { var s=cl[id]||{d:false,n:false}; s.n=!s.n; if(s.n) s.d=false; cl[id]=s; rCL(); lagre(); }
+
+// ── PROFIL ─────────────────────────────────────────────
+function oppdaterProfil() {
+  document.getElementById('profil-termin').textContent = TERMIN ? formaterTermin(TERMIN) : '–';
+  document.getElementById('profil-uke').textContent = TERMIN ? 'Uke ' + EKTE_U + ' + ' + beregnDagerIUke(TERMIN) : 'Uke ' + U;
+  if (TERMIN) document.getElementById('profil-termin-input').value = TERMIN;
+}
+
+function lagreNyTermin() {
+  var val = document.getElementById('profil-termin-input').value;
+  if (!val) return;
+  TERMIN = val;
+  TERMIN_LENGDE = TERMIN_LENGDE || 283;
+  EKTE_U = beregnUkeFraTermin(val);
+  U = EKTE_U;
+  localStorage.setItem('sammen-termin', val);
+  lagre();
+  oppdaterProfil();
+  oppdaterHjem();
+  document.getElementById('profil-termin-lagre').style.opacity = 0;
+}
+
+function oppdaterLengde(val) {
+  var n = parseInt(val);
+  if (isNaN(n) || n < 260 || n > 295) return;
+  TERMIN_LENGDE = n;
+  localStorage.setItem('sammen-lengde', n);
+  if (TERMIN) {
+    EKTE_U = beregnUkeFraTermin(TERMIN);
+    U = EKTE_U;
+  }
+  oppdaterHjem();
+  oppdaterProfil();
+}
+function nullstill() {
+  if (confirm('Tilbakestille appen? All data slettes.')) {
+    localStorage.removeItem('sammen-v1');
+    localStorage.removeItem('sammen-onboarding');
+    localStorage.removeItem('sammen-termin');
+    localStorage.removeItem('sammen-prefs');
+    location.reload();
+  }
 }
 
 // ── ONBOARDING ─────────────────────────────────────────
-var OB = {
-  termin: null,      // ISO date string
-  ukeModus: false,   // bruker vet uke, ikke termin
-  prefs: {}          // valgte preferanser
-};
+var OB = { termin: null, prefs: {} };
 
 function obGå(steg) {
   if (steg === 4) {
-    // Vis ferdig-skjerm med frukt og uke
-    var uke = obBeregnUke();
+    var uke = OB.termin ? beregnUkeFraTermin(OB.termin) : 20;
     var f = gF(uke);
     document.getElementById('ob-frukt-emoji').textContent = f.e;
     document.getElementById('ob-ferdig-uke').textContent = 'Uke ' + uke;
     document.getElementById('ob-ferdig-navn').textContent = f.n;
     document.getElementById('ob-ferdig-tekst').textContent = f.d;
   }
-  for (var i = 1; i <= 4; i++) {
-    document.getElementById('ob' + i).classList.toggle('skjult', i !== steg);
-  }
+  for (var i=1;i<=4;i++) document.getElementById('ob'+i).classList.toggle('skjult', i!==steg);
 }
 
 function obSjekkTermin() {
@@ -1313,172 +1671,60 @@ function obSjekkTermin() {
   document.getElementById('ob2-btn').disabled = !val;
 }
 
-function obVisUkeModus() { /* ikke i bruk */ }
-function obOppdaterUke() { /* ikke i bruk */ }
-
 function obTogglePref(key) {
   OB.prefs[key] = !OB.prefs[key];
-  var el = document.getElementById('pref-' + key);
-  var cb = document.getElementById('cb-' + key);
+  var el = document.getElementById('pref-'+key);
+  var cb = document.getElementById('cb-'+key);
   el.classList.toggle('on', OB.prefs[key]);
-  cb.innerHTML = OB.prefs[key]
-    ? '<svg width="11" height="11" viewBox="0 0 11 11"><polyline points="1.5,5.5 4.5,8.5 9.5,2.5" stroke="white" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>'
-    : '';
-}
-
-function obBeregnUke() {
-  if (OB.termin) {
-    var termin = new Date(OB.termin);
-    var naa = new Date();
-    var ukerIgjen = (termin - naa) / (7 * 24 * 60 * 60 * 1000);
-    var uke = Math.round(40 - ukerIgjen);
-    return Math.min(42, Math.max(4, uke));
-  }
-  return 20;
+  cb.innerHTML = OB.prefs[key] ? '<svg width="11" height="11" viewBox="0 0 11 11"><polyline points="1.5,5.5 4.5,8.5 9.5,2.5" stroke="white" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>' : '';
 }
 
 function obFerdig() {
-  U = obBeregnUke();
   if (OB.termin) {
+    TERMIN = OB.termin;
+    TERMIN_LENGDE = parseInt(document.getElementById('ob-lengde').value) || 280;
+    EKTE_U = beregnUkeFraTermin(OB.termin);
+    U = EKTE_U;
     localStorage.setItem('sammen-termin', OB.termin);
+    localStorage.setItem('sammen-lengde', TERMIN_LENGDE);
   }
   localStorage.setItem('sammen-prefs', JSON.stringify(OB.prefs));
   localStorage.setItem('sammen-onboarding', 'done');
-
-  // Lagre all state inkludert riktig U
   lagre();
-
-  // Skjul onboarding
-  for (var i = 1; i <= 4; i++) {
-    document.getElementById('ob' + i).classList.add('skjult');
-  }
-
-  sU(U, false);
-  bUI();
-  rCL(true);
+  for (var i=1;i<=4;i++) document.getElementById('ob'+i).classList.add('skjult');
+  oppdaterHjem();
 }
 
 // ── INIT ───────────────────────────────────────────────
 function init() {
-  // Sjekk om onboarding er fullført
-  var onboardingDone = localStorage.getItem('sammen-onboarding') === 'done';
-
+  var done = localStorage.getItem('sammen-onboarding') === 'done';
+  var terminStr = localStorage.getItem('sammen-termin');
+  var lengdeStr = localStorage.getItem('sammen-lengde');
+  if (terminStr) {
+    TERMIN = terminStr;
+    TERMIN_LENGDE = parseInt(lengdeStr) || 283;
+    EKTE_U = beregnUkeFraTermin(terminStr);
+    U = EKTE_U;
+  }
   try {
     var raw = localStorage.getItem('sammen-v1');
     if (raw) {
       var x = JSON.parse(raw);
-      if (x.U) U = x.U;
       if (x.db) db = x.db;
       if (x.cl) cl = x.cl;
       if (x.oc) oc = x.oc;
     }
-  } catch (e) { console.warn('Innlasting feilet', e); }
+  } catch(e) { console.warn(e); }
 
-  if (onboardingDone) {
-    // Hopp over onboarding – skjul alle ob-skjermer
-    for (var i = 1; i <= 4; i++) {
-      document.getElementById('ob' + i).classList.add('skjult');
-    }
-    sU(U, false);
-    bUI();
-    document.getElementById('dn').value = (db[TODAY] || {}).n || '';
-    rCL(true);
+  if (done) {
+    for (var i=1;i<=4;i++) document.getElementById('ob'+i).classList.add('skjult');
+    oppdaterHjem();
+    document.getElementById('dn').value = (db[TODAY]||{}).n || '';
   } else {
-    // Vis onboarding steg 1
     obGå(1);
   }
 }
 
-// ── DAGBOK ─────────────────────────────────────────────
-function rDh() {
-  var ds = Object.keys(db).filter(d => db[d] && db[d].k).sort((a, b) => b.localeCompare(a));
-  if (!ds.length) {
-    document.getElementById('dh').innerHTML = '<div class="tomt">Ingen registreringer ennå.<br>Start på Hjem-fanen og kjenn etter.</div>';
-    return;
-  }
-  var mn = ['jan', 'feb', 'mar', 'apr', 'mai', 'jun', 'jul', 'aug', 'sep', 'okt', 'nov', 'des'];
-  var dg = ['søn', 'man', 'tir', 'ons', 'tor', 'fre', 'lør'];
-  var h = '';
-  ds.forEach(dato => {
-    var d = db[dato], dt = new Date(dato);
-    var lbl = dato === TODAY ? 'I dag' : dg[dt.getDay()] + ' ' + dt.getDate() + '. ' + mn[dt.getMonth()];
-    h += '<div class="dcard">';
-    h += '<div class="ddato">' + lbl + '</div>';
-    h += '<div style="display:flex;gap:10px;align-items:center">';
-    h += '<div style="font-size:30px;font-weight:700;color:var(--text);line-height:1">' + d.k + '</div>';
-    h += '<div><div class="dbev">bevegelser registrert</div><div class="dtid">' + (d.m ? d.m + ' minutter' : '') + '</div></div>';
-    h += '</div>';
-    if (d.n) h += '<div class="dnote">«' + d.n + '»</div>';
-    h += '</div>';
-  });
-  document.getElementById('dh').innerHTML = h;
-}
-
-// ── SJEKKLISTE ─────────────────────────────────────────
-function rCL(showAll) {
-  CL_DATA = buildCL(showAll !== false);
-  var h = '';
-
-  CL_DATA.forEach((cat) => {
-    // Tell opp done og not-relevant per kategori
-    var allItems = cat.groups.flatMap(g => g.items);
-    var tot = allItems.length;
-    var dn = allItems.filter(item => (cl[item.id] || {}).d).length;
-    var nr = allItems.filter(item => (cl[item.id] || {}).n).length;
-    var op = oc[cat.id] !== false;
-
-    h += '<div>';
-    h += '<div class="crow" onclick="tC(\'' + cat.id + '\')">';
-    h += '<span class="cn">' + cat.k + '</span>';
-    h += '<span style="display:flex;align-items:center;gap:6px">';
-    h += '<span class="cp">' + dn + '/' + (tot - nr) + '</span>';
-    h += '<span class="chev' + (op ? ' open' : '') + '">▾</span>';
-    h += '</span></div>';
-
-    if (op) {
-      cat.groups.forEach((grp) => {
-        // Vis gruppe-overskrift kun hvis det er mer enn én gruppe
-        if (cat.groups.length > 1) {
-          h += '<div style="font-size:10px;font-weight:600;color:var(--text-3);letter-spacing:.06em;text-transform:uppercase;padding:10px 0 4px 4px;border-top:0.5px solid var(--border)">' + grp.g + '</div>';
-        }
-        grp.items.forEach((item) => {
-          var s = cl[item.id] || { d: false, n: false };
-          var bc = s.d ? 'done' : s.n ? 'nr' : '';
-          var lc = s.d ? 'done' : s.n ? 'nr' : '';
-          var isOpt = item.optional;
-
-          h += '<div class="irow" onclick="tI(\'' + item.id + '\')">';
-          h += '<div class="cb ' + bc + '">';
-          if (s.d) h += '<svg width="11" height="11" viewBox="0 0 11 11"><polyline points="1.5,5.5 4.5,8.5 9.5,2.5" stroke="white" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>';
-          else if (s.n) h += '<span style="font-size:12px;color:var(--text-3)">–</span>';
-          h += '</div>';
-          h += '<div style="flex:1">';
-          h += '<div style="display:flex;align-items:baseline;gap:6px;flex-wrap:wrap">';
-          h += '<div class="il ' + lc + '">' + item.title + '</div>';
-          if (isOpt) h += '<span style="font-size:10px;color:var(--text-3);background:var(--bg-2);padding:1px 6px;border-radius:4px;border:0.5px solid var(--border)">valgfritt</span>';
-          h += '</div>';
-          if (item.label) h += '<div class="iu">' + item.label + '</div>';
-          if (!s.d) {
-            h += '<button class="inr" onclick="event.stopPropagation();tN(\'' + item.id + '\')">';
-            h += s.n ? 'Angre' : 'Ikke relevant for meg';
-            h += '</button>';
-          }
-          h += '</div></div>';
-        });
-      });
-    }
-    h += '</div>';
-  });
-
-  document.getElementById('cl').innerHTML = h;
-}
-
-function tC(catId) { oc[catId] = oc[catId] === false ? true : false; rCL(true); lagre(); }
-function tI(id) { var s = cl[id] || {d:false,n:false}; if (!s.n) { s.d = !s.d; cl[id] = s; rCL(true); lagre(); } }
-function tN(id) { var s = cl[id] || {d:false,n:false}; s.n = !s.n; if (s.n) s.d = false; cl[id] = s; rCL(true); lagre(); }
-
-// ── ØNSKEBREV ──────────────────────────────────────────
-// ── START ──────────────────────────────────────────────
 init();
 </script>
 </body>
