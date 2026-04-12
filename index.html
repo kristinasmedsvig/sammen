@@ -714,8 +714,6 @@ html, body {
     <div class="ob-tekst">Vi bruker termindatoen til å vise hva som er relevant akkurat nå.</div>
     <label class="ob-label">Termindato</label>
     <input class="ob-input" type="date" id="ob-termin" oninput="obSjekkTermin()">
-    <label class="ob-label" style="margin-top:8px">Graviditetslengde (dager)</label>
-    <input class="ob-input" type="number" id="ob-lengde" value="283" min="260" max="295" placeholder="283">
   </div>
   <div class="ob-bunn">
     <button class="ob-btn" id="ob2-btn" onclick="obGå(3)" disabled>Neste</button>
@@ -1177,9 +1175,10 @@ var CAT_NAMES = {
   svangerskapsoppfolging:'Svangerskapsoppfølging',blodprover_vaksiner:'Blodprøver og vaksiner',
   planlegging_okonomi:'Planlegging og økonomi',klar:'Klær til baby',soveplass:'Soveplass',
   transport:'Transport og på farten',stell_hygiene:'Stell og hygiene',mat_naerhet:'Mat og nærhet',
+  velvare:'For deg',
   sykehusveske:'Sykehusveske',medisinske_hensyn:'Medisinske hensyn',etter_fodsel:'Etter fødsel'
 };
-var CAT_ORDER = ['svangerskapsoppfolging','blodprover_vaksiner','planlegging_okonomi','klar','soveplass','transport','stell_hygiene','mat_naerhet','sykehusveske','medisinske_hensyn','etter_fodsel'];
+var CAT_ORDER = ['svangerskapsoppfolging','blodprover_vaksiner','planlegging_okonomi','klar','soveplass','transport','stell_hygiene','mat_naerhet','velvare','sykehusveske','medisinske_hensyn','etter_fodsel'];
 
 var ALL_ITEMS = [
   {id:'first_check',title:'Første svangerskapskontroll',category:'svangerskapsoppfolging',group:'Tidlig i svangerskapet',week_from:4,week_to:12,optional:false,conditions:[],label:null},
@@ -1199,11 +1198,11 @@ var ALL_ITEMS = [
   {id:'bloodtype_rhesus',title:'Blodtype og rhesus-faktor',category:'blodprover_vaksiner',group:'Blodprøver',week_from:6,week_to:12,optional:false,conditions:[],label:'Tas på første svangerskapskontroll'},
   {id:'hemoglobin_first',title:'Hemoglobin – anemi',category:'blodprover_vaksiner',group:'Blodprøver',week_from:6,week_to:12,optional:false,conditions:[],label:'Tas på første svangerskapskontroll'},
   {id:'diverse_tester',title:'Diverse tester (HIV, hepatitt B, syfilis, røde hunder)',category:'blodprover_vaksiner',group:'Blodprøver',week_from:6,week_to:12,optional:false,conditions:[],label:'Tas på første svangerskapskontroll'},
-  {id:'rhd_fetal_typing',title:'Blodprøve for å påvise barnets RhD-type',category:'blodprover_vaksiner',group:'Rhesus-oppfølging',week_from:24,week_to:24,optional:false,conditions:['rhesus_negative'],label:'Uke 24 · kun hvis du er RhD-negativ'},
-  {id:'ferritin_if_needed',title:'Ferritin (jernlager)',category:'blodprover_vaksiner',group:'Blodprøver',week_from:6,week_to:15,optional:true,conditions:[],label:'Tas på første svangerskapskontroll'},
+  {id:'rhd_fetal_typing',title:'Blodprøve for å påvise barnets RhD-type',category:'blodprover_vaksiner',group:'Rhesus-oppfølging',week_from:24,week_to:24,optional:true,conditions:['rhesus_negative'],label:'Uke 24 · kun hvis du er RhD-negativ'},
+  {id:'ferritin_if_needed',title:'Ferritin (jernlager)',category:'blodprover_vaksiner',group:'Blodprøver',week_from:6,week_to:15,optional:false,conditions:[],label:'Tas på første svangerskapskontroll'},
   {id:'hemoglobin_repeat',title:'Ny hemoglobinmåling',category:'blodprover_vaksiner',group:'Blodprøver',week_from:28,week_to:28,optional:false,conditions:[],label:'Uke 28'},
-  {id:'anti_d_dose_1',title:'Anti-D profylakse',category:'blodprover_vaksiner',group:'Rhesus-oppfølging',week_from:27,week_to:28,optional:false,conditions:['rhesus_negative'],label:'Uke 28 · hvis fosteret er RhD-positivt og du er RhD-negativ – forebygger reaksjon mellom blodet'},
-  {id:'anti_d_dose_2',title:'Anti-D dose 2',category:'blodprover_vaksiner',group:'Rhesus-oppfølging',week_from:40,week_to:42,optional:false,conditions:['rhesus_negative'],label:'Etter fødsel · innen 72 timer'},
+  {id:'anti_d_dose_1',title:'Anti-D profylakse',category:'blodprover_vaksiner',group:'Rhesus-oppfølging',week_from:27,week_to:28,optional:true,conditions:['rhesus_negative'],label:'Uke 28 · hvis fosteret er RhD-positivt og du er RhD-negativ – forebygger reaksjon mellom blodet'},
+  {id:'anti_d_dose_2',title:'Anti-D dose 2',category:'blodprover_vaksiner',group:'Rhesus-oppfølging',week_from:40,week_to:42,optional:true,conditions:['rhesus_negative'],label:'Etter fødsel · innen 72 timer'},
   {id:'influenza_vaccine',title:'Influensavaksine – gratis',category:'blodprover_vaksiner',group:'Vaksiner',week_from:12,week_to:40,optional:true,conditions:['flu_season'],label:'Høst og vinter'},
   {id:'pertussis_vaccine',title:'Kikhostevaksine (dTp) – gratis',category:'blodprover_vaksiner',group:'Vaksiner',week_from:23,week_to:24,optional:true,conditions:[],label:'Uke 24'},
   {id:'rsv_vaccine',title:'RS-virusvaksine – egenbetaling',category:'blodprover_vaksiner',group:'Vaksiner',week_from:24,week_to:36,optional:true,conditions:[],label:'Uke 24–36 · resept fra lege'},
@@ -1235,14 +1234,15 @@ var ALL_ITEMS = [
   {id:'sleep_nightlight',title:'Nattlampe',category:'soveplass',group:'Valgfritt',week_from:32,week_to:36,optional:true,conditions:[],label:'Praktisk ved nattamming'},
   {id:'transport_stroller',title:'Barnevogn',category:'transport',group:'Grunnleggende',week_from:24,week_to:32,optional:false,conditions:[],label:null},
   {id:'transport_car_seat',title:'Bilstol til baby',category:'transport',group:'Grunnleggende',week_from:28,week_to:36,optional:false,conditions:[],label:null},
-  {id:'out_and_about_bag',title:'Stelleveske eller stelleryggsekk',category:'transport',group:'Grunnleggende',week_from:30,week_to:36,optional:false,conditions:[],label:null},
+  {id:'out_and_about_bag',title:'Stelleveske eller stelleryggsekk',category:'transport',group:'Grunnleggende',week_from:30,week_to:36,optional:true,conditions:[],label:null},
   {id:'out_and_about_burp_cloths',title:'Gulpekluter',category:'stell_hygiene',group:'Hygiene',week_from:36,week_to:40,optional:false,conditions:[],label:'Kjøp gjerne 6–8 stk'},
   {id:'out_and_about_changing_pad',title:'Stelleunderlag',category:'transport',group:'Grunnleggende',week_from:30,week_to:40,optional:true,conditions:[],label:'Engangs eller brettbart'},
   {id:'transport_rain_cover',title:'Regntrekk til barnevogn',category:'transport',group:'Valgfritt',week_from:30,week_to:36,optional:true,conditions:[],label:null},
   {id:'transport_footmuff',title:'Vognpose',category:'transport',group:'Valgfritt',week_from:30,week_to:40,optional:true,conditions:[],label:null},
   {id:'transport_sunshade_stroller',title:'Solskjerm til barnevogn',category:'transport',group:'Valgfritt',week_from:30,week_to:36,optional:true,conditions:[],label:null},
   {id:'transport_sleepcarrier',title:'Bærebag til vogn / SleepCarrier',category:'transport',group:'Valgfritt',week_from:30,week_to:36,optional:true,conditions:[],label:'Gjør det enkelt å ta sovende baby med seg'},
-  {id:'transport_wrap',title:'Bæresjal / wrap',category:'transport',group:'Valgfritt',week_from:30,week_to:36,optional:true,conditions:[],label:'Mykt alternativ til bæresele for de første månedene'},
+  {id:'transport_wrap',title:'Bæresjal / wrap',category:'transport',group:'Valgfritt',week_from:30,week_to:36,optional:true,conditions:[],label:'Populært de første ukene og månedene – mykt og godt mot kroppen fra nyfødt'},
+  {id:'bonding_carrier',title:'Bæresele',category:'transport',group:'Valgfritt',week_from:34,week_to:40,optional:true,conditions:[],label:'Brukes gjerne når babyen er litt større, men mange modeller er også godkjent fra nyfødt'},
   {id:'transport_adapter',title:'Adapter til barnevogn (for bilstol)',category:'transport',group:'Valgfritt',week_from:30,week_to:36,optional:true,conditions:[],label:null},
   {id:'transport_car_window_sunshade',title:'Solbeskyttelse til bilvindu',category:'transport',group:'Valgfritt',week_from:30,week_to:36,optional:true,conditions:[],label:null},
   {id:'transport_bag_for_stroller',title:'Stelleveske til barnevogn',category:'transport',group:'Valgfritt',week_from:30,week_to:36,optional:true,conditions:[],label:null},
@@ -1274,14 +1274,26 @@ var ALL_ITEMS = [
   {id:'feeding_bottle_brush',title:'Flaskebørste',category:'mat_naerhet',group:'Amming og mating',week_from:34,week_to:40,optional:true,conditions:['uses_bottles'],label:'Hvis flasker'},
   {id:'feeding_sterilizer',title:'Sterilisator for flasker',category:'mat_naerhet',group:'Amming og mating',week_from:34,week_to:40,optional:true,conditions:[],label:null},
   {id:'feeding_pacifier',title:'Smokk',category:'mat_naerhet',group:'Amming og mating',week_from:34,week_to:40,optional:true,conditions:[],label:null},
-  {id:'bonding_carrier',title:'Bæresele eller bæresjal',category:'mat_naerhet',group:'Bæring',week_from:37,week_to:40,optional:true,conditions:[],label:null},
   {id:'feeding_bib',title:'Smekker',category:'mat_naerhet',group:'Mating',week_from:37,week_to:40,optional:false,conditions:[],label:'1–2 stk'},
   {id:'feeding_highchair',title:'Barnestol',category:'mat_naerhet',group:'Mating',week_from:34,week_to:40,optional:true,conditions:[],label:'Med nyfødtinnlegg kan den brukes fra dag én'},
   {id:'feeding_highchair_insert',title:'Nyfødtinnlegg til barnestol',category:'mat_naerhet',group:'Mating',week_from:34,week_to:40,optional:true,conditions:[],label:null},
   {id:'baby_bouncer',title:'Vippestol',category:'mat_naerhet',group:'Mating',week_from:32,week_to:36,optional:true,conditions:[],label:'Praktisk fra nyfødt – babyen kan ligge der mens du har hendene fri'},
   {id:'baby_soft_toys',title:'Myke leker eller rangler',category:'mat_naerhet',group:'Lek og stimulering',week_from:32,week_to:36,optional:true,conditions:[],label:null},
+  {id:'baby_gym',title:'Babygym',category:'mat_naerhet',group:'Lek og stimulering',week_from:32,week_to:36,optional:true,conditions:[],label:null},
   {id:'storage_toys',title:'Oppbevaring til leker',category:'mat_naerhet',group:'Oppbevaring',week_from:32,week_to:36,optional:true,conditions:[],label:null},
   {id:'storage_clothes',title:'Oppbevaring til klær',category:'mat_naerhet',group:'Oppbevaring',week_from:32,week_to:36,optional:true,conditions:[],label:null},
+  // For deg
+  {id:'velvare_gravidklær',title:'Gravidklær',category:'velvare',group:'Komfort',week_from:12,week_to:40,optional:true,conditions:[],label:'Du fortjener å føle deg bra i klærne'},
+  {id:'velvare_stottestrompter',title:'Støttestrømper',category:'velvare',group:'Komfort',week_from:20,week_to:40,optional:true,conditions:[],label:'Kan hjelpe mot hovne ben og tyngdefølelse – særlig nyttig fra 2. trimester'},
+  {id:'velvare_psykisk',title:'Kjenner du deg nedstemt eller har fødselsangst?',category:'velvare',group:'Psykisk helse',week_from:8,week_to:40,optional:true,conditions:[],label:'Snakk med jordmor eller fastlege – det er vanlig og det finnes god hjelp'},
+  {id:'velvare_multivitamin',title:'Multivitamin for gravide + omega-3',category:'velvare',group:'Tilskudd',week_from:4,week_to:40,optional:true,conditions:[],label:'Bør tas daglig gjennom hele svangerskapet for å sikre optimalt inntak av næringsstoffer'},
+  {id:'velvare_jern',title:'Jerntilskudd ved jernmangel',category:'velvare',group:'Tilskudd',week_from:12,week_to:40,optional:true,conditions:[],label:'Mange gravide sliter med jernmangel og trenger separat tilskudd utover multivitamin, særlig i 2. og 3. trimester. Måles ved første kontroll og i uke 28'},
+  {id:'velvare_magnesium',title:'Magnesium ved leggkramper',category:'velvare',group:'Tilskudd',week_from:16,week_to:40,optional:true,conditions:[],label:'Leggkramper er vanlig i 2. og 3. trimester. Magnesiumtilskudd er trygt ved anbefalt dosering'},
+  {id:'velvare_kvalme',title:'Mye kvalme? Snakk med legen',category:'velvare',group:'Plager',week_from:6,week_to:40,optional:true,conditions:[],label:'Legen kan skrive ut reseptbelagte medisiner som hjelper betydelig'},
+  {id:'velvare_fordoying',title:'Fordøyelseshjelp',category:'velvare',group:'Plager',week_from:16,week_to:40,optional:true,conditions:[],label:'Forstoppelse er vanlig. Fiber, kiwi, svisker, dadler, laktulose eller Movicol kan hjelpe'},
+  {id:'velvare_bekkenbunn',title:'Bekkenbunnsøvelser (kniping)',category:'velvare',group:'Trening',week_from:8,week_to:40,optional:true,conditions:[],label:'Anbefales gjennom hele svangerskapet. Styrker musklene som støtter livmor og blære, og gjør det lettere å komme seg etter fødsel'},
+  {id:'velvare_trening',title:'Styrking av kjernemuskulatur',category:'velvare',group:'Trening',week_from:12,week_to:36,optional:true,conditions:[],label:'Jordmor eller fysioterapeut kan veilede deg i trygg trening under graviditet'},
+
   {id:'hospital_health_card',title:'Helsekort for gravide',category:'sykehusveske',group:'Dokumenter',week_from:39,week_to:40,optional:false,conditions:[],label:null},
   {id:'hospital_phone_charger',title:'Mobil og lader',category:'sykehusveske',group:'Til fødsel',week_from:39,week_to:40,optional:false,conditions:[],label:null},
   {id:'hospital_snacks',title:'Snacks',category:'sykehusveske',group:'Til fødsel',week_from:40,week_to:40,optional:true,conditions:[],label:null},
@@ -1306,6 +1318,8 @@ var ALL_ITEMS = [
   {id:'postbirth_postpartum_pads',title:'Store bind til barselbødning',category:'etter_fodsel',group:'Mor etter fødsel',week_from:36,week_to:42,optional:false,conditions:[],label:'Du blør gjerne 2–6 uker etter fødsel'},
   {id:'postbirth_sitz_bath',title:'Kjølebind eller ispose til underlivet',category:'etter_fodsel',group:'Mor etter fødsel',week_from:36,week_to:42,optional:true,conditions:[],label:'Lindrer verkende underliv'},
   {id:'postbirth_skylleflaske',title:'Skylleflaske',category:'etter_fodsel',group:'Mor etter fødsel',week_from:36,week_to:42,optional:true,conditions:[],label:'For å lindre svie og ubehag ved toalettbesøk etter fødsel'},
+  {id:'postbirth_multimam',title:'Brystvortekrem eller behandling ved såre brystvorter',category:'etter_fodsel',group:'Mor etter fødsel',week_from:36,week_to:42,optional:true,conditions:[],label:'F.eks. Medela brystvortekrem eller Multi-Mam Kompress'},
+  {id:'postbirth_smertestillende',title:'Smertestillende',category:'etter_fodsel',group:'Mor etter fødsel',week_from:36,week_to:42,optional:true,conditions:[],label:'F.eks. Paracet – trygt etter fødsel og ved amming'},
 ];
 
 // ── HJELPEFUNKSJONER ───────────────────────────────────
@@ -1943,7 +1957,7 @@ function obTogglePref(key) {
 function obFerdig() {
   if (OB.termin) {
     TERMIN = OB.termin;
-    TERMIN_LENGDE = parseInt(document.getElementById('ob-lengde').value) || 280;
+    TERMIN_LENGDE = 283;
     EKTE_U = beregnUkeFraTermin(OB.termin);
     U = EKTE_U;
     localStorage.setItem('sammen-termin', OB.termin);
